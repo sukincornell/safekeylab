@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Sales - Aegis Privacy API</title>
+    <meta name="description" content="Contact Aegis Sales for enterprise AI privacy solutions. Schedule a demo, get pricing, or speak with our privacy experts about your requirements.">
+    <link rel="icon" type="image/svg+xml" href="aegis-icon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <a href="index.html" style="display: flex; align-items: center; text-decoration: none;">
+                        <img src="aegis-icon.svg" alt="Aegis Shield" class="shield-icon">
+                        <span class="logo-text">AEGIS</span>
+                    </a>
+                </div>
+                <div class="nav-links">
+                    <a href="features.html">Features</a>
+                    <a href="documentation.html">Docs</a>
+                    <a href="pricing.html">Pricing</a>
+                    <a href="security.html">Security</a>
+                    <a href="contact.html" class="cta-button active">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contact Hero -->
+    <section class="docs-hero">
+        <div class="container">
+            <h1>Contact Sales</h1>
+            <p>Speak with our privacy experts about protecting your AI chatbot from PII leaks</p>
+        </div>
+    </section>
+
+    <!-- Contact Options -->
+    <section class="contact-options-section">
+        <div class="container">
+            <div class="contact-intro">
+                <h2>How Can We Help?</h2>
+                <p>Whether you're evaluating Aegis for a single chatbot or deploying across your entire organization, our team is here to help you succeed.</p>
+            </div>
+
+            <div class="contact-options-grid">
+                <div class="contact-option-card">
+                    <div class="option-icon">🎯</div>
+                    <h3>Schedule a Demo</h3>
+                    <p>See Aegis in action with your actual data. Our solutions engineers will walk through your use case and show real-time PII protection.</p>
+                    <ul>
+                        <li>Live demo with your data</li>
+                        <li>Custom integration planning</li>
+                        <li>ROI calculation</li>
+                        <li>Q&A with technical experts</li>
+                    </ul>
+                    <button class="contact-cta primary" onclick="showContactForm('demo')">Schedule Demo</button>
+                </div>
+
+                <div class="contact-option-card">
+                    <div class="option-icon">💰</div>
+                    <h3>Get Pricing</h3>
+                    <p>Custom enterprise pricing based on your volume, requirements, and deployment preferences. No surprises, transparent costs.</p>
+                    <ul>
+                        <li>Volume-based pricing</li>
+                        <li>Enterprise discounts</li>
+                        <li>Multi-year agreements</li>
+                        <li>On-premise options</li>
+                    </ul>
+                    <button class="contact-cta" onclick="showContactForm('pricing')">Get Quote</button>
+                </div>
+
+                <div class="contact-option-card">
+                    <div class="option-icon">🛠️</div>
+                    <h3>Technical Consultation</h3>
+                    <p>Discuss integration architecture, compliance requirements, and technical specifications with our engineering team.</p>
+                    <ul>
+                        <li>Architecture review</li>
+                        <li>Compliance mapping</li>
+                        <li>Integration planning</li>
+                        <li>Performance optimization</li>
+                    </ul>
+                    <button class="contact-cta" onclick="showContactForm('technical')">Book Consultation</button>
+                </div>
+
+                <div class="contact-option-card">
+                    <div class="option-icon">🏢</div>
+                    <h3>Enterprise Partnership</h3>
+                    <p>Large-scale deployments, strategic partnerships, and white-label solutions for enterprise AI platforms.</p>
+                    <ul>
+                        <li>Strategic partnerships</li>
+                        <li>White-label solutions</li>
+                        <li>Custom development</li>
+                        <li>Dedicated support</li>
+                    </ul>
+                    <button class="contact-cta" onclick="showContactForm('enterprise')">Partner With Us</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section class="contact-form-section" id="contact-form">
+        <div class="container">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2 id="form-title">Contact Our Sales Team</h2>
+                    <p id="form-subtitle">Tell us about your requirements and we'll get back to you within 4 hours</p>
+                </div>
+
+                <form class="contact-form" id="contactForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input type="text" id="firstName" name="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input type="text" id="lastName" name="lastName" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Work Email *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="company">Company *</label>
+                            <input type="text" id="company" name="company" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="title">Job Title *</label>
+                            <input type="text" id="title" name="title" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="companySize">Company Size *</label>
+                            <select id="companySize" name="companySize" required>
+                                <option value="">Select company size</option>
+                                <option value="startup">Startup (1-50 employees)</option>
+                                <option value="growth">Growth (51-500 employees)</option>
+                                <option value="enterprise">Enterprise (501-5000 employees)</option>
+                                <option value="large-enterprise">Large Enterprise (5000+ employees)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="industry">Industry *</label>
+                            <select id="industry" name="industry" required>
+                                <option value="">Select industry</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="financial">Financial Services</option>
+                                <option value="technology">Technology</option>
+                                <option value="legal">Legal Services</option>
+                                <option value="education">Education</option>
+                                <option value="government">Government</option>
+                                <option value="retail">Retail/E-commerce</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="requestType">What can we help you with? *</label>
+                        <select id="requestType" name="requestType" required>
+                            <option value="">Select request type</option>
+                            <option value="demo">Schedule a Product Demo</option>
+                            <option value="pricing">Get Pricing Information</option>
+                            <option value="technical">Technical Consultation</option>
+                            <option value="enterprise">Enterprise Partnership</option>
+                            <option value="support">Technical Support</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="volume">Expected Monthly API Requests</label>
+                        <select id="volume" name="volume">
+                            <option value="">Select volume (optional)</option>
+                            <option value="low">Under 1M requests/month</option>
+                            <option value="medium">1M - 10M requests/month</option>
+                            <option value="high">10M - 100M requests/month</option>
+                            <option value="enterprise">100M+ requests/month</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="useCase">Tell us about your use case *</label>
+                        <textarea id="useCase" name="useCase" rows="4" required placeholder="Describe your AI chatbot, what type of data it processes, and what privacy concerns you have..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="timeline">Implementation Timeline</label>
+                        <select id="timeline" name="timeline">
+                            <option value="">Select timeline (optional)</option>
+                            <option value="immediate">Immediate (within 1 month)</option>
+                            <option value="short">Short-term (1-3 months)</option>
+                            <option value="medium">Medium-term (3-6 months)</option>
+                            <option value="long">Long-term (6+ months)</option>
+                            <option value="evaluating">Just evaluating options</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="compliance" name="compliance">
+                            <span class="checkmark"></span>
+                            I need help with GDPR, HIPAA, or other compliance requirements
+                        </label>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="onPremise" name="onPremise">
+                            <span class="checkmark"></span>
+                            I'm interested in on-premise deployment options
+                        </label>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="newsletter" name="newsletter">
+                            <span class="checkmark"></span>
+                            Subscribe to Aegis Security updates and privacy insights
+                        </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="submit-button">
+                            <span>Send Message</span>
+                            <div class="loading-spinner" style="display: none;"></div>
+                        </button>
+                        <p class="form-note">We'll respond within 4 business hours. For urgent requests, call +1 (555) 123-AEGIS</p>
+                    </div>
+                </form>
+            </div>
+
+            <div class="contact-sidebar">
+                <div class="sidebar-section">
+                    <h3>Why Choose Aegis?</h3>
+                    <div class="benefits-list">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">⚡</span>
+                            <div>
+                                <h4>10-Second Setup</h4>
+                                <p>Auto-configures optimal privacy settings automatically</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🎯</span>
+                            <div>
+                                <h4>99.99% Accuracy</h4>
+                                <p>Industry-leading PII detection with minimal false positives</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🚀</span>
+                            <div>
+                                <h4>&lt;50ms Latency</h4>
+                                <p>Won't slow down your AI chatbot responses</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🛡️</span>
+                            <div>
+                                <h4>Enterprise Security</h4>
+                                <p>SOC2, GDPR, HIPAA compliant with bank-grade security</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Customer Success</h3>
+                    <blockquote class="testimonial">
+                        <p>"Aegis prevented a potential $20M GDPR fine when our customer support AI accidentally processed customer emails containing PII. The auto-detection caught everything."</p>
+                        <cite>Sarah Chen, CISO at TechCorp</cite>
+                    </blockquote>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Direct Contact</h3>
+                    <div class="direct-contact">
+                        <div class="contact-method">
+                            <strong>Sales:</strong>
+                            <a href="mailto:sales@aegis-shield.ai">sales@aegis-shield.ai</a>
+                        </div>
+                        <div class="contact-method">
+                            <strong>Phone:</strong>
+                            <a href="tel:+15551234247">+1 (555) 123-AEGIS</a>
+                        </div>
+                        <div class="contact-method">
+                            <strong>Address:</strong>
+                            <address>
+                                123 Security Blvd<br>
+                                San Francisco, CA 94105
+                            </address>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="contact-faq-section">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>How long does implementation take?</h3>
+                    <p>Most customers are protecting their chatbots within 24 hours. Our auto-configuration technology eliminates the typical weeks of manual setup required by other solutions.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>What's included in enterprise support?</h3>
+                    <p>Enterprise customers get dedicated account management, priority support, custom SLAs, compliance documentation, and direct access to our engineering team.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Do you offer on-premise deployment?</h3>
+                    <p>Yes, we offer on-premise and hybrid cloud deployments for customers with strict data residency requirements. This includes full documentation and white-glove setup.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>How does pricing work?</h3>
+                    <p>Pricing is based on monthly API request volume, with volume discounts for higher usage. Enterprise customers can also access custom pricing for multi-year agreements.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>What compliance certifications do you have?</h3>
+                    <p>Aegis is SOC 2 Type II, ISO 27001, PCI DSS Level 1 certified and fully GDPR and HIPAA compliant. We provide all necessary documentation for your audits.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Can I test Aegis before purchasing?</h3>
+                    <p>Absolutely! We offer a 30-day free trial with full access to all features. Enterprise customers can also request a proof-of-concept with their actual data.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <img src="aegis-icon.svg" alt="Aegis Shield" class="shield-icon">
+                        <span class="logo-text">AEGIS</span>
+                    </div>
+                    <p class="tagline">Divine Protection for Enterprise AI</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="features.html">Features</a>
+                        <a href="pricing.html">Pricing</a>
+                        <a href="index.html#demo">Demo</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Developers</h4>
+                        <a href="documentation.html">Documentation</a>
+                        <a href="api-reference.html">API Reference</a>
+                        <a href="sdks.html">SDK Downloads</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="about.html">About</a>
+                        <a href="security.html">Security</a>
+                        <a href="contact.html">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Aegis Security. All rights reserved.</p>
+                <p>Protecting AI with divine authority.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        function showContactForm(type) {
+            const form = document.getElementById('contact-form');
+            const title = document.getElementById('form-title');
+            const subtitle = document.getElementById('form-subtitle');
+            const requestType = document.getElementById('requestType');
+
+            // Update form content based on type
+            const formContent = {
+                demo: {
+                    title: 'Schedule a Demo',
+                    subtitle: 'See Aegis protect your actual data in real-time',
+                    value: 'demo'
+                },
+                pricing: {
+                    title: 'Get Custom Pricing',
+                    subtitle: 'Receive a personalized quote based on your requirements',
+                    value: 'pricing'
+                },
+                technical: {
+                    title: 'Technical Consultation',
+                    subtitle: 'Discuss integration and architecture with our engineers',
+                    value: 'technical'
+                },
+                enterprise: {
+                    title: 'Enterprise Partnership',
+                    subtitle: 'Explore strategic partnerships and custom solutions',
+                    value: 'enterprise'
+                }
+            };
+
+            if (formContent[type]) {
+                title.textContent = formContent[type].title;
+                subtitle.textContent = formContent[type].subtitle;
+                requestType.value = formContent[type].value;
+            }
+
+            // Scroll to form
+            form.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const submitButton = this.querySelector('.submit-button');
+            const buttonText = submitButton.querySelector('span');
+            const spinner = submitButton.querySelector('.loading-spinner');
+
+            // Show loading state
+            buttonText.textContent = 'Sending...';
+            spinner.style.display = 'inline-block';
+            submitButton.disabled = true;
+
+            // Simulate form submission
+            setTimeout(() => {
+                buttonText.textContent = 'Message Sent!';
+                spinner.style.display = 'none';
+
+                // Show success message
+                alert('Thank you for your interest! Our team will contact you within 4 business hours.');
+
+                // Reset form
+                this.reset();
+                setTimeout(() => {
+                    buttonText.textContent = 'Send Message';
+                    submitButton.disabled = false;
+                }, 3000);
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

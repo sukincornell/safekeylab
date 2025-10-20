@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDK Downloads - Aegis Privacy API</title>
+    <meta name="description" content="Download Aegis SDKs for Python, Node.js, Java, Go, and more. Quick integration guides and code examples for protecting your AI chatbots.">
+    <link rel="icon" type="image/svg+xml" href="aegis-icon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <a href="index.html" style="display: flex; align-items: center; text-decoration: none;">
+                        <img src="aegis-icon.svg" alt="Aegis Shield" class="shield-icon">
+                        <span class="logo-text">AEGIS</span>
+                    </a>
+                </div>
+                <div class="nav-links">
+                    <a href="features.html">Features</a>
+                    <a href="documentation.html">Docs</a>
+                    <a href="pricing.html">Pricing</a>
+                    <a href="security.html">Security</a>
+                    <a href="contact.html" class="cta-button">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SDK Hero -->
+    <section class="docs-hero">
+        <div class="container">
+            <h1>SDK Downloads</h1>
+            <p>Integrate Aegis privacy protection in minutes with our official SDKs and libraries</p>
+        </div>
+    </section>
+
+    <!-- Quick Start -->
+    <section class="quick-start-section">
+        <div class="container">
+            <div class="quick-start-grid">
+                <div class="quick-start-card">
+                    <div class="language-icon">🐍</div>
+                    <h3>Python</h3>
+                    <div class="install-command">
+                        <code>pip install aegis-shield</code>
+                        <button onclick="copyToClipboard('pip install aegis-shield')" class="copy-btn">📋</button>
+                    </div>
+                    <p>Most popular choice for AI/ML applications</p>
+                </div>
+                <div class="quick-start-card">
+                    <div class="language-icon">🟢</div>
+                    <h3>Node.js</h3>
+                    <div class="install-command">
+                        <code>npm install aegis-shield</code>
+                        <button onclick="copyToClipboard('npm install aegis-shield')" class="copy-btn">📋</button>
+                    </div>
+                    <p>Perfect for web applications and serverless</p>
+                </div>
+                <div class="quick-start-card">
+                    <div class="language-icon">☕</div>
+                    <h3>Java</h3>
+                    <div class="install-command">
+                        <code>implementation 'ai.aegis:aegis-shield:1.0.0'</code>
+                        <button onclick="copyToClipboard('implementation \'ai.aegis:aegis-shield:1.0.0\'')" class="copy-btn">📋</button>
+                    </div>
+                    <p>Enterprise-grade for Spring Boot applications</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SDK Documentation -->
+    <section class="sdk-docs-section">
+        <div class="container">
+            <div class="sdk-tabs">
+                <button class="sdk-tab active" onclick="showSDKTab('python')">Python SDK</button>
+                <button class="sdk-tab" onclick="showSDKTab('nodejs')">Node.js SDK</button>
+                <button class="sdk-tab" onclick="showSDKTab('java')">Java SDK</button>
+                <button class="sdk-tab" onclick="showSDKTab('go')">Go SDK</button>
+            </div>
+
+            <!-- Python SDK -->
+            <div class="sdk-content active" id="python-sdk">
+                <div class="sdk-info">
+                    <h2>Python SDK</h2>
+                    <p>The most comprehensive SDK for Python applications. Supports async/await, Django, Flask, and FastAPI.</p>
+
+                    <div class="feature-badges">
+                        <span class="badge">✓ Async Support</span>
+                        <span class="badge">✓ Django Integration</span>
+                        <span class="badge">✓ Type Hints</span>
+                        <span class="badge">✓ Pytest Fixtures</span>
+                    </div>
+                </div>
+
+                <div class="code-example">
+                    <h3>Basic Usage</h3>
+                    <pre class="code-block"><code><span class="keyword">from</span> <span class="string">aegis</span> <span class="keyword">import</span> AegisShield
+
+<span class="comment"># Initialize client</span>
+client = AegisShield(api_key=<span class="string">"sk_live_YOUR_KEY"</span>)
+
+<span class="comment"># Protect sensitive data before sending to LLM</span>
+result = client.protect(
+    text=<span class="string">"My SSN is 123-45-6789"</span>,
+    detection_level=<span class="string">"strict"</span>
+)
+
+<span class="keyword">print</span>(result.protected_text)  <span class="comment"># "My SSN is [SSN_REDACTED]"</span>
+<span class="keyword">print</span>(result.pii_detected)    <span class="comment"># 1</span>
+<span class="keyword">print</span>(result.processing_time) <span class="comment"># 12ms</span></code></pre>
+                </div>
+
+                <div class="code-example">
+                    <h3>Advanced Configuration</h3>
+                    <pre class="code-block"><code><span class="keyword">from</span> <span class="string">aegis</span> <span class="keyword">import</span> AegisShield, ProtectionConfig
+
+config = ProtectionConfig(
+    methods=[<span class="string">"redaction"</span>, <span class="string">"tokenization"</span>],
+    preserve_format=<span class="literal">True</span>,
+    compliance_mode=<span class="string">"HIPAA"</span>
+)
+
+client = AegisShield(
+    api_key=<span class="string">"sk_live_YOUR_KEY"</span>,
+    config=config
+)
+
+<span class="comment"># Batch protection for multiple messages</span>
+messages = [
+    <span class="string">"Patient John Doe, DOB 01/01/1990"</span>,
+    <span class="string">"Credit card ending in 1234"</span>
+]
+
+results = client.protect_batch(messages)
+<span class="keyword">for</span> result <span class="keyword">in</span> results:
+    <span class="keyword">print</span>(result.protected_text)</code></pre>
+                </div>
+
+                <div class="download-section">
+                    <h3>Installation & Documentation</h3>
+                    <div class="download-options">
+                        <a href="#" class="download-btn primary">
+                            <span>📥 Download Python SDK</span>
+                            <small>v2.1.0 - Latest</small>
+                        </a>
+                        <a href="documentation.html#python" class="download-btn">
+                            <span>📖 Python Documentation</span>
+                            <small>Complete API Reference</small>
+                        </a>
+                        <a href="#" class="download-btn">
+                            <span>🔗 GitHub Repository</span>
+                            <small>Source Code & Examples</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Node.js SDK -->
+            <div class="sdk-content" id="nodejs-sdk">
+                <div class="sdk-info">
+                    <h2>Node.js SDK</h2>
+                    <p>TypeScript-first SDK with full Express.js and Next.js integration. Perfect for web applications.</p>
+
+                    <div class="feature-badges">
+                        <span class="badge">✓ TypeScript</span>
+                        <span class="badge">✓ Express Middleware</span>
+                        <span class="badge">✓ Next.js Support</span>
+                        <span class="badge">✓ Streaming API</span>
+                    </div>
+                </div>
+
+                <div class="code-example">
+                    <h3>Basic Usage</h3>
+                    <pre class="code-block"><code><span class="keyword">const</span> { AegisShield } = <span class="keyword">require</span>(<span class="string">'aegis-shield'</span>);
+
+<span class="comment">// Initialize client</span>
+<span class="keyword">const</span> aegis = <span class="keyword">new</span> AegisShield({
+  apiKey: <span class="string">'sk_live_YOUR_KEY'</span>
+});
+
+<span class="comment">// Protect data before sending to OpenAI</span>
+<span class="keyword">const</span> result = <span class="keyword">await</span> aegis.protect({
+  text: <span class="string">'My email is john@company.com'</span>,
+  detectionLevel: <span class="string">'moderate'</span>
+});
+
+console.log(result.protectedText); <span class="comment">// 'My email is [EMAIL_REDACTED]'</span></code></pre>
+                </div>
+
+                <div class="code-example">
+                    <h3>Express.js Middleware</h3>
+                    <pre class="code-block"><code><span class="keyword">const</span> express = <span class="keyword">require</span>(<span class="string">'express'</span>);
+<span class="keyword">const</span> { aegisMiddleware } = <span class="keyword">require</span>(<span class="string">'aegis-shield'</span>);
+
+<span class="keyword">const</span> app = express();
+
+<span class="comment">// Auto-protect all request bodies</span>
+app.use(aegisMiddleware({
+  apiKey: <span class="string">'sk_live_YOUR_KEY'</span>,
+  fields: [<span class="string">'message'</span>, <span class="string">'userInput'</span>],
+  onPIIDetected: (req, piiInfo) => {
+    console.log(<span class="string">`PII detected: ${piiInfo.count} items`</span>);
+  }
+}));
+
+app.post(<span class="string">'/chat'</span>, (req, res) => {
+  <span class="comment">// req.body.message is now automatically protected</span>
+  <span class="keyword">const</span> safeMessage = req.body.message;
+  <span class="comment">// Send to OpenAI/Claude...</span>
+});</code></pre>
+                </div>
+
+                <div class="download-section">
+                    <h3>Installation & Documentation</h3>
+                    <div class="download-options">
+                        <a href="#" class="download-btn primary">
+                            <span>📥 Download Node.js SDK</span>
+                            <small>v1.8.3 - Latest</small>
+                        </a>
+                        <a href="documentation.html#nodejs" class="download-btn">
+                            <span>📖 Node.js Documentation</span>
+                            <small>Complete API Reference</small>
+                        </a>
+                        <a href="#" class="download-btn">
+                            <span>🔗 NPM Package</span>
+                            <small>Install via npm/yarn</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Java SDK -->
+            <div class="sdk-content" id="java-sdk">
+                <div class="sdk-info">
+                    <h2>Java SDK</h2>
+                    <p>Enterprise-grade Java SDK with Spring Boot integration and comprehensive error handling.</p>
+
+                    <div class="feature-badges">
+                        <span class="badge">✓ Spring Boot</span>
+                        <span class="badge">✓ Reactive Streams</span>
+                        <span class="badge">✓ JUnit Integration</span>
+                        <span class="badge">✓ Connection Pooling</span>
+                    </div>
+                </div>
+
+                <div class="code-example">
+                    <h3>Basic Usage</h3>
+                    <pre class="code-block"><code><span class="keyword">import</span> ai.aegis.AegisShield;
+<span class="keyword">import</span> ai.aegis.ProtectionResult;
+
+<span class="comment">// Initialize client</span>
+AegisShield client = <span class="keyword">new</span> AegisShield.Builder()
+    .apiKey(<span class="string">"sk_live_YOUR_KEY"</span>)
+    .build();
+
+<span class="comment">// Protect sensitive data</span>
+ProtectionResult result = client.protect(
+    <span class="string">"Patient ID: P-12345, DOB: 1985-03-15"</span>
+);
+
+System.out.println(result.getProtectedText());
+System.out.println(<span class="string">"PII Count: "</span> + result.getPiiCount());</code></pre>
+                </div>
+
+                <div class="code-example">
+                    <h3>Spring Boot Integration</h3>
+                    <pre class="code-block"><code><span class="annotation">@Configuration</span>
+<span class="keyword">public class</span> AegisConfig {
+
+    <span class="annotation">@Bean</span>
+    <span class="keyword">public</span> AegisShield aegisShield() {
+        <span class="keyword">return new</span> AegisShield.Builder()
+            .apiKey(${aegis.api.key})
+            .timeout(Duration.ofSeconds(<span class="literal">30</span>))
+            .retryPolicy(RetryPolicy.exponentialBackoff())
+            .build();
+    }
+}
+
+<span class="annotation">@Service</span>
+<span class="keyword">public class</span> ChatService {
+
+    <span class="annotation">@Autowired</span>
+    <span class="keyword">private</span> AegisShield aegis;
+
+    <span class="keyword">public</span> String processChatMessage(String userInput) {
+        ProtectionResult result = aegis.protect(userInput);
+        <span class="keyword">return</span> sendToLLM(result.getProtectedText());
+    }
+}</code></pre>
+                </div>
+
+                <div class="download-section">
+                    <h3>Installation & Documentation</h3>
+                    <div class="download-options">
+                        <a href="#" class="download-btn primary">
+                            <span>📥 Download Java SDK</span>
+                            <small>v1.5.2 - Latest</small>
+                        </a>
+                        <a href="documentation.html#java" class="download-btn">
+                            <span>📖 Java Documentation</span>
+                            <small>Complete API Reference</small>
+                        </a>
+                        <a href="#" class="download-btn">
+                            <span>🔗 Maven Central</span>
+                            <small>Maven/Gradle Dependencies</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Go SDK -->
+            <div class="sdk-content" id="go-sdk">
+                <div class="sdk-info">
+                    <h2>Go SDK</h2>
+                    <p>High-performance Go SDK designed for microservices and cloud-native applications.</p>
+
+                    <div class="feature-badges">
+                        <span class="badge">✓ Context Support</span>
+                        <span class="badge">✓ Goroutine Safe</span>
+                        <span class="badge">✓ gRPC Integration</span>
+                        <span class="badge">✓ Prometheus Metrics</span>
+                    </div>
+                </div>
+
+                <div class="code-example">
+                    <h3>Basic Usage</h3>
+                    <pre class="code-block"><code><span class="keyword">package</span> main
+
+<span class="keyword">import</span> (
+    <span class="string">"context"</span>
+    <span class="string">"fmt"</span>
+    <span class="string">"github.com/aegis-shield/go-sdk"</span>
+)
+
+<span class="keyword">func</span> main() {
+    client := aegis.NewClient(<span class="string">"sk_live_YOUR_KEY"</span>)
+
+    result, err := client.Protect(context.Background(), &aegis.ProtectRequest{
+        Text: <span class="string">"My phone is (555) 123-4567"</span>,
+        DetectionLevel: aegis.DetectionLevelStrict,
+    })
+
+    <span class="keyword">if</span> err != <span class="literal">nil</span> {
+        <span class="function">panic</span>(err)
+    }
+
+    fmt.Println(result.ProtectedText) <span class="comment">// "My phone is [PHONE_REDACTED]"</span>
+}</code></pre>
+                </div>
+
+                <div class="code-example">
+                    <h3>Microservice Integration</h3>
+                    <pre class="code-block"><code><span class="keyword">func</span> NewChatHandler(aegisClient *aegis.Client) *ChatHandler {
+    <span class="keyword">return</span> &ChatHandler{
+        aegis: aegisClient,
+    }
+}
+
+<span class="keyword">func</span> (h *ChatHandler) ProcessMessage(ctx context.Context, req *pb.ChatRequest) (*pb.ChatResponse, <span class="type">error</span>) {
+    <span class="comment">// Protect user input before sending to LLM</span>
+    result, err := h.aegis.Protect(ctx, &aegis.ProtectRequest{
+        Text: req.Message,
+        PreserveFormat: <span class="literal">true</span>,
+    })
+
+    <span class="keyword">if</span> err != <span class="literal">nil</span> {
+        <span class="keyword">return</span> <span class="literal">nil</span>, fmt.Errorf(<span class="string">"protection failed: %w"</span>, err)
+    }
+
+    <span class="comment">// Forward to LLM service</span>
+    llmResponse := h.sendToLLM(result.ProtectedText)
+
+    <span class="keyword">return</span> &pb.ChatResponse{
+        Message: llmResponse,
+        PiiDetected: result.PiiCount,
+    }, <span class="literal">nil</span>
+}</code></pre>
+                </div>
+
+                <div class="download-section">
+                    <h3>Installation & Documentation</h3>
+                    <div class="download-options">
+                        <a href="#" class="download-btn primary">
+                            <span>📥 Download Go SDK</span>
+                            <small>v1.3.1 - Latest</small>
+                        </a>
+                        <a href="documentation.html#go" class="download-btn">
+                            <span>📖 Go Documentation</span>
+                            <small>Complete API Reference</small>
+                        </a>
+                        <a href="#" class="download-btn">
+                            <span>🔗 Go Module</span>
+                            <small>go get installation</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- More SDKs -->
+    <section class="more-sdks-section">
+        <div class="container">
+            <h2 class="section-title">More SDKs & Integrations</h2>
+            <div class="more-sdks-grid">
+                <div class="sdk-card">
+                    <div class="sdk-icon">🔷</div>
+                    <h3>C# / .NET</h3>
+                    <p>Full .NET Framework and .NET Core support with async/await patterns</p>
+                    <span class="status coming-soon">Coming Q1 2025</span>
+                </div>
+                <div class="sdk-card">
+                    <div class="sdk-icon">🦀</div>
+                    <h3>Rust</h3>
+                    <p>Ultra-fast Rust SDK for high-performance applications</p>
+                    <span class="status coming-soon">Coming Q1 2025</span>
+                </div>
+                <div class="sdk-card">
+                    <div class="sdk-icon">🔵</div>
+                    <h3>PHP</h3>
+                    <p>Laravel and Symfony integration for web applications</p>
+                    <span class="status coming-soon">Coming Q2 2025</span>
+                </div>
+                <div class="sdk-card">
+                    <div class="sdk-icon">💎</div>
+                    <h3>Ruby</h3>
+                    <p>Rails-friendly gem with ActiveRecord integration</p>
+                    <span class="status coming-soon">Coming Q2 2025</span>
+                </div>
+                <div class="sdk-card">
+                    <div class="sdk-icon">🐘</div>
+                    <h3>PostgreSQL Extension</h3>
+                    <p>Database-level PII protection with SQL functions</p>
+                    <span class="status beta">Beta Available</span>
+                </div>
+                <div class="sdk-card">
+                    <div class="sdk-icon">⚡</div>
+                    <h3>GraphQL Plugin</h3>
+                    <p>Automatic field-level protection for GraphQL APIs</p>
+                    <span class="status beta">Beta Available</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Section -->
+    <section class="sdk-support-section">
+        <div class="container">
+            <div class="support-content">
+                <h2>Need Help Getting Started?</h2>
+                <p>Our developer success team is here to help you integrate Aegis quickly and securely.</p>
+                <div class="support-options">
+                    <a href="contact.html" class="support-btn primary">Contact Developer Support</a>
+                    <a href="documentation.html" class="support-btn">Browse Documentation</a>
+                    <a href="#" class="support-btn">Join Discord Community</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <img src="aegis-icon.svg" alt="Aegis Shield" class="shield-icon">
+                        <span class="logo-text">AEGIS</span>
+                    </div>
+                    <p class="tagline">Divine Protection for Enterprise AI</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="features.html">Features</a>
+                        <a href="pricing.html">Pricing</a>
+                        <a href="index.html#demo">Demo</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Developers</h4>
+                        <a href="documentation.html">Documentation</a>
+                        <a href="api-reference.html">API Reference</a>
+                        <a href="sdks.html">SDK Downloads</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="about.html">About</a>
+                        <a href="security.html">Security</a>
+                        <a href="contact.html">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Aegis Security. All rights reserved.</p>
+                <p>Protecting AI with divine authority.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        function showSDKTab(sdkName) {
+            // Hide all SDK content
+            document.querySelectorAll('.sdk-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.sdk-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected SDK content
+            document.getElementById(sdkName + '-sdk').classList.add('active');
+
+            // Add active class to selected tab
+            event.target.classList.add('active');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Show success feedback
+                event.target.textContent = '✓';
+                setTimeout(() => {
+                    event.target.textContent = '📋';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

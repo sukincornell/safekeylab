@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features - Aegis Privacy API</title>
+    <meta name="description" content="Aegis privacy features: 99.99% PII detection, auto-configuration, 6 protection methods, prompt injection defense, and enterprise compliance.">
+    <link rel="icon" type="image/svg+xml" href="aegis-icon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <a href="index.html" style="display: flex; align-items: center; text-decoration: none;">
+                        <img src="aegis-icon.svg" alt="Aegis Shield" class="shield-icon">
+                        <span class="logo-text">AEGIS</span>
+                    </a>
+                </div>
+                <div class="nav-links">
+                    <a href="features.html" class="active">Features</a>
+                    <a href="documentation.html">Docs</a>
+                    <a href="pricing.html">Pricing</a>
+                    <a href="security.html">Security</a>
+                    <a href="contact.html" class="cta-button">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Features Hero -->
+    <section class="docs-hero">
+        <div class="container">
+            <h1>Aegis Features</h1>
+            <p>Complete privacy protection for enterprise AI chatbots with patent-pending technology</p>
+        </div>
+    </section>
+
+    <!-- Core Features Overview -->
+    <section class="core-features-section">
+        <div class="container">
+            <div class="features-intro">
+                <h2>Why Aegis is Different</h2>
+                <p class="large-text">Traditional privacy solutions require weeks of manual configuration and still miss critical PII. Aegis uses patent-pending auto-configuration to achieve 99.99% accuracy in seconds.</p>
+            </div>
+
+            <div class="core-features-grid">
+                <div class="feature-highlight">
+                    <div class="feature-icon-large">🤖</div>
+                    <h3>Patent-Pending Auto-Configuration</h3>
+                    <p>Binary search algorithm automatically finds optimal privacy parameters for any dataset. No manual tuning, no human error, no weeks of setup.</p>
+                    <div class="feature-stats">
+                        <div class="stat">
+                            <span class="stat-value">10 seconds</span>
+                            <span class="stat-label">Setup time</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">Zero</span>
+                            <span class="stat-label">Manual tuning</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-highlight">
+                    <div class="feature-icon-large">🧠</div>
+                    <h3>99.99% PII Detection Accuracy</h3>
+                    <p>Multi-head attention transformer with DeBERTa + pattern fusion. Understands context and semantics, not just regex patterns.</p>
+                    <div class="feature-stats">
+                        <div class="stat">
+                            <span class="stat-value">99.99%</span>
+                            <span class="stat-label">Detection accuracy</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">0.01%</span>
+                            <span class="stat-label">False positives</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-highlight">
+                    <div class="feature-icon-large">⚡</div>
+                    <h3>35M Requests/Second</h3>
+                    <p>Distributed edge computing architecture processes massive scale with sub-50ms latency. Built for hyperscale operations.</p>
+                    <div class="feature-stats">
+                        <div class="stat">
+                            <span class="stat-value">&lt;50ms</span>
+                            <span class="stat-label">Latency</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">35M</span>
+                            <span class="stat-label">Requests/sec</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detection Capabilities -->
+    <section class="detection-section">
+        <div class="container">
+            <h2 class="section-title">Advanced PII Detection</h2>
+            <div class="detection-content">
+                <div class="detection-grid">
+                    <div class="detection-category">
+                        <h3>📋 Personal Identifiers</h3>
+                        <ul>
+                            <li>Social Security Numbers (SSN)</li>
+                            <li>Driver's License Numbers</li>
+                            <li>Passport Numbers</li>
+                            <li>National ID Numbers</li>
+                            <li>Tax ID Numbers (TIN/EIN)</li>
+                            <li>Employee ID Numbers</li>
+                        </ul>
+                    </div>
+
+                    <div class="detection-category">
+                        <h3>💳 Financial Information</h3>
+                        <ul>
+                            <li>Credit Card Numbers</li>
+                            <li>Bank Account Numbers</li>
+                            <li>Routing Numbers</li>
+                            <li>IBAN Numbers</li>
+                            <li>SWIFT Codes</li>
+                            <li>Cryptocurrency Addresses</li>
+                        </ul>
+                    </div>
+
+                    <div class="detection-category">
+                        <h3>🏥 Healthcare Data (PHI)</h3>
+                        <ul>
+                            <li>Medical Record Numbers</li>
+                            <li>Health Plan IDs</li>
+                            <li>Patient Identifiers</li>
+                            <li>Medical Device IDs</li>
+                            <li>Healthcare Appointments</li>
+                            <li>Insurance Information</li>
+                        </ul>
+                    </div>
+
+                    <div class="detection-category">
+                        <h3>📞 Contact Information</h3>
+                        <ul>
+                            <li>Email Addresses</li>
+                            <li>Phone Numbers (all formats)</li>
+                            <li>Home Addresses</li>
+                            <li>IP Addresses</li>
+                            <li>MAC Addresses</li>
+                            <li>Geographic Coordinates</li>
+                        </ul>
+                    </div>
+
+                    <div class="detection-category">
+                        <h3>👤 Biometric & Personal</h3>
+                        <ul>
+                            <li>Full Names</li>
+                            <li>Dates of Birth</li>
+                            <li>Biometric Templates</li>
+                            <li>Facial Recognition Data</li>
+                            <li>Fingerprint Data</li>
+                            <li>Voice Prints</li>
+                        </ul>
+                    </div>
+
+                    <div class="detection-category">
+                        <h3>🌐 Digital Identifiers</h3>
+                        <ul>
+                            <li>API Keys & Tokens</li>
+                            <li>Session IDs</li>
+                            <li>User Account Numbers</li>
+                            <li>Device Identifiers</li>
+                            <li>Tracking Cookies</li>
+                            <li>Browser Fingerprints</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="detection-demo">
+                    <h3>Context-Aware Detection</h3>
+                    <p>Unlike simple regex matching, Aegis understands context and semantics:</p>
+                    <div class="demo-examples">
+                        <div class="demo-example">
+                            <div class="example-input">
+                                <strong>Input:</strong> "My SSN is 123-45-6789, but I'm not giving you the real one"
+                            </div>
+                            <div class="example-output">
+                                <strong>Aegis:</strong> Detects and protects SSN based on context, not just pattern
+                            </div>
+                        </div>
+                        <div class="demo-example">
+                            <div class="example-input">
+                                <strong>Input:</strong> "The product code is ABC-123-DEF, similar to a SSN format"
+                            </div>
+                            <div class="example-output">
+                                <strong>Aegis:</strong> Recognizes this is NOT a SSN based on context
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Protection Methods -->
+    <section class="protection-methods-section">
+        <div class="container">
+            <h2 class="section-title">6 Protection Methods</h2>
+            <div class="methods-grid">
+                <div class="method-card">
+                    <div class="method-icon">🚫</div>
+                    <h3>Redaction</h3>
+                    <p>Completely removes PII and replaces with placeholders like [REDACTED] or [SSN_REDACTED]</p>
+                    <div class="method-example">
+                        <div class="before">Before: "My SSN is 123-45-6789"</div>
+                        <div class="after">After: "My SSN is [SSN_REDACTED]"</div>
+                    </div>
+                    <div class="method-use-cases">
+                        <strong>Best for:</strong> Legal documents, high-security environments
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-icon">🎭</div>
+                    <h3>Masking</h3>
+                    <p>Partially obscures PII while preserving format and some information for context</p>
+                    <div class="method-example">
+                        <div class="before">Before: "Card 4532-1234-5678-9012"</div>
+                        <div class="after">After: "Card ****-****-****-9012"</div>
+                    </div>
+                    <div class="method-use-cases">
+                        <strong>Best for:</strong> Customer service, partial verification
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-icon">🔄</div>
+                    <h3>Tokenization</h3>
+                    <p>Replaces PII with reversible tokens that can be detokenized when needed</p>
+                    <div class="method-example">
+                        <div class="before">Before: "Email: john@company.com"</div>
+                        <div class="after">After: "Email: TOKEN_A7B9X2"</div>
+                    </div>
+                    <div class="method-use-cases">
+                        <strong>Best for:</strong> Analytics, reversible protection
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-icon">📊</div>
+                    <h3>Differential Privacy</h3>
+                    <p>Adds mathematically calibrated noise to provide formal privacy guarantees</p>
+                    <div class="method-example">
+                        <div class="before">Before: "Age: 34"</div>
+                        <div class="after">After: "Age: ~35" (with privacy noise)</div>
+                    </div>
+                    <div class="method-use-cases">
+                        <strong>Best for:</strong> Research, statistical analysis
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-icon">👥</div>
+                    <h3>K-Anonymity</h3>
+                    <p>Ensures each person is indistinguishable from at least k-1 others in the dataset</p>
+                    <div class="method-example">
+                        <div class="before">Before: "John, 34, Engineer, NYC"</div>
+                        <div class="after">After: "Person, 30-40, Tech, Northeast"</div>
+                    </div>
+                    <div class="method-use-cases">
+                        <strong>Best for:</strong> Research datasets, group analysis
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-icon">🎲</div>
+                    <h3>Synthetic Data</h3>
+                    <p>Generates realistic but fake data that preserves statistical properties</p>
+                    <div class="method-example">
+                        <div class="before">Before: "Sarah, DOB 1985-03-15"</div>
+                        <div class="after">After: "Emma, DOB 1984-07-22"</div>
+                    </div>
+                    <div class="method-use-cases">
+                        <strong>Best for:</strong> Testing, AI training, demos
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Features -->
+    <section class="advanced-features-section">
+        <div class="container">
+            <h2 class="section-title">Advanced Features</h2>
+            <div class="advanced-grid">
+                <div class="advanced-feature">
+                    <div class="feature-header">
+                        <div class="feature-icon">🛡️</div>
+                        <h3>Prompt Injection Defense</h3>
+                    </div>
+                    <p>First API to defend against jailbreaking, data extraction, and adversarial attacks on LLMs</p>
+                    <div class="feature-details">
+                        <ul>
+                            <li>Detects prompt injection attempts</li>
+                            <li>Prevents data extraction attacks</li>
+                            <li>Blocks jailbreaking attempts</li>
+                            <li>Protects system prompts</li>
+                            <li>Real-time threat intelligence</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="advanced-feature">
+                    <div class="feature-header">
+                        <div class="feature-icon">🔍</div>
+                        <h3>Real-Time Analytics</h3>
+                    </div>
+                    <p>Comprehensive dashboards and insights into PII exposure, threat detection, and system performance</p>
+                    <div class="feature-details">
+                        <ul>
+                            <li>PII detection trends</li>
+                            <li>Threat intelligence dashboard</li>
+                            <li>Performance monitoring</li>
+                            <li>Compliance reporting</li>
+                            <li>Custom alerts</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="advanced-feature">
+                    <div class="feature-header">
+                        <div class="feature-icon">🌍</div>
+                        <h3>Multi-Region Deployment</h3>
+                    </div>
+                    <p>Global edge network with data residency controls and regional compliance</p>
+                    <div class="feature-details">
+                        <ul>
+                            <li>US, EU, APAC regions</li>
+                            <li>Data residency controls</li>
+                            <li>Local compliance laws</li>
+                            <li>Edge computing</li>
+                            <li>Disaster recovery</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="advanced-feature">
+                    <div class="feature-header">
+                        <div class="feature-icon">🔧</div>
+                        <h3>Custom Integrations</h3>
+                    </div>
+                    <p>Flexible API and SDK support for any architecture with custom privacy rules</p>
+                    <div class="feature-details">
+                        <ul>
+                            <li>REST & GraphQL APIs</li>
+                            <li>Webhook support</li>
+                            <li>Custom detection rules</li>
+                            <li>White-label solutions</li>
+                            <li>Enterprise SSO</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="advanced-feature">
+                    <div class="feature-header">
+                        <div class="feature-icon">📋</div>
+                        <h3>Audit & Compliance</h3>
+                    </div>
+                    <p>Complete audit trails and compliance documentation for enterprise requirements</p>
+                    <div class="feature-details">
+                        <ul>
+                            <li>Immutable audit logs</li>
+                            <li>Compliance reports</li>
+                            <li>Data lineage tracking</li>
+                            <li>Retention policies</li>
+                            <li>Export capabilities</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="advanced-feature">
+                    <div class="feature-header">
+                        <div class="feature-icon">🏢</div>
+                        <h3>Enterprise Controls</h3>
+                    </div>
+                    <p>Advanced enterprise features for large-scale deployments and governance</p>
+                    <div class="feature-details">
+                        <ul>
+                            <li>Team management</li>
+                            <li>Role-based access</li>
+                            <li>Policy enforcement</li>
+                            <li>Budget controls</li>
+                            <li>Usage quotas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Metrics -->
+    <section class="performance-section">
+        <div class="container">
+            <h2 class="section-title">Performance & Scale</h2>
+            <div class="performance-grid">
+                <div class="performance-card">
+                    <div class="perf-icon">⚡</div>
+                    <div class="perf-metric">
+                        <span class="perf-value">&lt;50ms</span>
+                        <span class="perf-label">Average Latency</span>
+                    </div>
+                    <p>Sub-50ms response time ensures your chatbot stays fast and responsive</p>
+                </div>
+
+                <div class="performance-card">
+                    <div class="perf-icon">🚀</div>
+                    <div class="perf-metric">
+                        <span class="perf-value">35M</span>
+                        <span class="perf-label">Requests/Second</span>
+                    </div>
+                    <p>Massive scale processing capability for enterprise AI operations</p>
+                </div>
+
+                <div class="performance-card">
+                    <div class="perf-icon">📈</div>
+                    <div class="perf-metric">
+                        <span class="perf-value">99.99%</span>
+                        <span class="perf-label">Uptime SLA</span>
+                    </div>
+                    <p>Enterprise-grade reliability with multi-region redundancy</p>
+                </div>
+
+                <div class="performance-card">
+                    <div class="perf-icon">🎯</div>
+                    <div class="perf-metric">
+                        <span class="perf-value">99.99%</span>
+                        <span class="perf-label">Detection Accuracy</span>
+                    </div>
+                    <p>Industry-leading PII detection with minimal false positives</p>
+                </div>
+
+                <div class="performance-card">
+                    <div class="perf-icon">🔄</div>
+                    <div class="perf-metric">
+                        <span class="perf-value">Auto</span>
+                        <span class="perf-label">Scaling</span>
+                    </div>
+                    <p>Automatic scaling to handle traffic spikes and growing workloads</p>
+                </div>
+
+                <div class="performance-card">
+                    <div class="perf-icon">🌍</div>
+                    <div class="perf-metric">
+                        <span class="perf-value">Global</span>
+                        <span class="perf-label">Edge Network</span>
+                    </div>
+                    <p>Worldwide edge computing for low latency anywhere</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integration Examples -->
+    <section class="integration-examples-section">
+        <div class="container">
+            <h2 class="section-title">Easy Integration</h2>
+            <div class="integration-tabs">
+                <button class="integration-tab active" onclick="showIntegrationTab('simple')">Simple API</button>
+                <button class="integration-tab" onclick="showIntegrationTab('streaming')">Streaming</button>
+                <button class="integration-tab" onclick="showIntegrationTab('batch')">Batch Processing</button>
+                <button class="integration-tab" onclick="showIntegrationTab('webhook')">Webhooks</button>
+            </div>
+
+            <div class="integration-content">
+                <!-- Simple API -->
+                <div class="integration-example active" id="simple-integration">
+                    <h3>Simple API Protection</h3>
+                    <pre class="code-block"><code><span class="keyword">import</span> <span class="string">requests</span>
+
+<span class="comment"># Protect user input before sending to LLM</span>
+response = requests.post(<span class="string">'https://api.aegis-shield.ai/v1/protect'</span>, {
+    <span class="string">'text'</span>: <span class="string">'My SSN is 123-45-6789 and email is john@company.com'</span>,
+    <span class="string">'methods'</span>: [<span class="string">'redaction'</span>],
+    <span class="string">'detection_level'</span>: <span class="string">'strict'</span>
+}, headers={
+    <span class="string">'Authorization'</span>: <span class="string">'Bearer sk_live_YOUR_KEY'</span>
+})
+
+protected_text = response.json()[<span class="string">'protected_text'</span>]
+<span class="comment"># "My SSN is [SSN_REDACTED] and email is [EMAIL_REDACTED]"</span>
+
+<span class="comment"># Now safe to send to OpenAI/Claude</span>
+openai_response = openai.ChatCompletion.create(
+    model=<span class="string">"gpt-4"</span>,
+    messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: protected_text}]
+)</code></pre>
+                </div>
+
+                <!-- Streaming -->
+                <div class="integration-example" id="streaming-integration">
+                    <h3>Real-Time Streaming Protection</h3>
+                    <pre class="code-block"><code><span class="keyword">from</span> <span class="string">aegis</span> <span class="keyword">import</span> AegisStream
+
+<span class="comment"># Create streaming connection</span>
+stream = AegisStream(api_key=<span class="string">"sk_live_YOUR_KEY"</span>)
+
+<span class="comment"># Process messages in real-time</span>
+<span class="keyword">for</span> user_message <span class="keyword">in</span> chat_stream:
+    <span class="comment"># Protect each message as it arrives</span>
+    protected = stream.protect(user_message)
+
+    <span class="keyword">if</span> protected.pii_detected > <span class="literal">0</span>:
+        <span class="function">log_pii_event</span>(protected.metadata)
+
+    <span class="comment"># Forward to LLM</span>
+    llm_response = <span class="function">send_to_llm</span>(protected.text)
+
+    <span class="comment"># Send back to user</span>
+    <span class="function">send_to_user</span>(llm_response)</code></pre>
+                </div>
+
+                <!-- Batch Processing -->
+                <div class="integration-example" id="batch-integration">
+                    <h3>Batch Processing</h3>
+                    <pre class="code-block"><code><span class="keyword">from</span> <span class="string">aegis</span> <span class="keyword">import</span> AegisClient
+
+client = AegisClient(api_key=<span class="string">"sk_live_YOUR_KEY"</span>)
+
+<span class="comment"># Process multiple messages at once</span>
+messages = [
+    <span class="string">"Patient John Doe, DOB 01/01/1990"</span>,
+    <span class="string">"Credit card 4532-1234-5678-9012"</span>,
+    <span class="string">"Email support@company.com"</span>
+]
+
+<span class="comment"># Batch protection for efficiency</span>
+results = client.protect_batch(messages, {
+    <span class="string">'method'</span>: <span class="string">'tokenization'</span>,
+    <span class="string">'preserve_format'</span>: <span class="literal">True</span>
+})
+
+<span class="keyword">for</span> i, result <span class="keyword">in</span> <span class="function">enumerate</span>(results):
+    <span class="function">print</span>(<span class="string">f"Message {i}: {result.protected_text}"</span>)
+    <span class="function">print</span>(<span class="string">f"PII detected: {result.pii_count}"</span>)</code></pre>
+                </div>
+
+                <!-- Webhooks -->
+                <div class="integration-example" id="webhook-integration">
+                    <h3>Webhook Integration</h3>
+                    <pre class="code-block"><code><span class="keyword">from</span> <span class="string">flask</span> <span class="keyword">import</span> Flask, request
+<span class="keyword">from</span> <span class="string">aegis</span> <span class="keyword">import</span> AegisClient
+
+app = Flask(__name__)
+aegis = AegisClient(api_key=<span class="string">"sk_live_YOUR_KEY"</span>)
+
+<span class="annotation">@app.route</span>(<span class="string">'/chat'</span>, methods=[<span class="string">'POST'</span>])
+<span class="keyword">def</span> <span class="function">handle_chat</span>():
+    user_message = request.json[<span class="string">'message'</span>]
+
+    <span class="comment"># Protect message before LLM</span>
+    result = aegis.protect(user_message, webhook_url=<span class="string">"https://your-app.com/pii-detected"</span>)
+
+    <span class="comment"># Process with LLM</span>
+    llm_response = <span class="function">send_to_llm</span>(result.protected_text)
+
+    <span class="keyword">return</span> {<span class="string">'response'</span>: llm_response}
+
+<span class="annotation">@app.route</span>(<span class="string">'/pii-detected'</span>, methods=[<span class="string">'POST'</span>])
+<span class="keyword">def</span> <span class="function">handle_pii_alert</span>():
+    <span class="comment"># Handle PII detection alerts</span>
+    pii_event = request.json
+    <span class="function">send_security_alert</span>(pii_event)
+    <span class="keyword">return</span> <span class="string">'OK'</span></code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="features-cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Protect Your AI Chatbot?</h2>
+                <p>See how Aegis can prevent PII leaks and compliance violations in your AI applications</p>
+                <div class="cta-actions">
+                    <a href="index.html#demo" class="cta-button-large">Try Live Demo</a>
+                    <a href="contact.html" class="cta-button-secondary">Schedule Demo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <img src="aegis-icon.svg" alt="Aegis Shield" class="shield-icon">
+                        <span class="logo-text">AEGIS</span>
+                    </div>
+                    <p class="tagline">Divine Protection for Enterprise AI</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="features.html">Features</a>
+                        <a href="pricing.html">Pricing</a>
+                        <a href="index.html#demo">Demo</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Developers</h4>
+                        <a href="documentation.html">Documentation</a>
+                        <a href="api-reference.html">API Reference</a>
+                        <a href="sdks.html">SDK Downloads</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="about.html">About</a>
+                        <a href="security.html">Security</a>
+                        <a href="contact.html">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Aegis Security. All rights reserved.</p>
+                <p>Protecting AI with divine authority.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        function showIntegrationTab(tabName) {
+            // Hide all integration examples
+            document.querySelectorAll('.integration-example').forEach(example => {
+                example.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.integration-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected integration example
+            document.getElementById(tabName + '-integration').classList.add('active');
+
+            // Add active class to selected tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

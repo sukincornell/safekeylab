@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference - Aegis Privacy API</title>
+    <meta name="description" content="Complete API reference for Aegis privacy protection. Endpoints, parameters, response formats, and code examples.">
+    <link rel="icon" type="image/svg+xml" href="aegis-icon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <a href="index.html" style="display: flex; align-items: center; text-decoration: none;">
+                        <img src="aegis-icon.svg" alt="Aegis Shield" class="shield-icon">
+                        <span class="logo-text">AEGIS</span>
+                    </a>
+                </div>
+                <div class="nav-links">
+                    <a href="features.html">Features</a>
+                    <a href="documentation.html">Docs</a>
+                    <a href="api-reference.html" class="active">API</a>
+                    <a href="pricing.html">Pricing</a>
+                    <a href="contact.html" class="cta-button">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- API Reference Hero -->
+    <section class="docs-hero">
+        <div class="container">
+            <h1>API Reference</h1>
+            <p>RESTful API endpoints for privacy-preserving data protection</p>
+            <div class="api-info">
+                <span class="api-version">Version: 1.0</span>
+                <span class="api-base">Base URL: https://api.aegis-shield.ai/v1</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Content -->
+    <section class="docs-content">
+        <div class="container">
+            <div class="docs-grid">
+                <!-- Sidebar -->
+                <aside class="docs-sidebar">
+                    <div class="sidebar-section">
+                        <h3>Core Endpoints</h3>
+                        <ul>
+                            <li><a href="#process">POST /process</a></li>
+                            <li><a href="#detect">POST /detect</a></li>
+                            <li><a href="#batch">POST /batch</a></li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-section">
+                        <h3>Configuration</h3>
+                        <ul>
+                            <li><a href="#patterns">GET /patterns</a></li>
+                            <li><a href="#patterns-create">POST /patterns</a></li>
+                            <li><a href="#settings">GET /settings</a></li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-section">
+                        <h3>Compliance</h3>
+                        <ul>
+                            <li><a href="#audit-logs">GET /audit-logs</a></li>
+                            <li><a href="#reports">GET /reports</a></li>
+                            <li><a href="#export">POST /export</a></li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-section">
+                        <h3>Account</h3>
+                        <ul>
+                            <li><a href="#usage">GET /usage</a></li>
+                            <li><a href="#keys">GET /api-keys</a></li>
+                            <li><a href="#webhooks-api">POST /webhooks</a></li>
+                        </ul>
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="docs-main">
+                    <!-- Process Endpoint -->
+                    <section id="process" class="endpoint-section">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="endpoint-path">/v1/process</span>
+                        </div>
+                        <p class="endpoint-description">Process text to detect and protect PII using automatic or specified privacy methods.</p>
+
+                        <h3>Request Headers</h3>
+                        <table class="api-table">
+                            <thead>
+                                <tr>
+                                    <th>Header</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>Authorization</code></td>
+                                    <td>string</td>
+                                    <td>Yes</td>
+                                    <td>Bearer token with your API key</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Content-Type</code></td>
+                                    <td>string</td>
+                                    <td>Yes</td>
+                                    <td>Must be <code>application/json</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Request Body</h3>
+                        <div class="code-block">
+                            <pre><code>{
+    "data": "string | object | array",  // Required: Data to process
+    "method": "auto | redaction | masking | tokenization | differential_privacy | k_anonymity",
+    "format": "text | json | csv",
+    "confidence_threshold": 0.85,  // Min confidence for detection (0.0-1.0)
+    "custom_patterns": [
+        {
+            "name": "CUSTOM_ID",
+            "pattern": "regex_pattern"
+        }
+    ],
+    "return_metrics": true,
+    "preserve_context": false
+}</code></pre>
+                        </div>
+
+                        <h3>Response</h3>
+                        <div class="code-block">
+                            <pre><code>{
+    "request_id": "req_abc123def456",
+    "timestamp": "2024-01-15T10:30:00Z",
+    "processed_data": "My name is [PERSON_NAME], SSN [SSN_REDACTED]",
+    "entities_detected": [
+                                {
+            "text": "John Smith",
+            "type": "PERSON_NAME",
+            "start": 11,
+            "end": 21,
+            "confidence": 0.98,
+            "replacement": "[PERSON_NAME]"
+        },
+        {
+            "text": "123-45-6789",
+            "type": "SSN",
+            "start": 27,
+            "end": 38,
+            "confidence": 0.99,
+            "replacement": "[SSN_REDACTED]"
+        }
+    ],
+    "processing_time_ms": 12.5,
+    "method_used": "redaction",
+    "compliance": {
+        "gdpr": true,
+        "ccpa": true,
+        "hipaa": true,
+        "pci_dss": true
+    },
+    "risk_score": 0.85
+}</code></pre>
+                        </div>
+
+                        <h3>Example Request</h3>
+                        <div class="code-tabs">
+                            <button class="tab active" onclick="showApiTab('process-curl')">cURL</button>
+                            <button class="tab" onclick="showApiTab('process-python')">Python</button>
+                            <button class="tab" onclick="showApiTab('process-node')">Node.js</button>
+                        </div>
+
+                        <div class="code-block" id="process-curl">
+                            <pre><code>curl -X POST https://api.aegis-shield.ai/v1/process \
+  -H "Authorization: Bearer sk_live_YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "data": "Contact John Smith at john@example.com or 555-123-4567",
+    "method": "auto",
+    "format": "text",
+    "return_metrics": true
+  }'</code></pre>
+                        </div>
+
+                        <div class="code-block hidden" id="process-python">
+                            <pre><code>import requests
+
+response = requests.post(
+    "https://api.aegis-shield.ai/v1/process",
+    headers={
+        "Authorization": "Bearer sk_live_YOUR_API_KEY",
+        "Content-Type": "application/json"
+    },
+    json={
+        "data": "Contact John Smith at john@example.com or 555-123-4567",
+        "method": "auto",
+        "format": "text",
+        "return_metrics": True
+    }
+)
+
+result = response.json()
+print(result["processed_data"])</code></pre>
+                        </div>
+
+                        <div class="code-block hidden" id="process-node">
+                            <pre><code>const response = await fetch('https://api.aegis-shield.ai/v1/process', {
+    method: 'POST',
+    headers: {
+        'Authorization': 'Bearer sk_live_YOUR_API_KEY',
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        data: 'Contact John Smith at john@example.com or 555-123-4567',
+        method: 'auto',
+        format: 'text',
+        returnMetrics: true
+    })
+});
+
+const result = await response.json();
+console.log(result.processedData);</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Detect Endpoint -->
+                    <section id="detect" class="endpoint-section">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="endpoint-path">/v1/detect</span>
+                        </div>
+                        <p class="endpoint-description">Detect PII without modifying the original data. Useful for analysis and compliance reporting.</p>
+
+                        <h3>Request Body</h3>
+                        <div class="code-block">
+                            <pre><code>{
+    "data": "string | object | array",
+    "confidence_threshold": 0.85,
+    "custom_patterns": [],
+    "include_positions": true
+}</code></pre>
+                        </div>
+
+                        <h3>Response</h3>
+                        <div class="code-block">
+                            <pre><code>{
+    "request_id": "req_xyz789",
+    "entities": [
+        {
+            "text": "john@example.com",
+            "type": "EMAIL",
+            "confidence": 0.99,
+            "start": 22,
+            "end": 38
+        }
+    ],
+    "summary": {
+        "total_entities": 3,
+        "by_type": {
+            "EMAIL": 1,
+            "PHONE": 1,
+            "PERSON_NAME": 1
+        },
+        "risk_score": 0.75
+    }
+}</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Batch Endpoint -->
+                    <section id="batch" class="endpoint-section">
+                        <div class="endpoint-header">
+                            <span class="method post">POST</span>
+                            <span class="endpoint-path">/v1/batch</span>
+                        </div>
+                        <p class="endpoint-description">Process multiple documents in a single request for improved performance.</p>
+
+                        <h3>Request Body</h3>
+                        <div class="code-block">
+                            <pre><code>{
+    "documents": [
+        {
+            "id": "doc_1",
+            "data": "First document text..."
+        },
+        {
+            "id": "doc_2",
+            "data": "Second document text..."
+        }
+    ],
+    "method": "auto",
+    "parallel": true
+}</code></pre>
+                        </div>
+
+                        <h3>Response</h3>
+                        <div class="code-block">
+                            <pre><code>{
+    "batch_id": "batch_abc123",
+    "results": [
+        {
+            "document_id": "doc_1",
+            "processed_data": "...",
+            "entities_detected": 5
+        },
+        {
+            "document_id": "doc_2",
+            "processed_data": "...",
+            "entities_detected": 3
+        }
+    ],
+    "total_processing_time_ms": 45.2
+}</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Audit Logs -->
+                    <section id="audit-logs" class="endpoint-section">
+                        <div class="endpoint-header">
+                            <span class="method get">GET</span>
+                            <span class="endpoint-path">/v1/audit-logs</span>
+                        </div>
+                        <p class="endpoint-description">Retrieve audit logs for compliance and security monitoring.</p>
+
+                        <h3>Query Parameters</h3>
+                        <table class="api-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>start_date</code></td>
+                                    <td>ISO 8601</td>
+                                    <td>No</td>
+                                    <td>Start of time range</td>
+                                </tr>
+                                <tr>
+                                    <td><code>end_date</code></td>
+                                    <td>ISO 8601</td>
+                                    <td>No</td>
+                                    <td>End of time range</td>
+                                </tr>
+                                <tr>
+                                    <td><code>limit</code></td>
+                                    <td>integer</td>
+                                    <td>No</td>
+                                    <td>Max results (default: 100)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>offset</code></td>
+                                    <td>integer</td>
+                                    <td>No</td>
+                                    <td>Pagination offset</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Response</h3>
+                        <div class="code-block">
+                            <pre><code>{
+    "logs": [
+        {
+            "timestamp": "2024-01-15T10:30:00Z",
+            "request_id": "req_abc123",
+            "action": "process",
+            "entities_detected": 5,
+            "method_used": "redaction",
+            "user_agent": "Python/3.9 aegis-sdk/1.0",
+            "ip_address": "192.168.1.1"
+        }
+    ],
+    "pagination": {
+        "total": 1523,
+        "limit": 100,
+        "offset": 0
+    }
+}</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Rate Limits -->
+                    <section class="endpoint-section">
+                        <h2>Rate Limits</h2>
+                        <p>API rate limits vary by plan:</p>
+
+                        <table class="api-table">
+                            <thead>
+                                <tr>
+                                    <th>Plan</th>
+                                    <th>Requests/Second</th>
+                                    <th>Requests/Month</th>
+                                    <th>Burst Limit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Starter</td>
+                                    <td>100</td>
+                                    <td>10M</td>
+                                    <td>500</td>
+                                </tr>
+                                <tr>
+                                    <td>Growth</td>
+                                    <td>1,000</td>
+                                    <td>100M</td>
+                                    <td>5,000</td>
+                                </tr>
+                                <tr>
+                                    <td>Enterprise</td>
+                                    <td>10,000</td>
+                                    <td>Unlimited</td>
+                                    <td>50,000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Rate Limit Headers</h3>
+                        <p>Every response includes rate limit information:</p>
+                        <div class="code-block">
+                            <pre><code>X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 998
+X-RateLimit-Reset: 1642248000</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Error Codes -->
+                    <section class="endpoint-section">
+                        <h2>Error Codes</h2>
+                        <p>Standard HTTP status codes and custom error responses:</p>
+
+                        <table class="api-table">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Error Code</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>400</td>
+                                    <td><code>invalid_request</code></td>
+                                    <td>Malformed request or missing parameters</td>
+                                </tr>
+                                <tr>
+                                    <td>401</td>
+                                    <td><code>unauthorized</code></td>
+                                    <td>Invalid or missing API key</td>
+                                </tr>
+                                <tr>
+                                    <td>403</td>
+                                    <td><code>forbidden</code></td>
+                                    <td>API key lacks required permissions</td>
+                                </tr>
+                                <tr>
+                                    <td>429</td>
+                                    <td><code>rate_limit_exceeded</code></td>
+                                    <td>Too many requests</td>
+                                </tr>
+                                <tr>
+                                    <td>500</td>
+                                    <td><code>internal_error</code></td>
+                                    <td>Server error, please retry</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Error Response Format</h3>
+                        <div class="code-block">
+                            <pre><code>{
+    "error": {
+        "code": "invalid_request",
+        "message": "Missing required parameter: data",
+        "details": {
+            "parameter": "data",
+            "type": "missing"
+        }
+    },
+    "request_id": "req_error123"
+}</code></pre>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <img src="aegis-icon.svg" alt="Aegis" class="shield-icon">
+                        <span class="logo-text">AEGIS</span>
+                    </div>
+                    <p class="tagline">Privacy API for Enterprise AI</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="features.html">Features</a>
+                        <a href="pricing.html">Pricing</a>
+                        <a href="index.html#demo">Demo</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Developers</h4>
+                        <a href="documentation.html">Documentation</a>
+                        <a href="api-reference.html">API Reference</a>
+                        <a href="sdks.html">SDK Downloads</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="about.html">About</a>
+                        <a href="security.html">Security</a>
+                        <a href="contact.html">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Aegis Shield, Inc. All rights reserved. Patent Pending.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function showApiTab(tabId) {
+            // Hide all code blocks
+            document.querySelectorAll('.code-block').forEach(block => {
+                if (block.id && block.id.startsWith('process-')) {
+                    block.classList.add('hidden');
+                }
+            });
+            // Show selected
+            document.getElementById(tabId).classList.remove('hidden');
+
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

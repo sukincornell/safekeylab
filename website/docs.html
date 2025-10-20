@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Aegis Privacy Shield</title>
+    <meta name="description" content="Get started with Aegis API in 60 seconds. Complete documentation for PII protection in AI applications.">
+    <link rel="icon" type="image/svg+xml" href="aegis-icon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        .docs-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 20px 60px;
+        }
+        .docs-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+        .docs-nav h3 {
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        .docs-nav a {
+            display: block;
+            color: #999;
+            text-decoration: none;
+            padding: 8px 0;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .docs-nav a:hover {
+            color: #fff;
+        }
+        .docs-nav a.active {
+            color: #00ff88;
+            font-weight: 600;
+        }
+        .docs-content h1 {
+            font-size: 48px;
+            margin-bottom: 24px;
+            font-weight: 700;
+        }
+        .docs-content h2 {
+            font-size: 32px;
+            margin-top: 48px;
+            margin-bottom: 24px;
+            font-weight: 600;
+            border-top: 1px solid #333;
+            padding-top: 48px;
+        }
+        .docs-content h3 {
+            font-size: 24px;
+            margin-top: 32px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        .docs-content p {
+            line-height: 1.8;
+            color: #ccc;
+            margin-bottom: 24px;
+        }
+        .docs-content pre {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 24px;
+            overflow-x: auto;
+            margin: 24px 0;
+        }
+        .docs-content code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #00ff88;
+        }
+        .inline-code {
+            background: #222;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #00ff88;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+        .alert {
+            background: rgba(255, 51, 51, 0.1);
+            border: 1px solid #ff3333;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 24px 0;
+        }
+        .alert-success {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: #00ff88;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #333;
+            border: 1px solid #555;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        pre:hover .copy-btn {
+            opacity: 1;
+        }
+        .copy-btn:hover {
+            background: #444;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <img src="aegis-icon.svg" alt="Aegis Shield" class="shield-icon">
+                    <span class="logo-text">AEGIS</span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="index.html#features">Features</a>
+                    <a href="docs.html" class="active">Docs</a>
+                    <a href="index.html#pricing">Pricing</a>
+                    <a href="index.html#demo" class="cta-button">Try Demo</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="docs-container">
+        <!-- Sidebar -->
+        <aside class="docs-sidebar">
+            <nav class="docs-nav">
+                <h3>Getting Started</h3>
+                <a href="#quickstart" class="active">Quick Start (60 seconds)</a>
+                <a href="#installation">Installation</a>
+                <a href="#authentication">Authentication</a>
+                <a href="#first-request">Your First Request</a>
+
+                <h3 style="margin-top: 32px;">Core Concepts</h3>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#detection">PII Detection</a>
+                <a href="#methods">Privacy Methods</a>
+                <a href="#compliance">Compliance</a>
+
+                <h3 style="margin-top: 32px;">Integration</h3>
+                <a href="#openai">OpenAI</a>
+                <a href="#claude">Claude/Anthropic</a>
+                <a href="#langchain">Langchain</a>
+                <a href="#streaming">Streaming</a>
+
+                <h3 style="margin-top: 32px;">API Reference</h3>
+                <a href="#endpoints">Endpoints</a>
+                <a href="#parameters">Parameters</a>
+                <a href="#responses">Responses</a>
+                <a href="#errors">Error Handling</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="docs-content">
+            <h1>Documentation</h1>
+            <p>Complete guide to protecting your AI application from PII leaks</p>
+
+            <div class="alert alert-success">
+                <strong>⚡ Quick Integration:</strong> Most developers integrate Aegis in under 60 seconds. Just one line of code between your app and the AI provider.
+            </div>
+
+            <h2 id="quickstart">Quick Start (60 Seconds)</h2>
+            <p>The fastest way to protect your AI application from leaking PII:</p>
+
+            <h3>Step 1: Get SDK Access</h3>
+            <div style="position: relative;">
+                <pre><code># SDK available through private registry
+# Contact sales@aegis.ai for access
+
+# After approval, you'll receive:
+# - Private PyPI repository URL
+# - npm registry credentials
+# - API keys for authentication</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h3>Step 2: Get Your API Key</h3>
+            <p>Contact sales at <a href="https://aegis.ai" style="color: #00ff88;">aegis.ai</a> to get your API key. Test environment available for POC.</p>
+
+            <h3>Step 3: Add One Line of Code</h3>
+            <div style="position: relative;">
+                <pre><code># BEFORE - Dangerous (sends PII to OpenAI)
+import openai
+
+user_input = "My SSN is 123-45-6789"
+response = openai.ChatCompletion.create(
+    model="gpt-4",
+    messages=[{"role": "user", "content": user_input}]
+)
+
+# AFTER - Protected (PII removed before OpenAI)
+import openai
+from aegis import protect
+
+user_input = "My SSN is 123-45-6789"
+safe_input = protect(user_input)  # <-- One line added
+response = openai.ChatCompletion.create(
+    model="gpt-4",
+    messages=[{"role": "user", "content": safe_input}]
+)</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <div class="alert alert-success">
+                <strong>✅ That's it!</strong> Your application is now HIPAA, GDPR, and PCI compliant. SSNs, credit cards, and all PII are automatically removed before reaching OpenAI.
+            </div>
+
+            <h2 id="installation">Installation</h2>
+
+            <h3>Python SDK</h3>
+            <div style="position: relative;">
+                <pre><code># Available via private PyPI repository
+# Contact sales for access credentials
+
+pip install aegis-privacy \
+  --index-url https://pypi.aegis.ai/simple \
+  --extra-index-url https://pypi.org/simple</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h3>Node.js/TypeScript</h3>
+            <div style="position: relative;">
+                <pre><code># Configure private npm registry
+npm config set @aegis:registry https://npm.aegis.ai
+
+# Install with authentication token
+npm install @aegis/privacy
+
+// TypeScript types included</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h3>REST API</h3>
+            <p>Direct API access available for enterprise customers:</p>
+            <div style="position: relative;">
+                <pre><code># API endpoint provided after onboarding
+# Example usage:
+curl -X POST https://[your-instance].aegis.ai/v3/protect \
+  -H "X-API-Key: your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "John Smith SSN 123-45-6789",
+    "mode": "strict"
+  }'</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h2 id="authentication">Authentication</h2>
+
+            <h3>API Key Authentication</h3>
+            <p>Include your API key in all requests:</p>
+            <div style="position: relative;">
+                <pre><code># Python
+from aegis import AegisClient
+
+client = AegisClient(api_key="sk_live_YOUR_API_KEY")
+
+# Environment variable (recommended)
+# export AEGIS_API_KEY=sk_live_YOUR_API_KEY
+client = AegisClient()  # Automatically uses env var</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h3>Enterprise Authentication</h3>
+            <p>For enterprise customers with enhanced security requirements:</p>
+            <div style="position: relative;">
+                <pre><code># OAuth 2.0 flow
+client = AegisClient(
+    client_id="your_client_id",
+    client_secret="your_client_secret",
+    auth_method="oauth2"
+)
+
+# mTLS (mutual TLS)
+client = AegisClient(
+    cert_path="/path/to/client.crt",
+    key_path="/path/to/client.key",
+    auth_method="mtls"
+)</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h2 id="first-request">Your First Request</h2>
+
+            <h3>Basic Protection</h3>
+            <div style="position: relative;">
+                <pre><code>from aegis import protect
+
+# Input with multiple PII types
+text = """
+Patient: John Smith
+SSN: 123-45-6789
+Diagnosis: Depression
+Credit Card: 4532-1234-5678-9012
+"""
+
+# Protect the text
+protected = protect(text)
+
+print(protected)
+# Output:
+# Patient: [NAME]
+# SSN: [SSN_REDACTED]
+# Diagnosis: [MEDICAL_CONDITION]
+# Credit Card: [CREDIT_CARD_REDACTED]</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h3>With Options</h3>
+            <div style="position: relative;">
+                <pre><code>protected = protect(text, {
+    "mode": "strict",           # strict | balanced | minimal
+    "method": "redaction",      # redaction | masking | tokenization
+    "preserve_format": True,     # Keep text structure
+    "entity_types": ["ssn", "credit_card"],  # Specific types only
+    "custom_patterns": [{
+        "name": "employee_id",
+        "pattern": r"EMP\d{6}"
+    }]
+})</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h2 id="how-it-works">How It Works</h2>
+
+            <p>Aegis uses a multi-layer approach to achieve 100% PII detection accuracy:</p>
+
+            <h3>1. Pattern Recognition</h3>
+            <p>Regex patterns for structured data like SSNs, credit cards, phone numbers</p>
+
+            <h3>2. Machine Learning</h3>
+            <p>Transformer models (DeBERTa) for contextual understanding of names, addresses</p>
+
+            <h3>3. Dictionary Matching</h3>
+            <p>Medical terms, financial terminology, legal phrases</p>
+
+            <h3>4. Context Analysis</h3>
+            <p>Understanding surrounding text to identify sensitive information</p>
+
+            <div class="alert">
+                <strong>⚠️ Important:</strong> Aegis processes data in-memory only. We never store, log, or train on your data.
+            </div>
+
+            <h2 id="detection">PII Detection Types</h2>
+
+            <h3>Supported PII Types (40+)</h3>
+            <div style="position: relative;">
+                <pre><code>Personal Identifiers:
+- Names (first, last, full)
+- Social Security Numbers (SSN)
+- Driver's License Numbers
+- Passport Numbers
+- National ID Numbers
+
+Financial Data:
+- Credit Card Numbers (with Luhn validation)
+- Bank Account Numbers
+- Routing Numbers
+- IBAN Numbers
+- SWIFT Codes
+
+Contact Information:
+- Email Addresses
+- Phone Numbers (international)
+- Physical Addresses
+- IP Addresses
+
+Medical (HIPAA):
+- Medical Record Numbers (MRN)
+- Health Plan IDs
+- Diagnosis Information
+- Medications
+- Biometric Data
+
+Credentials:
+- Passwords
+- API Keys
+- OAuth Tokens
+- JWT Tokens
+- SSH Keys</code></pre>
+            </div>
+
+            <h2 id="openai">OpenAI Integration</h2>
+
+            <h3>ChatGPT / GPT-4</h3>
+            <div style="position: relative;">
+                <pre><code>import openai
+from aegis import protect_openai
+
+# Automatic protection for all OpenAI calls
+openai = protect_openai(openai)
+
+# Now all calls are automatically protected
+response = openai.ChatCompletion.create(
+    model="gpt-4",
+    messages=[{"role": "user", "content": "My SSN is 123-45-6789"}]
+)
+# OpenAI receives: "My SSN is [REDACTED]"</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h3>Embeddings</h3>
+            <div style="position: relative;">
+                <pre><code># Protect embeddings to prevent PII in vector databases
+embedding = openai.Embedding.create(
+    input=protect("Customer John Smith, card 4532-1234-5678-9012"),
+    model="text-embedding-ada-002"
+)</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h2 id="claude">Claude/Anthropic Integration</h2>
+
+            <div style="position: relative;">
+                <pre><code>from anthropic import Anthropic
+from aegis import protect_anthropic
+
+# Wrap Anthropic client
+client = protect_anthropic(Anthropic())
+
+# Protected automatically
+message = client.messages.create(
+    model="claude-3-opus",
+    messages=[{
+        "role": "user",
+        "content": "Process payment for SSN 123-45-6789"
+    }]
+)</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h2 id="streaming">Streaming Support</h2>
+
+            <h3>Real-time Protection</h3>
+            <div style="position: relative;">
+                <pre><code># Protect streaming responses
+import openai
+from aegis import protect_stream
+
+stream = openai.ChatCompletion.create(
+    model="gpt-4",
+    messages=[{"role": "user", "content": user_input}],
+    stream=True
+)
+
+# Protect each chunk in real-time
+for chunk in protect_stream(stream):
+    print(chunk.choices[0].delta.content, end="")</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h2 id="endpoints">API Endpoints</h2>
+
+            <h3>POST /v3/protect</h3>
+            <p>Main endpoint for PII protection</p>
+            <div style="position: relative;">
+                <pre><code>{
+  "text": "string",           // Text to protect
+  "mode": "strict",          // strict | balanced | minimal
+  "method": "redaction",     // redaction | masking | tokenization
+  "preserve_format": true,   // Maintain text structure
+  "entity_types": ["ssn"],   // Optional: specific types
+  "webhook_url": "string"    // Optional: async callback
+}</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h3>POST /v2/detect</h3>
+            <p>Detection only (no modification)</p>
+            <div style="position: relative;">
+                <pre><code>{
+  "text": "string",
+  "entity_types": ["all"]    // Types to detect
+}
+
+// Response
+{
+  "entities": [
+    {
+      "type": "ssn",
+      "value": "123-45-6789",
+      "start": 10,
+      "end": 21,
+      "confidence": 0.99
+    }
+  ]
+}</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <h2 id="errors">Error Handling</h2>
+
+            <div style="position: relative;">
+                <pre><code>from aegis import AegisClient, AegisError
+
+try:
+    protected = client.protect(text)
+except AegisError as e:
+    if e.code == "RATE_LIMIT":
+        # Wait and retry
+        time.sleep(1)
+        protected = client.protect(text)
+    elif e.code == "INVALID_API_KEY":
+        # Check your API key
+        print("Invalid API key")
+    else:
+        # Log and handle
+        logger.error(f"Aegis error: {e}")</code></pre>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+
+            <div class="alert alert-success" style="margin-top: 60px;">
+                <strong>Need Help?</strong> Contact support@aegis.ai or join our Slack community for instant help.
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function copyCode(button) {
+            const pre = button.parentElement.querySelector('pre');
+            const code = pre.querySelector('code').textContent;
+            navigator.clipboard.writeText(code);
+            button.textContent = 'Copied!';
+            setTimeout(() => {
+                button.textContent = 'Copy';
+            }, 2000);
+        }
+
+        // Highlight active section in sidebar
+        document.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('h2[id], h3[id]');
+            const links = document.querySelectorAll('.docs-nav a');
+
+            let current = '';
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 100) {
+                    current = section.id;
+                }
+            });
+
+            links.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

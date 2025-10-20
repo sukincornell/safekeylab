@@ -1,0 +1,357 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aegis-api
+  namespace: aegis-production
+  labels:
+    app: aegis-api
+    version: v2.0.0
+    tier: backend
+    compliance: soc2
+spec:
+  replicas: 10  # Fortune 500 scale
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0  # Zero downtime
+  selector:
+    matchLabels:
+      app: aegis-api
+  template:
+    metadata:
+      labels:
+        app: aegis-api
+        version: v2.0.0
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: aegis-api
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+
+      # Anti-affinity for HA
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - aegis-api
+            topologyKey: kubernetes.io/hostname
+
+        # Prefer spreading across zones
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - aegis-api
+              topologyKey: topology.kubernetes.io/zone
+
+      # Init container for ML model download
+      initContainers:
+      - name: model-downloader
+        image: aegis/model-downloader:latest
+        command: ["/bin/sh"]
+        args: ["-c", "aws s3 sync s3://aegis-models/ /models/"]
+        volumeMounts:
+        - name: model-cache
+          mountPath: /models
+        env:
+        - name: AWS_REGION
+          value: us-east-1
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+
+      containers:
+      - name: aegis-api
+        image: aegis/api-enterprise:v2.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+          name: http
+        - containerPort: 8443
+          protocol: TCP
+          name: https
+        - containerPort: 9090
+          protocol: TCP
+          name: metrics
+
+        # Enterprise environment variables
+        env:
+        - name: NODE_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: ENABLE_DOCS
+          value: "false"  # Disable in production
+        - name: LOG_LEVEL
+          value: "INFO"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: aegis-database
+              key: url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: aegis-redis
+              key: url
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aegis-secrets
+              key: secret-key
+        - name: ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aegis-secrets
+              key: encryption-key
+        - name: AWS_REGION
+          value: us-east-1
+        - name: STRIPE_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aegis-stripe
+              key: secret-key
+        - name: SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              name: aegis-monitoring
+              key: sentry-dsn
+        - name: ML_MODEL_PATH
+          value: "/models"
+        - name: COMPLIANCE_MODE
+          value: "ALL"
+        - name: DATA_RESIDENCY_REGIONS
+          value: "US,EU,UK,CA,AU,JP,SG"
+
+        # Health checks
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 2
+
+        startupProbe:
+          httpGet:
+            path: /health
+            port: 8000
+            scheme: HTTP
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 30
+
+        # Enterprise resources
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "2000m"
+            ephemeral-storage: "10Gi"
+          limits:
+            memory: "8Gi"
+            cpu: "4000m"
+            ephemeral-storage: "20Gi"
+
+        # Volume mounts
+        volumeMounts:
+        - name: model-cache
+          mountPath: /models
+          readOnly: true
+        - name: tls-certs
+          mountPath: /etc/tls
+          readOnly: true
+        - name: audit-logs
+          mountPath: /var/log/aegis
+        - name: tmp
+          mountPath: /tmp
+
+        # Security context
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - NET_BIND_SERVICE
+
+      # Sidecar for log shipping
+      - name: log-shipper
+        image: fluent/fluent-bit:latest
+        volumeMounts:
+        - name: audit-logs
+          mountPath: /var/log/aegis
+          readOnly: true
+        - name: fluent-bit-config
+          mountPath: /fluent-bit/etc/
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+
+      # Sidecar for metrics
+      - name: metrics-proxy
+        image: prom/node-exporter:latest
+        ports:
+        - containerPort: 9100
+          name: metrics
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "100m"
+
+      volumes:
+      - name: model-cache
+        emptyDir:
+          sizeLimit: 10Gi
+      - name: tls-certs
+        secret:
+          secretName: aegis-tls
+      - name: audit-logs
+        emptyDir:
+          sizeLimit: 5Gi
+      - name: tmp
+        emptyDir:
+          sizeLimit: 1Gi
+      - name: fluent-bit-config
+        configMap:
+          name: fluent-bit-config
+
+      # Pod disruption budget
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "aegis"
+        effect: "NoSchedule"
+
+      # Termination grace period for clean shutdown
+      terminationGracePeriodSeconds: 60
+
+---
+# Horizontal Pod Autoscaler
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: aegis-api-hpa
+  namespace: aegis-production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: aegis-api
+  minReplicas: 10
+  maxReplicas: 100  # Scale to 100 pods for peak load
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  - type: Pods
+    pods:
+      metric:
+        name: aegis_requests_per_second
+      target:
+        type: AverageValue
+        averageValue: "1000"
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 10
+        periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+      - type: Pods
+        value: 5
+        periodSeconds: 15
+      selectPolicy: Max
+
+---
+# Pod Disruption Budget
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: aegis-api-pdb
+  namespace: aegis-production
+spec:
+  minAvailable: 80%
+  selector:
+    matchLabels:
+      app: aegis-api
+
+---
+# Service Account
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: aegis-api
+  namespace: aegis-production
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/aegis-api-role

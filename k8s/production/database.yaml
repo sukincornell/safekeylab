@@ -1,0 +1,256 @@
+# PostgreSQL High Availability with Patroni
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: aegis-postgres-cluster
+  namespace: aegis-production
+spec:
+  instances: 3  # 1 primary + 2 replicas
+
+  postgresql:
+    parameters:
+      max_connections: "1000"
+      shared_buffers: "4GB"
+      effective_cache_size: "12GB"
+      maintenance_work_mem: "1GB"
+      checkpoint_completion_target: "0.9"
+      wal_buffers: "16MB"
+      default_statistics_target: "100"
+      random_page_cost: "1.1"
+      effective_io_concurrency: "200"
+      work_mem: "16MB"
+      min_wal_size: "1GB"
+      max_wal_size: "4GB"
+      max_worker_processes: "8"
+      max_parallel_workers_per_gather: "4"
+      max_parallel_workers: "8"
+      max_parallel_maintenance_workers: "4"
+      # Encryption at rest
+      ssl: "on"
+      ssl_cert_file: "/etc/postgresql/tls/tls.crt"
+      ssl_key_file: "/etc/postgresql/tls/tls.key"
+      ssl_ca_file: "/etc/postgresql/tls/ca.crt"
+
+  bootstrap:
+    initdb:
+      database: aegis
+      owner: aegis
+      secret:
+        name: aegis-postgres-credentials
+      dataChecksums: true
+      encoding: UTF8
+      localeCollate: en_US.UTF-8
+      localeCType: en_US.UTF-8
+
+  persistence:
+    storageClass: fast-ssd
+    size: 1Ti
+    volumeMode: Filesystem
+    accessModes:
+    - ReadWriteOnce
+
+  monitoring:
+    enabled: true
+    customQueriesConfigMap:
+      name: aegis-postgres-metrics
+      key: queries.yaml
+
+  backup:
+    enabled: true
+    retentionPolicy: "30d"
+    barmanObjectStore:
+      destinationPath: "s3://aegis-backups/postgres"
+      s3Credentials:
+        accessKeyId:
+          name: aegis-s3-credentials
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: aegis-s3-credentials
+          key: SECRET_ACCESS_KEY
+      wal:
+        retention: "7d"
+        maxParallel: 8
+      data:
+        compression: gzip
+        encryption: AES256
+        immediateCheckpoint: true
+        jobs: 4
+
+  resources:
+    requests:
+      memory: "16Gi"
+      cpu: "4000m"
+    limits:
+      memory: "32Gi"
+      cpu: "8000m"
+
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: postgresql
+            operator: In
+            values:
+            - aegis-postgres-cluster
+        topologyKey: kubernetes.io/hostname
+
+---
+# Redis Cluster for High Availability
+apiVersion: redis.redis.opstreelabs.in/v1beta1
+kind: RedisCluster
+metadata:
+  name: aegis-redis-cluster
+  namespace: aegis-production
+spec:
+  clusterSize: 6  # 3 masters + 3 replicas
+  redisLeader:
+    replicas: 1
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - redis-cluster
+          topologyKey: kubernetes.io/hostname
+
+    redisConfig:
+      additionalRedisConfig: |
+        maxmemory 8gb
+        maxmemory-policy allkeys-lru
+        save 900 1
+        save 300 10
+        save 60 10000
+        appendonly yes
+        appendfsync everysec
+        requirepass "REDIS_PASSWORD_PLACEHOLDER"
+        masterauth "REDIS_PASSWORD_PLACEHOLDER"
+
+        # Security
+        protected-mode yes
+        port 0
+        tls-port 6379
+        tls-cert-file /tls/tls.crt
+        tls-key-file /tls/tls.key
+        tls-ca-cert-file /tls/ca.crt
+        tls-dh-params-file /tls/redis.dh
+        tls-protocols "TLSv1.2 TLSv1.3"
+        tls-prefer-server-ciphers yes
+        tls-session-caching no
+
+    resources:
+      requests:
+        memory: "8Gi"
+        cpu: "2000m"
+      limits:
+        memory: "16Gi"
+        cpu: "4000m"
+
+  redisFollower:
+    replicas: 1
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - redis-cluster
+          topologyKey: kubernetes.io/hostname
+
+    resources:
+      requests:
+        memory: "8Gi"
+        cpu: "1000m"
+      limits:
+        memory: "16Gi"
+        cpu: "2000m"
+
+  storage:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: fast-ssd
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 100Gi
+
+  redisExporter:
+    enabled: true
+    image: oliver006/redis_exporter:latest
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "100m"
+      limits:
+        memory: "512Mi"
+        cpu: "200m"
+
+---
+# Secrets for database
+apiVersion: v1
+kind: Secret
+metadata:
+  name: aegis-postgres-credentials
+  namespace: aegis-production
+type: Opaque
+stringData:
+  username: aegis
+  password: "CHANGE_THIS_STRONG_PASSWORD_123!@#"
+
+---
+# Secrets for Redis
+apiVersion: v1
+kind: Secret
+metadata:
+  name: aegis-redis-credentials
+  namespace: aegis-production
+type: Opaque
+stringData:
+  password: "CHANGE_THIS_STRONG_REDIS_PASSWORD_456$%^"
+
+---
+# ConfigMap for custom PostgreSQL metrics
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aegis-postgres-metrics
+  namespace: aegis-production
+data:
+  queries.yaml: |
+    queries:
+    - name: aegis_active_connections
+      query: "SELECT count(*) FROM pg_stat_activity WHERE state = 'active'"
+      metrics:
+      - count:
+          usage: "GAUGE"
+          description: "Number of active connections"
+
+    - name: aegis_table_sizes
+      query: |
+        SELECT schemaname, tablename, pg_total_relation_size(schemaname||'.'||tablename) AS size_bytes
+        FROM pg_tables
+        WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
+      metrics:
+      - schemaname:
+          usage: "LABEL"
+      - tablename:
+          usage: "LABEL"
+      - size_bytes:
+          usage: "GAUGE"
+
+    - name: aegis_replication_lag
+      query: |
+        SELECT client_addr,
+               extract(epoch from (now() - pg_last_xact_replay_timestamp())) AS lag_seconds
+        FROM pg_stat_replication
+      metrics:
+      - client_addr:
+          usage: "LABEL"
+      - lag_seconds:
+          usage: "GAUGE"

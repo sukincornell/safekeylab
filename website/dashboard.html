@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Aegis Privacy Shield</title>
+    <meta name="description" content="Monitor your PII protection metrics, API usage, and compliance status">
+    <link rel="icon" type="image/svg+xml" href="aegis-icon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            min-height: 100vh;
+            background: #fff;
+        }
+        .dashboard-sidebar {
+            background: #f8f8f8;
+            border-right: 1px solid #e0e0e0;
+            padding: 24px;
+        }
+        .dashboard-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .dashboard-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .dashboard-nav a {
+            color: #777;
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .dashboard-nav a:hover {
+            color: #000;
+            background: rgba(0, 0, 0, 0.05);
+        }
+        .dashboard-nav a.active {
+            color: #000;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .dashboard-main {
+            padding: 32px 48px;
+            overflow-y: auto;
+        }
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .dashboard-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #000;
+        }
+        .date-range {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .date-select {
+            background: #fff;
+            border: 1px solid #d0d0d0;
+            color: #000;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+        .stat-card {
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 24px;
+        }
+        .stat-label {
+            color: #777;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 8px;
+        }
+        .stat-change {
+            font-size: 14px;
+            color: #000;
+        }
+        .stat-change.negative {
+            color: #ff3333;
+        }
+        .chart-container {
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+        }
+        .chart-placeholder {
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 8px;
+        }
+        .data-table {
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            text-align: left;
+            padding: 16px 24px;
+            background: #050505;
+            color: #777;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        td {
+            padding: 16px 24px;
+            border-top: 1px solid #1a1a1a;
+            color: #ccc;
+            font-size: 14px;
+        }
+        tr:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge.success {
+            background: rgba(0, 0, 0, 0.1);
+            color: #000;
+        }
+        .badge.warning {
+            background: rgba(255, 170, 0, 0.2);
+            color: #ffaa00;
+        }
+        .badge.danger {
+            background: rgba(255, 51, 51, 0.2);
+            color: #ff3333;
+        }
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #000, #333);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: 600;
+        }
+        .user-info {
+            text-align: right;
+        }
+        .user-name {
+            color: #000;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .user-role {
+            color: #777;
+            font-size: 12px;
+        }
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 200px;
+            gap: 12px;
+            padding: 20px 0;
+        }
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, #000, #333);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            min-height: 10px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .chart-bar:hover {
+            opacity: 1;
+        }
+        .chart-bar-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: #777;
+        }
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .quick-action {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            color: #000;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .quick-action:hover {
+            background: rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body style="background: #fff; color: #000;">
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="dashboard-logo">
+                <img src="aegis-icon.svg" alt="Aegis" style="width: 32px; height: 32px;">
+                <span style="color: #000; font-size: 20px; font-weight: 700;">AEGIS</span>
+            </div>
+
+            <nav class="dashboard-nav">
+                <a href="#" class="active">
+                    <span>📊</span> Overview
+                </a>
+                <a href="#">
+                    <span>📈</span> Analytics
+                </a>
+                <a href="#">
+                    <span>🔍</span> PII Detection
+                </a>
+                <a href="#">
+                    <span>🔑</span> API Keys
+                </a>
+                <a href="#">
+                    <span>📋</span> Audit Logs
+                </a>
+                <a href="#">
+                    <span>⚡</span> Performance
+                </a>
+                <a href="#">
+                    <span>⚠️</span> Alerts
+                </a>
+                <a href="#">
+                    <span>📄</span> Reports
+                </a>
+                <a href="#">
+                    <span>⚙️</span> Settings
+                </a>
+                <a href="#">
+                    <span>📚</span> Documentation
+                </a>
+            </nav>
+
+            <div style="margin-top: auto; padding-top: 40px; border-top: 1px solid #222;">
+                <a href="index.html" style="color: #666; text-decoration: none; font-size: 14px;">
+                    ← Back to Website
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Header -->
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Dashboard Overview</h1>
+                <div style="display: flex; gap: 24px; align-items: center;">
+                    <div class="date-range">
+                        <select class="date-select">
+                            <option>Last 7 days</option>
+                            <option>Last 30 days</option>
+                            <option>Last 90 days</option>
+                            <option>Custom range</option>
+                        </select>
+                    </div>
+                    <div class="user-menu">
+                        <div class="user-info">
+                            <div class="user-name">John Smith</div>
+                            <div class="user-role">Administrator</div>
+                        </div>
+                        <div class="user-avatar">JS</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <a href="#" class="quick-action">🚀 Test API</a>
+                <a href="#" class="quick-action">📖 View Docs</a>
+                <a href="#" class="quick-action">🔑 Generate API Key</a>
+                <a href="#" class="quick-action">📊 Export Report</a>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <span>🛡️</span> PII Items Protected
+                    </div>
+                    <div class="stat-value">2,847,391</div>
+                    <div class="stat-change">↑ 12.5% from last period</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <span>📊</span> API Requests
+                    </div>
+                    <div class="stat-value">982,451</div>
+                    <div class="stat-change">↑ 23.8% from last period</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <span>⚡</span> Avg Response Time
+                    </div>
+                    <div class="stat-value">1.8ms</div>
+                    <div class="stat-change">↓ 0.3ms improvement</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <span>✅</span> Detection Accuracy
+                    </div>
+                    <div class="stat-value">99.97%</div>
+                    <div class="stat-change">Maintained</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <span>💰</span> Compliance Saved
+                    </div>
+                    <div class="stat-value">$4.2M</div>
+                    <div class="stat-change">Estimated fine prevention</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <span>🌍</span> Active Regions
+                    </div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-change">Global coverage</div>
+                </div>
+            </div>
+
+            <!-- Chart: API Usage -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">API Request Volume (Last 7 Days)</h3>
+                    <select class="date-select" style="background: #fff; border: 1px solid #d0d0d0; color: #000; font-size: 12px; padding: 6px 12px;">
+                        <option>Hourly</option>
+                        <option>Daily</option>
+                        <option>Weekly</option>
+                    </select>
+                </div>
+                <div class="chart-bars">
+                    <div class="chart-bar" style="height: 60%">
+                        <span class="chart-bar-label">Mon</span>
+                    </div>
+                    <div class="chart-bar" style="height: 75%">
+                        <span class="chart-bar-label">Tue</span>
+                    </div>
+                    <div class="chart-bar" style="height: 85%">
+                        <span class="chart-bar-label">Wed</span>
+                    </div>
+                    <div class="chart-bar" style="height: 70%">
+                        <span class="chart-bar-label">Thu</span>
+                    </div>
+                    <div class="chart-bar" style="height: 90%">
+                        <span class="chart-bar-label">Fri</span>
+                    </div>
+                    <div class="chart-bar" style="height: 45%">
+                        <span class="chart-bar-label">Sat</span>
+                    </div>
+                    <div class="chart-bar" style="height: 40%">
+                        <span class="chart-bar-label">Sun</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PII Detection Table -->
+            <div class="data-table">
+                <div class="table-header">
+                    <h3 class="table-title">Recent PII Detections</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Type</th>
+                            <th>Count</th>
+                            <th>Action</th>
+                            <th>API Endpoint</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2024-10-20 15:42:18</td>
+                            <td>SSN</td>
+                            <td>3</td>
+                            <td>Redacted</td>
+                            <td>/v3/protect</td>
+                            <td><span class="badge success">Protected</span></td>
+                        </tr>
+                        <tr>
+                            <td>2024-10-20 15:41:55</td>
+                            <td>Credit Card</td>
+                            <td>2</td>
+                            <td>Masked</td>
+                            <td>/v3/protect</td>
+                            <td><span class="badge success">Protected</span></td>
+                        </tr>
+                        <tr>
+                            <td>2024-10-20 15:41:12</td>
+                            <td>Email, Phone</td>
+                            <td>5</td>
+                            <td>Tokenized</td>
+                            <td>/v2/process</td>
+                            <td><span class="badge success">Protected</span></td>
+                        </tr>
+                        <tr>
+                            <td>2024-10-20 15:40:33</td>
+                            <td>Medical Record</td>
+                            <td>1</td>
+                            <td>Redacted</td>
+                            <td>/v3/protect</td>
+                            <td><span class="badge warning">HIPAA Alert</span></td>
+                        </tr>
+                        <tr>
+                            <td>2024-10-20 15:39:47</td>
+                            <td>API Key</td>
+                            <td>1</td>
+                            <td>Removed</td>
+                            <td>/v2/detect</td>
+                            <td><span class="badge danger">Critical</span></td>
+                        </tr>
+                        <tr>
+                            <td>2024-10-20 15:38:22</td>
+                            <td>Address</td>
+                            <td>4</td>
+                            <td>Generalized</td>
+                            <td>/v3/protect</td>
+                            <td><span class="badge success">Protected</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Compliance Summary -->
+            <div class="chart-container" style="margin-top: 32px;">
+                <div class="chart-header">
+                    <h3 class="chart-title">Compliance Status</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; padding: 24px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 8px;">✅</div>
+                        <div style="color: #000; font-weight: 600;">GDPR Compliant</div>
+                        <div style="color: #666; font-size: 12px; margin-top: 4px;">All EU data protected</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 8px;">✅</div>
+                        <div style="color: #000; font-weight: 600;">HIPAA Ready</div>
+                        <div style="color: #666; font-size: 12px; margin-top: 4px;">PHI fully secured</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 8px;">✅</div>
+                        <div style="color: #000; font-weight: 600;">PCI DSS</div>
+                        <div style="color: #666; font-size: 12px; margin-top: 4px;">Card data protected</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 8px;">✅</div>
+                        <div style="color: #000; font-weight: 600;">CCPA Aligned</div>
+                        <div style="color: #666; font-size: 12px; margin-top: 4px;">California privacy met</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple interactivity
+        document.querySelectorAll('.dashboard-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.dashboard-nav a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Simulate real-time updates
+        setInterval(() => {
+            const apiRequests = document.querySelector('.stat-value');
+            if (apiRequests && apiRequests.textContent.includes(',')) {
+                const current = parseInt(apiRequests.textContent.replace(/,/g, ''));
+                const increment = Math.floor(Math.random() * 10) + 1;
+                apiRequests.textContent = (current + increment).toLocaleString();
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

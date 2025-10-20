@@ -1,0 +1,253 @@
+{
+  "test_cases": [
+    {
+      "id": "basic_001",
+      "text": "Contact John Smith at john.smith@company.com or call 415-555-1234",
+      "entities": [
+        {"type": "name", "value": "John Smith", "start": 8, "end": 18},
+        {"type": "email", "value": "john.smith@company.com", "start": 22, "end": 44},
+        {"type": "phone", "value": "415-555-1234", "start": 53, "end": 65}
+      ],
+      "category": "basic",
+      "difficulty": "easy"
+    },
+    {
+      "id": "basic_002",
+      "text": "Patient SSN: 123-45-6789, Credit Card: 4532-1234-5678-9012",
+      "entities": [
+        {"type": "ssn", "value": "123-45-6789", "start": 13, "end": 24},
+        {"type": "credit_card", "value": "4532-1234-5678-9012", "start": 40, "end": 59}
+      ],
+      "category": "basic",
+      "difficulty": "easy"
+    },
+    {
+      "id": "medical_001",
+      "text": "Patient: Sarah Johnson, DOB: 03/15/1985, MRN: 98765432, Diagnosis: Type 2 Diabetes",
+      "entities": [
+        {"type": "name", "value": "Sarah Johnson", "start": 9, "end": 22},
+        {"type": "date_of_birth", "value": "03/15/1985", "start": 30, "end": 40},
+        {"type": "medical_record", "value": "98765432", "start": 47, "end": 55}
+      ],
+      "category": "medical",
+      "difficulty": "medium"
+    },
+    {
+      "id": "financial_001",
+      "text": "Wire transfer to account 1234567890, routing 021000021, amount $50,000",
+      "entities": [
+        {"type": "bank_account", "value": "1234567890", "start": 26, "end": 36},
+        {"type": "routing_number", "value": "021000021", "start": 46, "end": 55}
+      ],
+      "category": "financial",
+      "difficulty": "medium"
+    },
+    {
+      "id": "obfuscated_001",
+      "text": "Email me at j o h n (at) g mail dot com",
+      "entities": [],
+      "category": "obfuscated",
+      "difficulty": "hard",
+      "note": "Intentionally obfuscated - most detectors should miss"
+    },
+    {
+      "id": "multilingual_001",
+      "text": "Mi número de teléfono es +52 55 1234 5678",
+      "entities": [
+        {"type": "phone", "value": "+52 55 1234 5678", "start": 25, "end": 41}
+      ],
+      "category": "multilingual",
+      "difficulty": "medium"
+    },
+    {
+      "id": "multilingual_002",
+      "text": "我的电子邮件是 wei.zhang@example.cn 电话 +86 138 0013 8000",
+      "entities": [
+        {"type": "email", "value": "wei.zhang@example.cn", "start": 8, "end": 28},
+        {"type": "phone", "value": "+86 138 0013 8000", "start": 33, "end": 50}
+      ],
+      "category": "multilingual",
+      "difficulty": "hard"
+    },
+    {
+      "id": "adversarial_001",
+      "text": "Bank of America phone: 1-800-432-1000, Wells Fargo: 1-800-869-3557",
+      "entities": [
+        {"type": "phone", "value": "1-800-432-1000", "start": 23, "end": 37},
+        {"type": "phone", "value": "1-800-869-3557", "start": 53, "end": 67}
+      ],
+      "category": "adversarial",
+      "difficulty": "hard",
+      "note": "Company names should NOT be detected as personal names"
+    },
+    {
+      "id": "api_keys_001",
+      "text": "AWS Key: AKIAIOSFODNN7EXAMPLE, API Token: sk-live-abcdef1234567890abcdef1234567890",
+      "entities": [
+        {"type": "aws_key", "value": "AKIAIOSFODNN7EXAMPLE", "start": 9, "end": 29},
+        {"type": "api_key", "value": "sk-live-abcdef1234567890abcdef1234567890", "start": 43, "end": 84}
+      ],
+      "category": "technical",
+      "difficulty": "medium"
+    },
+    {
+      "id": "complex_001",
+      "text": "Dr. Michael Chen (License #12345) treated patient Emma Wilson (DOB: 1975-04-20, SSN: 987-65-4321) at 123 Main St, Suite 100, New York, NY 10001. Contact: m.chen@hospital.org or 212-555-0198.",
+      "entities": [
+        {"type": "name", "value": "Michael Chen", "start": 4, "end": 16},
+        {"type": "license_number", "value": "12345", "start": 28, "end": 33},
+        {"type": "name", "value": "Emma Wilson", "start": 51, "end": 62},
+        {"type": "date_of_birth", "value": "1975-04-20", "start": 69, "end": 79},
+        {"type": "ssn", "value": "987-65-4321", "start": 86, "end": 97},
+        {"type": "address", "value": "123 Main St, Suite 100, New York, NY 10001", "start": 103, "end": 146},
+        {"type": "email", "value": "m.chen@hospital.org", "start": 157, "end": 176},
+        {"type": "phone", "value": "212-555-0198", "start": 180, "end": 192}
+      ],
+      "category": "complex",
+      "difficulty": "hard"
+    },
+    {
+      "id": "edge_case_001",
+      "text": "",
+      "entities": [],
+      "category": "edge_case",
+      "difficulty": "easy",
+      "note": "Empty text"
+    },
+    {
+      "id": "edge_case_002",
+      "text": "This text contains no PII. It discusses technology, science, and general topics without any personal information.",
+      "entities": [],
+      "category": "edge_case",
+      "difficulty": "easy",
+      "note": "No PII present"
+    },
+    {
+      "id": "unicode_001",
+      "text": "Contact: 📧 test@example.com ☎️ (555) 123-4567",
+      "entities": [
+        {"type": "email", "value": "test@example.com", "start": 12, "end": 28},
+        {"type": "phone", "value": "(555) 123-4567", "start": 32, "end": 46}
+      ],
+      "category": "unicode",
+      "difficulty": "medium"
+    },
+    {
+      "id": "ip_address_001",
+      "text": "Server IPs: 192.168.1.1, 10.0.0.1, Public: 8.8.8.8",
+      "entities": [
+        {"type": "ip_address", "value": "192.168.1.1", "start": 12, "end": 23},
+        {"type": "ip_address", "value": "10.0.0.1", "start": 25, "end": 33},
+        {"type": "ip_address", "value": "8.8.8.8", "start": 43, "end": 50}
+      ],
+      "category": "technical",
+      "difficulty": "easy"
+    },
+    {
+      "id": "context_trap_001",
+      "text": "The patient visited Dr. Smith at Mount Sinai Hospital on January 15, 2024",
+      "entities": [
+        {"type": "name", "value": "Smith", "start": 24, "end": 29}
+      ],
+      "category": "context",
+      "difficulty": "medium",
+      "note": "Mount Sinai Hospital should not be detected as a name"
+    },
+    {
+      "id": "mixed_format_001",
+      "text": "Emails: JOHN@EXAMPLE.COM, jane@COMPANY.org, Test_User.123@sub.domain.co.uk",
+      "entities": [
+        {"type": "email", "value": "JOHN@EXAMPLE.COM", "start": 8, "end": 24},
+        {"type": "email", "value": "jane@COMPANY.org", "start": 26, "end": 42},
+        {"type": "email", "value": "Test_User.123@sub.domain.co.uk", "start": 44, "end": 75}
+      ],
+      "category": "format_variations",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phone_formats_001",
+      "text": "Call: +1(555)123-4567, 555.123.4567, 5551234567, +44 20 7123 4567",
+      "entities": [
+        {"type": "phone", "value": "+1(555)123-4567", "start": 6, "end": 21},
+        {"type": "phone", "value": "555.123.4567", "start": 23, "end": 35},
+        {"type": "phone", "value": "5551234567", "start": 37, "end": 47},
+        {"type": "phone", "value": "+44 20 7123 4567", "start": 49, "end": 65}
+      ],
+      "category": "format_variations",
+      "difficulty": "medium"
+    },
+    {
+      "id": "redaction_utility_001",
+      "text": "The quick brown fox jumps over the lazy dog. Contact: admin@test.com",
+      "entities": [
+        {"type": "email", "value": "admin@test.com", "start": 55, "end": 69}
+      ],
+      "category": "utility",
+      "difficulty": "easy",
+      "note": "Test for measuring text utility after redaction"
+    },
+    {
+      "id": "healthcare_001",
+      "text": "Patient ID: PAT123456, Insurance: BCBS-98765, Provider NPI: 1234567890",
+      "entities": [
+        {"type": "patient_id", "value": "PAT123456", "start": 12, "end": 21},
+        {"type": "insurance_id", "value": "BCBS-98765", "start": 34, "end": 44},
+        {"type": "npi", "value": "1234567890", "start": 60, "end": 70}
+      ],
+      "category": "healthcare",
+      "difficulty": "medium"
+    },
+    {
+      "id": "crypto_001",
+      "text": "Bitcoin address: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa, Ethereum: 0x742d35Cc6634C0532925a3b844Bc9e7595f0b0Bb",
+      "entities": [
+        {"type": "bitcoin_address", "value": "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", "start": 17, "end": 51},
+        {"type": "ethereum_address", "value": "0x742d35Cc6634C0532925a3b844Bc9e7595f0b0Bb", "start": 63, "end": 105}
+      ],
+      "category": "crypto",
+      "difficulty": "hard"
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "total_cases": 20,
+    "categories": {
+      "basic": 2,
+      "medical": 1,
+      "financial": 1,
+      "obfuscated": 1,
+      "multilingual": 2,
+      "adversarial": 1,
+      "technical": 2,
+      "complex": 1,
+      "edge_case": 2,
+      "unicode": 1,
+      "context": 1,
+      "format_variations": 2,
+      "utility": 1,
+      "healthcare": 1,
+      "crypto": 1
+    },
+    "entity_types": [
+      "name",
+      "email",
+      "phone",
+      "ssn",
+      "credit_card",
+      "date_of_birth",
+      "medical_record",
+      "bank_account",
+      "routing_number",
+      "aws_key",
+      "api_key",
+      "license_number",
+      "address",
+      "ip_address",
+      "patient_id",
+      "insurance_id",
+      "npi",
+      "bitcoin_address",
+      "ethereum_address"
+    ]
+  }
+}

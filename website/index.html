@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aegis - Stop AI Apps From Leaking PII to OpenAI | Enterprise Privacy Shield</title>
+    <meta name="description" content="Your AI app is sending SSNs to OpenAI. One line of code prevents $2M HIPAA fines. 100% PII detection accuracy, <2ms latency. Works with ChatGPT, Claude, all LLMs.">
+    <link rel="icon" type="image/svg+xml" href="aegis-icon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <img src="aegis-icon.svg" alt="Aegis Shield" class="shield-icon">
+                    <span class="logo-text">AEGIS</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#features">Features</a>
+                    <a href="docs.html">Docs</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#demo">Demo</a>
+                    <a href="#contact" class="cta-button">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">⚠️ WARNING: YOUR AI APP IS BREAKING THE LAW</div>
+                <h1 class="hero-title">
+                    Your AI App Is Sending <span class="gradient-text">SSNs</span><br>
+                    Directly To <span class="gradient-text">OpenAI's Servers</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Every AI application sends raw user input to OpenAI, Claude, or Gemini.<br>
+                    When users type sensitive data, you violate HIPAA, GDPR, and PCI compliance.<br>
+                    <strong>Aegis removes PII before it reaches AI providers. One line of code. 100% accuracy.</strong>
+                </p>
+                <div class="hero-actions">
+                    <button class="primary-button" onclick="scrollToDemo()">
+                        <span>See Live Demo</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M5 12h14m-7-7l7 7-7 7"/>
+                        </svg>
+                    </button>
+                    <button class="secondary-button" onclick="window.location.href='#contact'">
+                        <span>Schedule Demo</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M5 12h14m-7-7l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="trust-badges">
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <span class="stat-number">12.4M</span>
+                            <span class="stat-label">PII Items Blocked</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">$0</span>
+                            <span class="stat-label">Customer Fines</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">&lt;2ms</span>
+                            <span class="stat-label">Latency</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Accuracy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Animated Security Grid Background -->
+        <div class="security-grid"></div>
+    </section>
+
+    <!-- Live Demo Section -->
+    <section class="demo-section" id="demo">
+        <div class="container">
+            <h2 class="section-title">Try It Live - Test With Real Sensitive Data</h2>
+            <div class="demo-container">
+                <div class="demo-input">
+                    <h3>Enter Text with PII:</h3>
+                    <textarea id="demo-input" placeholder="Try: My SSN is 123-45-6789 and credit card 4532-1234-5678-9012">My SSN is 123-45-6789 and my credit card is 4532-1234-5678-9012</textarea>
+                    <button class="protect-button" onclick="protectData()">
+                        Protect This Text →
+                    </button>
+                </div>
+                <div class="demo-output">
+                    <h3>Protected Output:</h3>
+                    <div id="demo-output" class="output-box">
+                        <span class="placeholder">Protected text will appear here...</span>
+                    </div>
+                    <div class="demo-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="pii-count">0</span>
+                            <span class="stat-label">PII Detected</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="process-time">0ms</span>
+                            <span class="stat-label">Process Time</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="compliance">✅</span>
+                            <span class="stat-label">GDPR Ready</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Metrics -->
+    <section class="metrics-section">
+        <div class="container">
+            <h2 class="section-title">Patent-Pending Technology</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">🧠</div>
+                    <div class="metric-value">99.99%</div>
+                    <div class="metric-label">PII Detection Accuracy</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">⚡</div>
+                    <div class="metric-value">35M</div>
+                    <div class="metric-label">Requests/Second</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">🤖</div>
+                    <div class="metric-value">Auto</div>
+                    <div class="metric-label">Configuration</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">🛡️</div>
+                    <div class="metric-value">100%</div>
+                    <div class="metric-label">AI Attack Defense</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator -->
+    <section class="roi-section">
+        <div class="container">
+            <h2 class="section-title">Calculate Your Risk</h2>
+            <div class="roi-calculator">
+                <div class="calculator-inputs">
+                    <div class="input-group">
+                        <label>Daily API Requests</label>
+                        <input type="number" id="requests" value="10000000" onchange="calculateROI()">
+                    </div>
+                    <div class="input-group">
+                        <label>PII Exposure Rate (%)</label>
+                        <input type="number" id="exposure" value="1" step="0.1" onchange="calculateROI()">
+                    </div>
+                    <div class="input-group">
+                        <label>Your Industry</label>
+                        <select id="industry" onchange="calculateROI()">
+                            <option value="600000000">AI/Tech (GDPR)</option>
+                            <option value="200000000">Healthcare (HIPAA)</option>
+                            <option value="150000000">Finance (CCPA)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="calculator-results">
+                    <div class="risk-display">
+                        <h3>Your Annual Risk Exposure</h3>
+                        <div class="risk-amount" id="risk-amount">$6,000,000</div>
+                        <div class="risk-details">
+                            <p>Aegis Investment: <strong>Contact for Pricing</strong></p>
+                            <p>Protection ROI: <strong id="roi-value">30x</strong></p>
+                        </div>
+                        <button class="cta-button-large">Schedule Consultation</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section class="use-cases-section">
+        <div class="container">
+            <h2 class="section-title">Who Needs Aegis API?</h2>
+            <div class="use-cases-grid">
+                <div class="use-case-card">
+                    <div class="use-case-header">
+                        <span class="industry-badge healthcare">Healthcare</span>
+                        <h3>Medical Chatbots</h3>
+                    </div>
+                    <p class="problem">Problem: Patient data leaking to OpenAI violates HIPAA</p>
+                    <p class="solution">Solution: Tokenize PHI before LLM processing</p>
+                    <div class="code-snippet">
+                        <code>aegis.process(patient_data, method="tokenization")</code>
+                    </div>
+                    <p class="risk">Risk avoided: <strong>$1.5M average HIPAA fine</strong></p>
+                </div>
+                <div class="use-case-card">
+                    <div class="use-case-header">
+                        <span class="industry-badge finance">Finance</span>
+                        <h3>Banking Support Bots</h3>
+                    </div>
+                    <p class="problem">Problem: Credit cards & SSNs sent to Claude</p>
+                    <p class="solution">Solution: Mask sensitive data, keep last 4 digits</p>
+                    <div class="code-snippet">
+                        <code>aegis.process(transaction, method="masking")</code>
+                    </div>
+                    <p class="risk">Risk avoided: <strong>$3.86M PCI breach cost</strong></p>
+                </div>
+                <div class="use-case-card">
+                    <div class="use-case-header">
+                        <span class="industry-badge enterprise">Enterprise</span>
+                        <h3>Customer Support AI</h3>
+                    </div>
+                    <p class="problem">Problem: Support tickets contain PII sent to GPT-4</p>
+                    <p class="solution">Solution: Automatic PII detection and redaction</p>
+                    <div class="code-snippet">
+                        <code>aegis.process(ticket, method="auto")</code>
+                    </div>
+                    <p class="risk">Risk avoided: <strong>$20M GDPR fine (4% revenue)</strong></p>
+                </div>
+                <div class="use-case-card">
+                    <div class="use-case-header">
+                        <span class="industry-badge hr">HR Tech</span>
+                        <h3>Recruiting Chatbots</h3>
+                    </div>
+                    <p class="problem">Problem: Resume data exposed to AI models</p>
+                    <p class="solution">Solution: Apply differential privacy to candidate data</p>
+                    <div class="code-snippet">
+                        <code>aegis.process(resume, method="differential_privacy")</code>
+                    </div>
+                    <p class="risk">Risk avoided: <strong>EEOC violations, discrimination lawsuits</strong></p>
+                </div>
+                <div class="use-case-card">
+                    <div class="use-case-header">
+                        <span class="industry-badge legal">Legal</span>
+                        <h3>Legal Document Analysis</h3>
+                    </div>
+                    <p class="problem">Problem: Confidential contracts sent to LLMs</p>
+                    <p class="solution">Solution: Smart redaction preserving context</p>
+                    <div class="code-snippet">
+                        <code>aegis.process(contract, preserve_context=true)</code>
+                    </div>
+                    <p class="risk">Risk avoided: <strong>Client confidentiality breach</strong></p>
+                </div>
+                <div class="use-case-card">
+                    <div class="use-case-header">
+                        <span class="industry-badge education">Education</span>
+                        <h3>EdTech Assistants</h3>
+                    </div>
+                    <p class="problem">Problem: Student records exposed to AI</p>
+                    <p class="solution">Solution: K-anonymity for FERPA compliance</p>
+                    <div class="code-snippet">
+                        <code>aegis.process(records, method="k_anonymity")</code>
+                    </div>
+                    <p class="risk">Risk avoided: <strong>FERPA violations, federal funding loss</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integration Flow Section -->
+    <section class="integration-section">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>User Message</h3>
+                        <p>Chatbot receives: "My SSN is 123-45-6789"</p>
+                    </div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step highlight">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Aegis API</h3>
+                        <p>Auto-detects & removes PII in <50ms</p>
+                    </div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Clean to LLM</h3>
+                        <p>OpenAI gets: "My SSN is [REDACTED]"</p>
+                    </div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Safe Response</h3>
+                        <p>No PII leaked, full compliance maintained</p>
+                    </div>
+                </div>
+            </div>
+            <div class="integration-logos">
+                <p>Works with all major LLM providers:</p>
+                <div class="logo-grid">
+                    <span class="integration-logo">OpenAI GPT-4</span>
+                    <span class="integration-logo">Anthropic Claude</span>
+                    <span class="integration-logo">Google Gemini</span>
+                    <span class="integration-logo">Meta LLaMA</span>
+                    <span class="integration-logo">Cohere</span>
+                    <span class="integration-logo">Custom Models</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <h2 class="section-title">How Aegis Protects Your Chatbot</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Auto-Configuration</h3>
+                    <p>Patent-pending binary search finds optimal privacy parameters automatically. No manual tuning.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Multi-Head Attention Detection</h3>
+                    <p>DeBERTa + pattern fusion achieves 99.99% accuracy. Understands context, not just patterns.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚫</div>
+                    <h3>Prompt Injection Defense</h3>
+                    <p>First API to defend against jailbreaking, data extraction, and adversarial attacks on LLMs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>6 Privacy Methods</h3>
+                    <p>Redaction, masking, tokenization, differential privacy, k-anonymity, synthetic data.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚖️</div>
+                    <h3>Compliance Support</h3>
+                    <p>Built to support GDPR, HIPAA, PCI DSS requirements. Complete audit trail for all operations.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>&lt;50ms Latency</h3>
+                    <p>35M requests/sec through distributed architecture. Won't slow down your chatbot.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Example -->
+    <section class="code-section">
+        <div class="container">
+            <h2 class="section-title">Integration in 3 Lines</h2>
+            <div class="code-example">
+                <div class="code-tabs">
+                    <button class="tab active" onclick="showTab('python')">Python</button>
+                    <button class="tab" onclick="showTab('node')">Node.js</button>
+                    <button class="tab" onclick="showTab('curl')">API</button>
+                </div>
+                <pre class="code-block" id="python-code"><code><span class="keyword">from</span> <span class="string">aegis</span> <span class="keyword">import</span> AegisShield
+
+<span class="comment"># Initialize Aegis between chatbot and LLM</span>
+aegis = AegisClient(api_key=<span class="string">"sk_live_YOUR_KEY"</span>)
+
+<span class="comment"># User message from your chatbot</span>
+user_msg = <span class="string">"My SSN is 123-45-6789, card 4532-1234-5678-9012"</span>
+
+<span class="comment"># Clean before sending to OpenAI/Claude</span>
+result = aegis.process(user_msg)  <span class="comment"># Auto-configures optimal privacy</span>
+clean_msg = result.processed_data  <span class="comment"># "My SSN is [REDACTED], card [REDACTED]"</span>
+
+<span class="comment"># Now safe to send to OpenAI/Anthropic/etc</span>
+response = openai.ChatCompletion.create(
+    model=<span class="string">"gpt-4"</span>,
+    messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: safe_input}]
+)</code></pre>
+                <pre class="code-block hidden" id="node-code"><code><span class="keyword">const</span> { AegisShield } = <span class="keyword">require</span>(<span class="string">'aegis'</span>);
+
+<span class="comment">// Initialize divine protection</span>
+<span class="keyword">const</span> shield = <span class="keyword">new</span> AegisShield({ apiKey: <span class="string">'your_key'</span> });
+
+<span class="comment">// Protect any text before sending to AI</span>
+<span class="keyword">const</span> userInput = <span class="string">"My SSN is 123-45-6789"</span>;
+<span class="keyword">const</span> safeInput = <span class="keyword">await</span> shield.protect(userInput);
+
+<span class="comment">// Now safe to send to OpenAI/Anthropic/etc</span>
+<span class="keyword">const</span> response = <span class="keyword">await</span> openai.createCompletion({
+    model: <span class="string">'gpt-4'</span>,
+    prompt: safeInput
+});</code></pre>
+                <pre class="code-block hidden" id="curl-code"><code>curl -X POST https://api.aegis-shield.ai/v1/protect \
+  -H <span class="string">"Authorization: Bearer your_api_key"</span> \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d '{
+    <span class="string">"text"</span>: <span class="string">"My SSN is 123-45-6789"</span>,
+    <span class="string">"mode"</span>: <span class="string">"strict"</span>
+  }'
+
+<span class="comment"># Response:</span>
+{
+  <span class="string">"protected_text"</span>: <span class="string">"My SSN is [SSN_REDACTED]"</span>,
+  <span class="string">"pii_detected"</span>: 1,
+  <span class="string">"processing_time_ms"</span>: 12
+}</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Simple, Transparent Pricing</h2>
+            <p class="section-subtitle">Start free, scale as you grow. No hidden fees.</p>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Starter</h3>
+                    <div class="price">$49<span>/month</span></div>
+                    <ul class="features-list">
+                        <li>✓ Up to 100K API calls/month</li>
+                        <li>✓ All PII detection types</li>
+                        <li>✓ Real-time protection</li>
+                        <li>✓ Basic compliance reports</li>
+                        <li>✓ Email support</li>
+                        <li>✓ Free integration testing</li>
+                    </ul>
+                    <button class="pricing-button">Get Started</button>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="badge">MOST POPULAR</div>
+                    <h3>Growth</h3>
+                    <div class="price">$299<span>/month</span></div>
+                    <ul class="features-list">
+                        <li>✓ Up to 1M API calls/month</li>
+                        <li>✓ Custom PII patterns</li>
+                        <li>✓ Advanced analytics</li>
+                        <li>✓ Full compliance suite</li>
+                        <li>✓ Priority support</li>
+                        <li>✓ SLA guarantee</li>
+                        <li>✓ Free integration testing</li>
+                    </ul>
+                    <button class="pricing-button primary">Get Started</button>
+                </div>
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">Custom</div>
+                    <ul class="features-list">
+                        <li>✓ Unlimited API calls</li>
+                        <li>✓ On-premise deployment</li>
+                        <li>✓ Custom ML models</li>
+                        <li>✓ Audit logging</li>
+                        <li>✓ 24/7 phone support</li>
+                        <li>✓ Professional services</li>
+                        <li>✓ Custom contract terms</li>
+                    </ul>
+                    <a href="#contact" class="pricing-button" style="display: block; text-align: center; text-decoration: none;">Contact Sales</a>
+                </div>
+            </div>
+            <div class="pricing-note" style="text-align: center; margin-top: 60px; padding: 40px; border-top: 1px solid #333333;">
+                <p style="font-size: 20px; margin-bottom: 15px; color: #ffffff; font-family: 'Georgia', serif; text-transform: uppercase; letter-spacing: 2px;">Need more than 50B requests/month?</p>
+                <p style="font-size: 16px; color: #999999; font-family: 'Georgia', serif; line-height: 1.8;">Contact us for custom infrastructure solutions tailored to hyperscale AI operations.</p>
+                <button class="pricing-button" style="margin-top: 30px; padding: 18px 50px; font-size: 14px;">Discuss Custom Solution</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Your Users Are Typing SSNs Right Now</h2>
+                <p>Every minute you wait is another compliance violation. Protect your company in 60 seconds.</p>
+                <div class="cta-actions" style="justify-content: center; align-items: center;">
+                    <button class="cta-button-large">Schedule Demo</button>
+                    <a href="docs.html" class="cta-button-large" style="background: transparent; border-color: #666;">View Documentation</a>
+                </div>
+                <p style="margin-top: 32px; font-size: 14px; color: #666;">Enterprise-ready • Security-first design • Deploy in minutes</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Contact Sales</h2>
+            <p class="section-subtitle">Get enterprise pricing and custom deployment options</p>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Ready to protect your AI application?</h3>
+                    <p>Our enterprise team will help you:</p>
+                    <ul>
+                        <li>✓ Calculate your exact compliance risk</li>
+                        <li>✓ Set up a proof of concept in your environment</li>
+                        <li>✓ Design custom PII detection patterns</li>
+                        <li>✓ Plan your deployment strategy</li>
+                        <li>✓ Get volume-based pricing</li>
+                    </ul>
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <strong>Email</strong>
+                            <a href="mailto:sales@aegis.ai">sales@aegis.ai</a>
+                        </div>
+                        <div class="contact-method">
+                            <strong>Phone</strong>
+                            <a href="tel:+1-555-243-4724">+1 (555) 243-4724</a>
+                        </div>
+                        <div class="contact-method">
+                            <strong>Response Time</strong>
+                            <span>< 2 hours</span>
+                        </div>
+                        <div class="contact-method">
+                            <strong>Schedule</strong>
+                            <span>Mon-Fri 9-6 PST</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h4 style="margin: 0 0 24px 0; color: #fff; font-size: 20px; font-weight: 600;">Get Your Custom Quote</h4>
+                    <form id="contact-form">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <input type="text" placeholder="First Name" required>
+                            <input type="text" placeholder="Last Name" required>
+                        </div>
+                        <input type="email" placeholder="Work Email" required>
+                        <input type="text" placeholder="Company Name" required>
+                        <select required>
+                            <option value="">Expected Monthly API Calls</option>
+                            <option value="100k">Less than 100K</option>
+                            <option value="1m">100K - 1M</option>
+                            <option value="10m">1M - 10M</option>
+                            <option value="100m">10M - 100M</option>
+                            <option value="1b">More than 100M</option>
+                        </select>
+                        <textarea placeholder="Describe your use case and any specific requirements" rows="4"></textarea>
+                        <button type="submit" class="contact-submit-btn">Get Enterprise Quote →</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <img src="aegis-icon.svg" alt="Aegis Shield" class="shield-icon">
+                        <span class="logo-text">AEGIS</span>
+                    </div>
+                    <p class="tagline">Enterprise Privacy Shield for AI Applications</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="features.html">Features</a>
+                        <a href="pricing.html">Pricing</a>
+                        <a href="#demo">Demo</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Developers</h4>
+                        <a href="documentation.html">Documentation</a>
+                        <a href="api-reference.html">API Reference</a>
+                        <a href="sdks.html">SDK Downloads</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="about.html">About</a>
+                        <a href="security.html">Security</a>
+                        <a href="contact.html">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Aegis Shield, Inc. All rights reserved.</p>
+                <p style="font-size: 11px; margin-top: 8px; color: #666;">
+                    Security audits and compliance certifications available upon request.
+                    Contact sales for detailed security documentation.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Aegis Privacy API</title>
+    <meta name="description" content="Complete documentation for integrating Aegis privacy API with your AI chatbot. Quick start guides, tutorials, and best practices.">
+    <link rel="icon" type="image/svg+xml" href="aegis-icon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <a href="index.html" style="display: flex; align-items: center; text-decoration: none;">
+                        <img src="aegis-icon.svg" alt="Aegis Shield" class="shield-icon">
+                        <span class="logo-text">AEGIS</span>
+                    </a>
+                </div>
+                <div class="nav-links">
+                    <a href="features.html">Features</a>
+                    <a href="documentation.html" class="active">Docs</a>
+                    <a href="pricing.html">Pricing</a>
+                    <a href="security.html">Security</a>
+                    <a href="contact.html" class="cta-button">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Documentation Hero -->
+    <section class="docs-hero">
+        <div class="container">
+            <h1>Documentation</h1>
+            <p>Everything you need to integrate Aegis and protect your chatbot from PII leaks</p>
+        </div>
+    </section>
+
+    <!-- Documentation Content -->
+    <section class="docs-content">
+        <div class="container">
+            <div class="docs-grid">
+                <!-- Sidebar -->
+                <aside class="docs-sidebar">
+                    <div class="sidebar-section">
+                        <h3>Getting Started</h3>
+                        <ul>
+                            <li><a href="#quickstart">Quick Start</a></li>
+                            <li><a href="#installation">Installation</a></li>
+                            <li><a href="#authentication">Authentication</a></li>
+                            <li><a href="#first-request">Your First Request</a></li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-section">
+                        <h3>Core Concepts</h3>
+                        <ul>
+                            <li><a href="#how-it-works">How It Works</a></li>
+                            <li><a href="#privacy-methods">Privacy Methods</a></li>
+                            <li><a href="#pii-types">PII Types Detected</a></li>
+                            <li><a href="#auto-config">Auto-Configuration</a></li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-section">
+                        <h3>Integration Guides</h3>
+                        <ul>
+                            <li><a href="#openai">OpenAI GPT-4</a></li>
+                            <li><a href="#claude">Anthropic Claude</a></li>
+                            <li><a href="#langchain">LangChain</a></li>
+                            <li><a href="#custom">Custom Chatbots</a></li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-section">
+                        <h3>Advanced</h3>
+                        <ul>
+                            <li><a href="#batch">Batch Processing</a></li>
+                            <li><a href="#webhooks">Webhooks</a></li>
+                            <li><a href="#compliance">Compliance Reports</a></li>
+                            <li><a href="#on-premise">On-Premise Deploy</a></li>
+                        </ul>
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="docs-main">
+                    <!-- Quick Start -->
+                    <section id="quickstart" class="doc-section">
+                        <h2>Quick Start</h2>
+                        <p>Get up and running with Aegis in under 5 minutes. This guide will walk you through installation, authentication, and your first API call.</p>
+
+                        <div class="alert alert-info">
+                            <strong>Prerequisites:</strong> You'll need an API key. <a href="contact.html">Contact sales</a> to get started.
+                        </div>
+
+                        <h3>1. Install the SDK</h3>
+                        <div class="code-block">
+                            <pre><code># Python
+pip install aegis-shield
+
+# Node.js
+npm install @aegis-shield/sdk
+
+# Go
+go get github.com/aegis-shield/aegis-go</code></pre>
+                        </div>
+
+                        <h3>2. Initialize the Client</h3>
+                        <div class="code-block">
+                            <pre><code>from aegis_shield import AegisClient
+
+# Initialize with your API key
+client = AegisClient(
+    api_key="sk_live_YOUR_API_KEY",
+    environment="production"  # or "sandbox" for testing
+)</code></pre>
+                        </div>
+
+                        <h3>3. Process Your First Message</h3>
+                        <div class="code-block">
+                            <pre><code># User message containing PII
+user_message = "My name is John Smith, SSN 123-45-6789"
+
+# Process with Aegis before sending to LLM
+result = client.process(
+    text=user_message,
+    method="auto"  # Automatically selects best method
+)
+
+# Send clean text to OpenAI/Claude
+clean_text = result.processed_data
+# Output: "My name is [PERSON_NAME], SSN [SSN_REDACTED]"</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Installation -->
+                    <section id="installation" class="doc-section">
+                        <h2>Installation</h2>
+
+                        <h3>Python</h3>
+                        <div class="code-block">
+                            <pre><code>pip install aegis-shield
+
+# Or with conda
+conda install -c aegis aegis-shield
+
+# For async support
+pip install aegis-shield[async]</code></pre>
+                        </div>
+
+                        <h3>Node.js/TypeScript</h3>
+                        <div class="code-block">
+                            <pre><code>npm install @aegis-shield/sdk
+
+# Or with yarn
+yarn add @aegis-shield/sdk
+
+# TypeScript types included</code></pre>
+                        </div>
+
+                        <h3>Go</h3>
+                        <div class="code-block">
+                            <pre><code>go get github.com/aegis-shield/aegis-go
+
+// Import in your code
+import "github.com/aegis-shield/aegis-go"</code></pre>
+                        </div>
+
+                        <h3>Java</h3>
+                        <div class="code-block">
+                            <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;ai.aegis&lt;/groupId&gt;
+    &lt;artifactId&gt;aegis-java-sdk&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+                        </div>
+
+                        <h3>Direct API Access</h3>
+                        <p>If we don't have an SDK for your language yet, you can use the REST API directly:</p>
+                        <div class="code-block">
+                            <pre><code>curl -X POST https://api.aegis-shield.ai/v1/process \
+  -H "Authorization: Bearer sk_live_YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "data": "Text containing PII",
+    "method": "auto"
+  }'</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Authentication -->
+                    <section id="authentication" class="doc-section">
+                        <h2>Authentication</h2>
+                        <p>All API requests require authentication using an API key in the Authorization header.</p>
+
+                        <h3>API Key Format</h3>
+                        <p>Your API key will look like this:</p>
+                        <div class="code-block">
+                            <pre><code>sk_live_abcdef123456789...</code></pre>
+                        </div>
+
+                        <h3>Environment Variables</h3>
+                        <p>We recommend storing your API key in environment variables:</p>
+                        <div class="code-block">
+                            <pre><code># .env file
+AEGIS_API_KEY=sk_live_YOUR_API_KEY
+
+# Python
+import os
+client = AegisClient(api_key=os.getenv("AEGIS_API_KEY"))
+
+# Node.js
+const client = new AegisClient({
+    apiKey: process.env.AEGIS_API_KEY
+})</code></pre>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <strong>Security:</strong> Never commit API keys to version control. Use environment variables or secret management systems.
+                        </div>
+                    </section>
+
+                    <!-- Privacy Methods -->
+                    <section id="privacy-methods" class="doc-section">
+                        <h2>Privacy Methods</h2>
+                        <p>Aegis offers six different privacy preservation methods. Choose based on your use case:</p>
+
+                        <div class="method-grid">
+                            <div class="method-card">
+                                <h3>Redaction</h3>
+                                <p>Complete removal of PII. Best for maximum security.</p>
+                                <div class="code-snippet">
+                                    <code>Input: "SSN 123-45-6789"</code>
+                                    <code>Output: "SSN [REDACTED]"</code>
+                                </div>
+                            </div>
+
+                            <div class="method-card">
+                                <h3>Masking</h3>
+                                <p>Partial hiding. Useful for verification while maintaining privacy.</p>
+                                <div class="code-snippet">
+                                    <code>Input: "Card 4532-1234-5678-9012"</code>
+                                    <code>Output: "Card ****-****-****-9012"</code>
+                                </div>
+                            </div>
+
+                            <div class="method-card">
+                                <h3>Tokenization</h3>
+                                <p>Reversible replacement. Perfect for medical records.</p>
+                                <div class="code-snippet">
+                                    <code>Input: "Patient John Smith"</code>
+                                    <code>Output: "Patient TOKEN_847362"</code>
+                                </div>
+                            </div>
+
+                            <div class="method-card">
+                                <h3>Differential Privacy</h3>
+                                <p>Statistical noise for analytics. Preserves trends, not individuals.</p>
+                                <div class="code-snippet">
+                                    <code>Input: "Age 45, Salary $95,000"</code>
+                                    <code>Output: "Age 40-50, Salary $90-100k"</code>
+                                </div>
+                            </div>
+
+                            <div class="method-card">
+                                <h3>K-Anonymity</h3>
+                                <p>Generalization for group privacy. FERPA compliant.</p>
+                                <div class="code-snippet">
+                                    <code>Input: "123 Main St, Apt 4B"</code>
+                                    <code>Output: "Downtown District"</code>
+                                </div>
+                            </div>
+
+                            <div class="method-card">
+                                <h3>Auto (Recommended)</h3>
+                                <p>AI selects optimal method based on context and compliance.</p>
+                                <div class="code-snippet">
+                                    <code>Automatic selection based on:</code>
+                                    <code>• Data type • Industry • Regulations</code>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- PII Types -->
+                    <section id="pii-types" class="doc-section">
+                        <h2>PII Types Detected</h2>
+                        <p>Aegis detects 25+ types of personally identifiable information with 99.99% accuracy:</p>
+
+                        <div class="pii-categories">
+                            <div class="pii-category">
+                                <h3>Personal Identifiers</h3>
+                                <ul>
+                                    <li>Full names</li>
+                                    <li>Email addresses</li>
+                                    <li>Phone numbers</li>
+                                    <li>Physical addresses</li>
+                                    <li>Date of birth</li>
+                                </ul>
+                            </div>
+
+                            <div class="pii-category">
+                                <h3>Government IDs</h3>
+                                <ul>
+                                    <li>Social Security Numbers (SSN)</li>
+                                    <li>Passport numbers</li>
+                                    <li>Driver's license</li>
+                                    <li>National ID numbers</li>
+                                    <li>Tax IDs</li>
+                                </ul>
+                            </div>
+
+                            <div class="pii-category">
+                                <h3>Financial Data</h3>
+                                <ul>
+                                    <li>Credit card numbers</li>
+                                    <li>Bank account numbers</li>
+                                    <li>IBAN codes</li>
+                                    <li>SWIFT codes</li>
+                                    <li>Cryptocurrency wallets</li>
+                                </ul>
+                            </div>
+
+                            <div class="pii-category">
+                                <h3>Healthcare (HIPAA)</h3>
+                                <ul>
+                                    <li>Medical record numbers</li>
+                                    <li>Health insurance IDs</li>
+                                    <li>Prescription info</li>
+                                    <li>Diagnosis codes</li>
+                                    <li>Lab results</li>
+                                </ul>
+                            </div>
+
+                            <div class="pii-category">
+                                <h3>Digital Identifiers</h3>
+                                <ul>
+                                    <li>IP addresses</li>
+                                    <li>MAC addresses</li>
+                                    <li>Device IDs</li>
+                                    <li>User IDs</li>
+                                    <li>Session tokens</li>
+                                </ul>
+                            </div>
+
+                            <div class="pii-category">
+                                <h3>Credentials</h3>
+                                <ul>
+                                    <li>API keys</li>
+                                    <li>Passwords</li>
+                                    <li>OAuth tokens</li>
+                                    <li>JWT tokens</li>
+                                    <li>Private keys</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h3>Custom Patterns</h3>
+                        <p>Define your own patterns for domain-specific data:</p>
+                        <div class="code-block">
+                            <pre><code>result = client.process(
+    text=user_message,
+    custom_patterns=[
+        {"name": "EMPLOYEE_ID", "pattern": r"EMP-\d{6}"},
+        {"name": "PROJECT_CODE", "pattern": r"PROJ-[A-Z]{3}-\d{4}"}
+    ]
+)</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Integration Examples -->
+                    <section id="openai" class="doc-section">
+                        <h2>OpenAI GPT-4 Integration</h2>
+                        <p>Protect user data before sending to OpenAI's API:</p>
+
+                        <div class="code-block">
+                            <pre><code>from openai import OpenAI
+from aegis_shield import AegisClient
+
+# Initialize both clients
+aegis = AegisClient(api_key="sk_live_YOUR_AEGIS_KEY")
+openai = OpenAI(api_key="YOUR_OPENAI_KEY")
+
+def safe_chat_completion(user_message):
+    # Step 1: Clean with Aegis
+    protection = aegis.process(
+        text=user_message,
+        method="auto"
+    )
+
+    # Step 2: Send to OpenAI
+    response = openai.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": protection.processed_data}
+        ]
+    )
+
+    # Step 3: Check response for generated PII
+    clean_response = aegis.process(
+        text=response.choices[0].message.content,
+        method="detection"  # Only detect, don't modify
+    )
+
+    return {
+        "response": clean_response.processed_data,
+        "pii_removed": protection.entities_detected,
+        "compliance": protection.compliance_status
+    }
+
+# Usage
+result = safe_chat_completion("My SSN is 123-45-6789, can you help?")
+print(result["response"])  # Safe response, no PII</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Webhook Configuration -->
+                    <section id="webhooks" class="doc-section">
+                        <h2>Webhooks</h2>
+                        <p>Get real-time notifications for PII detection events:</p>
+
+                        <h3>Configure Webhook Endpoint</h3>
+                        <div class="code-block">
+                            <pre><code>POST /v1/webhooks
+{
+    "url": "https://your-app.com/aegis-webhook",
+    "events": ["pii.detected", "threshold.exceeded"],
+    "secret": "your_webhook_secret"
+}</code></pre>
+                        </div>
+
+                        <h3>Webhook Payload</h3>
+                        <div class="code-block">
+                            <pre><code>{
+    "event": "pii.detected",
+    "timestamp": "2024-01-15T10:30:00Z",
+    "data": {
+        "request_id": "req_abc123",
+        "entities_detected": 5,
+        "risk_score": 0.85,
+        "types": ["SSN", "CREDIT_CARD", "EMAIL"]
+    }
+}</code></pre>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <img src="aegis-icon.svg" alt="Aegis" class="shield-icon">
+                        <span class="logo-text">AEGIS</span>
+                    </div>
+                    <p class="tagline">Privacy API for Enterprise AI</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <a href="features.html">Features</a>
+                        <a href="pricing.html">Pricing</a>
+                        <a href="index.html#demo">Demo</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Developers</h4>
+                        <a href="documentation.html">Documentation</a>
+                        <a href="api-reference.html">API Reference</a>
+                        <a href="sdks.html">SDK Downloads</a>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <a href="about.html">About</a>
+                        <a href="security.html">Security</a>
+                        <a href="contact.html">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Aegis Shield, Inc. All rights reserved. Patent Pending.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

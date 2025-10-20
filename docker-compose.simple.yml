@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # Aegis API (Simplified)
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
+    container_name: aegis-api
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Website
+  website:
+    image: nginx:alpine
+    container_name: aegis-website
+    volumes:
+      - ./website:/usr/share/nginx/html:ro
+    ports:
+      - "80:80"
+    restart: unless-stopped

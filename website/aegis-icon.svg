@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simplified Shield -->
+  <path d="M16 4 L26 8 L26 18 C26 18 26 26 16 30 C6 26 6 18 6 18 L6 8 L16 4 Z"
+        stroke="#FFFFFF"
+        stroke-width="1.5"
+        fill="#FFFFFF"
+        fill-opacity="0.15"/>
+
+  <!-- Simplified Lightning -->
+  <path d="M16 10 L13 16 L15 16 L14 20 L19 13 L17 13 L18 10 Z"
+        fill="#FFFFFF"/>
+</svg>
