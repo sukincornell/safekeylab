@@ -421,7 +421,7 @@ class EnterpriseEncryption:
     def generate_data_key(self, customer_id: str) -> tuple[str, str]:
         """Generate customer-specific data encryption key"""
         # Derive key from master key and customer ID
-        kdf = PBKDF2(
+        kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
             salt=customer_id.encode(),

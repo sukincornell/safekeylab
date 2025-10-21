@@ -114,7 +114,7 @@ def protect_text(text: str, level: str = 'medium') -> str:
     Returns:
         Protected text with PII removed or masked
     """
-    shield = PrivacyShield()
+    shield = AegisShield()
 
     levels = {
         'low': {'methods': ['redaction']},
