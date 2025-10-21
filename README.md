@@ -1,4 +1,4 @@
-# Aegis - Enterprise Privacy Shield for AI 🛡️
+# Aegis - Multimodal Privacy Shield for AI 🛡️
 
 [![CI](https://github.com/sukincornell/aegis-privacy-shield/actions/workflows/ci-simple.yml/badge.svg)](https://github.com/sukincornell/aegis-privacy-shield/actions/workflows/ci-simple.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -6,7 +6,7 @@
 [![Docker](https://img.shields.io/badge/docker-ready-brightgreen.svg)](https://hub.docker.com/r/aegisprivacy/shield)
 [![Website](https://img.shields.io/badge/website-live-success.svg)](https://aegis-privacy-shield.vercel.app)
 
-Stop PII leaks before they cost you $600M in GDPR fines. Military-grade privacy protection for OpenAI, Anthropic, and enterprise AI systems.
+**The ONLY unified privacy platform for text, images, audio, video, and documents.** Stop PII leaks across ALL modalities before they cost you $600M in GDPR fines. Complete privacy protection for OpenAI, Anthropic, Zoom, surveillance systems, and enterprise AI.
 
 ## 📖 Documentation
 
@@ -33,19 +33,28 @@ from aegis_sdk import AegisClient
 # Initialize client
 client = AegisClient(api_key="sk_your_api_key")
 
-# Protect sensitive data
+# TEXT: Protect sensitive data
 text = "John Smith's email is john@example.com, SSN: 123-45-6789"
 result = client.process(text)
 print(result.processed_data)
 # Output: "[PERSON_NAME]'s email is [EMAIL_REDACTED], SSN: [SSN_REDACTED]"
 
-# Detect PII without modifying
-entities = client.detect(text)
-# Output: [
-#   {"type": "PERSON_NAME", "text": "John Smith", "confidence": 0.95},
-#   {"type": "EMAIL", "text": "john@example.com", "confidence": 0.98},
-#   {"type": "SSN", "text": "123-45-6789", "confidence": 0.99}
-# ]
+# IMAGE: Blur faces automatically
+with open("photo.jpg", "rb") as f:
+    result = client.process_image(f.read(), blur_faces=True)
+    # Faces are now blurred, text PII removed
+
+# AUDIO: Anonymize voice recordings
+with open("call.wav", "rb") as f:
+    result = client.process_audio(f.read(), anonymize_voice=True)
+    # Voice characteristics changed, transcript PII removed
+
+# VIDEO: Process surveillance footage
+result = client.process_video("security_cam.mp4", blur_faces=True)
+# All faces blurred throughout video, audio anonymized
+
+# AUTO: Let Aegis figure it out
+result = client.process_any(data)  # Automatically detects type
 ```
 
 ## 🏗️ Architecture
@@ -74,18 +83,23 @@ aegis/
 
 ## 🛠️ Features
 
-### PII Detection
+### 🆕 Multimodal Privacy (v2.0)
+- **Image Protection**: Face detection/blurring, OCR for text PII, object detection
+- **Audio Anonymization**: Voice changing, transcript PII removal, speaker identification
+- **Video Processing**: Real-time face tracking, audio track anonymization, stream processing
+- **Document Sanitization**: PDF redaction, form processing, signature removal
+- **Auto-Detection**: Automatically identify and process any file type
+
+### Text PII Detection
 - **25+ PII Types**: Names, emails, SSNs, credit cards, API keys, and more
 - **99.99% Accuracy**: ML-powered detection with Presidio and custom models
 - **Custom Patterns**: Define your own regex patterns for domain-specific data
 
 ### Privacy Methods
-- **Redaction**: Complete removal of PII
-- **Masking**: Partial hiding (e.g., `****1234`)
-- **Tokenization**: Reversible token replacement
-- **Differential Privacy**: Statistical noise addition
-- **K-Anonymity**: Generalization for grouped privacy
-- **Synthetic Data**: Realistic fake data generation
+- **Visual**: Blur, pixelate, blackout faces and sensitive regions
+- **Audio**: Pitch shift, voice synthesis, frequency distortion
+- **Text**: Redaction, masking, tokenization, differential privacy
+- **Documents**: OCR-based redaction, metadata stripping
 
 ### Performance
 - **35M requests/second**: Built for hyperscale
@@ -166,15 +180,26 @@ spec:
 
 ## 📊 API Endpoints
 
-### Core Endpoints
+### Multimodal Endpoints (v2)
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/v1/process` | POST | Process data to remove PII |
-| `/v1/batch` | POST | Batch process multiple items |
+| `/v2/process/image` | POST | Blur faces, redact text in images |
+| `/v2/process/audio` | POST | Anonymize voice, remove PII from transcripts |
+| `/v2/process/video` | POST | Process video files with face tracking |
+| `/v2/process/document` | POST | Redact PDFs and documents |
+| `/v2/process/auto` | POST | Auto-detect and process any file type |
+| `/v2/stream` | WS | Real-time stream processing |
+| `/v2/batch` | POST | Batch process mixed media types |
+
+### Core Text Endpoints (v1)
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/v1/process` | POST | Process text to remove PII |
+| `/v1/batch` | POST | Batch process text items |
 | `/v1/patterns` | GET | Get detection patterns |
 | `/v1/usage` | GET | Get usage statistics |
-| `/v1/compliance/{id}` | GET | Get compliance report |
 | `/health` | GET | Health check |
 
 ### Request Example

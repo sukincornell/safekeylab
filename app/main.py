@@ -28,15 +28,19 @@ from app.monitoring import metrics, log_request
 from app.training_sanitizer import TrainingSanitizer, TrainingConfig, SanitizationResult
 from app.onboarding import OnboardingOrchestrator, CustomerProfile, OnboardingState, IntegrationType
 from app.dashboard import DashboardController
+from app.multimodal_api import router as multimodal_router
 
 # Initialize FastAPI app
 app = FastAPI(
     title="Aegis API",
-    description="Enterprise Privacy Shield for AI Systems",
-    version="1.0.0",
+    description="Enterprise Privacy Shield for AI Systems - Now with Multimodal Support",
+    version="2.0.0",
     docs_url="/docs" if settings.DEBUG else None,
     redoc_url="/redoc" if settings.DEBUG else None
 )
+
+# Include multimodal router
+app.include_router(multimodal_router)
 
 # Add middleware
 app.add_middleware(
