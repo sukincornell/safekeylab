@@ -1,0 +1,96 @@
+name: Performance Benchmarks
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pandas numpy
+
+    - name: Run accuracy benchmarks
+      run: |
+        python benchmark/accuracy_benchmark.py > accuracy_results.txt
+        echo "## Accuracy Benchmark Results" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        tail -20 accuracy_results.txt >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+      continue-on-error: true
+
+    - name: Run latency benchmarks
+      run: |
+        # Start test server in background
+        python demo_production.py &
+        SERVER_PID=$!
+        sleep 5
+
+        # Run benchmarks
+        python benchmark/benchmark_api.py > latency_results.txt || true
+
+        # Kill server
+        kill $SERVER_PID || true
+
+        echo "## Latency Benchmark Results" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        tail -20 latency_results.txt >> $GITHUB_STEP_SUMMARY || echo "No latency results available" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+      continue-on-error: true
+
+    - name: Upload benchmark artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: benchmark-results
+        path: |
+          *_results.txt
+          benchmark/reports/*.json
+        retention-days: 30
+      continue-on-error: true
+
+    - name: Comment PR with results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          let comment = '## 📊 Benchmark Results\n\n';
+
+          try {
+            const accuracy = fs.readFileSync('accuracy_results.txt', 'utf8');
+            const accuracyLines = accuracy.split('\n').slice(-10).join('\n');
+            comment += '### Accuracy\n```\n' + accuracyLines + '\n```\n\n';
+          } catch (e) {
+            comment += '### Accuracy\n_No results available_\n\n';
+          }
+
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+      continue-on-error: true
