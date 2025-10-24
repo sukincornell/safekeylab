@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create your Aegis account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0A0A0A;
+            color: #FFFFFF;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 440px;
+            background: #161616;
+            border: 1px solid #262626;
+            border-radius: 16px;
+            padding: 48px 40px;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: #262626;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon svg {
+            width: 36px;
+            height: 36px;
+            fill: #FFFFFF;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #FFFFFF;
+            letter-spacing: -0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #E5E5E5;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            background: #0A0A0A;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            color: #666666;
+        }
+
+        .input-field:focus {
+            border-color: #4A4A4A;
+            background: #0D0D0D;
+        }
+
+        .input-field.error {
+            border-color: #FF4444;
+        }
+
+        .error-message {
+            color: #FF4444;
+            font-size: 13px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            background: #1A3A1A;
+            border: 1px solid #2A5A2A;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            color: #4AFA4A;
+            font-size: 14px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: #FFFFFF;
+            color: #000000;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 24px;
+        }
+
+        .register-btn:hover {
+            background: #E5E5E5;
+        }
+
+        .register-btn:active {
+            background: #D4D4D4;
+            transform: scale(0.99);
+        }
+
+        .register-btn:disabled {
+            background: #333333;
+            color: #666666;
+            cursor: not-allowed;
+        }
+
+        .demo-banner {
+            background: #1A1A3A;
+            border: 1px solid #2A2A5A;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            color: #8A8AFF;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .demo-accounts {
+            background: #1A1A1A;
+            border: 1px solid #2A2A2A;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 24px;
+        }
+
+        .demo-accounts h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #AAAAAA;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .demo-account-btn {
+            width: 100%;
+            padding: 10px 12px;
+            background: transparent;
+            border: 1px solid #333333;
+            border-radius: 6px;
+            color: #E5E5E5;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .demo-account-btn:hover {
+            background: #1A1A1A;
+            border-color: #4A4A4A;
+        }
+
+        .demo-account-btn span {
+            color: #666666;
+            font-size: 13px;
+        }
+
+        .footer-text {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 13px;
+            color: #888888;
+            line-height: 1.6;
+        }
+
+        .footer-text a {
+            color: #CCCCCC;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-text a:hover {
+            color: #FFFFFF;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <!-- Logo -->
+        <div class="logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 4h6l2 4h8v10H4z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Title -->
+        <h1>Create your Aegis account</h1>
+
+        <!-- Demo Banner -->
+        <div class="demo-banner">
+            🎯 Demo Mode: Create a test account or use pre-configured demo accounts below
+        </div>
+
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">
+            ✅ Account created successfully! Redirecting to dashboard...
+        </div>
+
+        <!-- Registration Form -->
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input
+                    type="text"
+                    id="fullName"
+                    class="input-field"
+                    placeholder="John Doe"
+                    required
+                >
+                <div class="error-message" id="nameError">Please enter your full name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    class="input-field"
+                    placeholder="you@example.com"
+                    required
+                >
+                <div class="error-message" id="emailError">Please enter a valid email</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    class="input-field"
+                    placeholder="At least 8 characters"
+                    required
+                    minlength="8"
+                >
+                <div class="error-message" id="passwordError">Password must be at least 8 characters</div>
+            </div>
+
+            <div class="form-group">
+                <label for="company">Company (Optional)</label>
+                <input
+                    type="text"
+                    id="company"
+                    class="input-field"
+                    placeholder="Your company name"
+                >
+            </div>
+
+            <!-- Register Button -->
+            <button type="submit" class="register-btn" id="registerBtn">
+                Create Account
+            </button>
+        </form>
+
+        <!-- Demo Accounts -->
+        <div class="demo-accounts">
+            <h3>Quick Demo Access</h3>
+            <button class="demo-account-btn" onclick="loginAsDemo('admin')">
+                <strong>Admin Demo</strong> <span>• Full access to all features</span>
+            </button>
+            <button class="demo-account-btn" onclick="loginAsDemo('developer')">
+                <strong>Developer Demo</strong> <span>• API & Integration focused</span>
+            </button>
+            <button class="demo-account-btn" onclick="loginAsDemo('analyst')">
+                <strong>Analyst Demo</strong> <span>• Read-only analytics view</span>
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-text">
+            Already have an account? <a href="login.html">Sign in</a><br>
+            By creating an account, you agree to Aegis's <a href="#">Terms of Service</a>
+        </div>
+    </div>
+
+    <!-- Load Configuration -->
+    <script src="js/config.js"></script>
+
+    <script>
+        // Demo users database (in production, this would be server-side)
+        const demoUsers = {
+            admin: {
+                email: 'admin@demo.aegis.com',
+                name: 'Admin User',
+                role: 'admin',
+                company: 'Aegis Demo',
+                features: ['full_access', 'api_management', 'team_management', 'billing']
+            },
+            developer: {
+                email: 'dev@demo.aegis.com',
+                name: 'Developer User',
+                role: 'developer',
+                company: 'Tech Corp',
+                features: ['api_access', 'sdk_access', 'documentation', 'integrations']
+            },
+            analyst: {
+                email: 'analyst@demo.aegis.com',
+                name: 'Analyst User',
+                role: 'analyst',
+                company: 'Analytics Inc',
+                features: ['read_only', 'reports', 'analytics', 'dashboards']
+            }
+        };
+
+        // Handle form submission
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Clear errors
+            document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
+            document.querySelectorAll('.input-field').forEach(el => el.classList.remove('error'));
+
+            // Get form values
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const company = document.getElementById('company').value.trim();
+
+            // Validate
+            let hasError = false;
+
+            if (!fullName) {
+                document.getElementById('fullName').classList.add('error');
+                document.getElementById('nameError').classList.add('show');
+                hasError = true;
+            }
+
+            if (!email || !email.includes('@')) {
+                document.getElementById('email').classList.add('error');
+                document.getElementById('emailError').classList.add('show');
+                hasError = true;
+            }
+
+            if (!password || password.length < 8) {
+                document.getElementById('password').classList.add('error');
+                document.getElementById('passwordError').classList.add('show');
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            // Disable button
+            const btn = document.getElementById('registerBtn');
+            btn.disabled = true;
+            btn.textContent = 'Creating account...';
+
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // Store user data (in production, this would be server-side)
+            const userData = {
+                id: 'user_' + Date.now(),
+                name: fullName,
+                email: email,
+                company: company || 'Individual',
+                role: 'user',
+                createdAt: new Date().toISOString(),
+                features: ['basic_access', 'api_limited', 'documentation']
+            };
+
+            // Save to localStorage (demo only)
+            localStorage.setItem('aegis_authenticated', 'true');
+            localStorage.setItem('aegis_user', JSON.stringify(userData));
+            localStorage.setItem('aegis_user_email', email);
+            localStorage.setItem('aegis_user_name', fullName);
+
+            // Show success message
+            document.getElementById('successMessage').classList.add('show');
+
+            // Redirect to dashboard
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        });
+
+        // Login as demo user
+        function loginAsDemo(type) {
+            const user = demoUsers[type];
+            if (!user) return;
+
+            // Store demo user data
+            localStorage.setItem('aegis_authenticated', 'true');
+            localStorage.setItem('aegis_user', JSON.stringify(user));
+            localStorage.setItem('aegis_user_email', user.email);
+            localStorage.setItem('aegis_user_name', user.name);
+            localStorage.setItem('aegis_user_role', user.role);
+            localStorage.setItem('aegis_demo_mode', 'true');
+
+            // Redirect to dashboard
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>

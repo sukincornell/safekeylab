@@ -3,572 +3,3352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Aegis Privacy Shield</title>
-    <meta name="description" content="Monitor your PII protection metrics, API usage, and compliance status">
-    <link rel="icon" type="image/svg+xml" href="aegis-icon.svg">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>SafeKey Lab - Enterprise Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Aegis Core Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/dashboard-data.js"></script>
+    <script src="js/dashboard.js" defer></script>
     <style>
-        .dashboard-container {
-            display: grid;
-            grid-template-columns: 240px 1fr;
-            min-height: 100vh;
-            background: #fff;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .dashboard-sidebar {
-            background: #f8f8f8;
-            border-right: 1px solid #e0e0e0;
-            padding: 24px;
+
+        :root {
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F9FAFB;
+            --bg-tertiary: #F3F4F6;
+            --border: #E5E7EB;
+            --border-subtle: #D1D5DB;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+            --accent: #3B82F6;
+            --accent-hover: #2563EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --card-bg: #FFFFFF;
+            --hover-bg: #F9FAFB;
         }
-        .dashboard-logo {
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body.dark-mode {
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #161616;
+            --bg-tertiary: #1A1A1A;
+            --border: #262626;
+            --border-subtle: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A3A3A3;
+            --text-muted: #666666;
+            --card-bg: #161616;
+            --hover-bg: #1A1A1A;
+        }
+
+        .dashboard {
             display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e0e0e0;
+            min-height: 100vh;
         }
-        .dashboard-nav {
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            gap: 8px;
         }
-        .dashboard-nav a {
-            color: #777;
-            text-decoration: none;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s;
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-        .dashboard-nav a:hover {
-            color: #000;
-            background: rgba(0, 0, 0, 0.05);
-        }
-        .dashboard-nav a.active {
-            color: #000;
-            background: rgba(0, 0, 0, 0.1);
-        }
-        .dashboard-main {
-            padding: 32px 48px;
-            overflow-y: auto;
-        }
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-        .dashboard-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: #000;
-        }
-        .date-range {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-        .date-select {
-            background: #fff;
-            border: 1px solid #d0d0d0;
-            color: #000;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 24px;
-            margin-bottom: 48px;
-        }
-        .stat-card {
-            background: #f8f8f8;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 24px;
-        }
-        .stat-label {
-            color: #777;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .stat-value {
-            font-size: 36px;
-            font-weight: 700;
-            color: #000;
-            margin-bottom: 8px;
-        }
-        .stat-change {
-            font-size: 14px;
-            color: #000;
-        }
-        .stat-change.negative {
-            color: #ff3333;
-        }
-        .chart-container {
-            background: #f8f8f8;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 32px;
-        }
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-        .chart-title {
             font-size: 18px;
             font-weight: 600;
-            color: #000;
+            color: var(--text-primary);
+            cursor: pointer;
         }
-        .chart-placeholder {
-            height: 300px;
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            font-size: 18px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #777;
-            background: rgba(0, 0, 0, 0.02);
-            border-radius: 8px;
+            color: white;
+            font-weight: 700;
         }
-        .data-table {
-            background: #f8f8f8;
-            border: 1px solid #e0e0e0;
+
+        .nav {
+            flex: 1;
+            padding: 16px 12px;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-decoration: none;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 0 3px 3px 0;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            opacity: 0.8;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            padding: 2px 8px;
+            background: var(--accent);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 10px;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .user-profile:hover {
+            background: var(--hover-bg);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3B82F6, #10B981);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .breadcrumb-item {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .breadcrumb-item:hover {
+            color: var(--text-primary);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-primary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-btn:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            border-color: var(--border-subtle);
+        }
+
+        .header-btn.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .header-btn.primary:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            border-color: var(--border-subtle);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 18px;
+            height: 18px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-secondary);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .content-grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        /* Stats Cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .stat-icon.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .stat-icon.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .stat-icon.danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .stat-icon.info {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .stat-change {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+        }
+
+        .stat-change.negative {
+            color: var(--danger);
+        }
+
+        /* Data Table */
+        .table-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
             border-radius: 12px;
             overflow: hidden;
         }
+
         .table-header {
             padding: 20px 24px;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
+
         .table-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
-            color: #000;
+            color: var(--text-primary);
         }
+
+        .table-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 8px 12px 8px 36px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 13px;
+            width: 240px;
+            outline: none;
+            transition: all 0.15s;
+        }
+
+        .search-input:focus {
+            border-color: var(--border-subtle);
+            background: var(--bg-tertiary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            width: 16px;
+            height: 16px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
+
+        thead {
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border);
+        }
+
         th {
             text-align: left;
-            padding: 16px 24px;
-            background: #050505;
-            color: #777;
+            padding: 12px 24px;
             font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
         }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+
+        tbody tr:hover {
+            background: var(--hover-bg);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
         td {
             padding: 16px 24px;
-            border-top: 1px solid #1a1a1a;
-            color: #ccc;
             font-size: 14px;
+            color: var(--text-primary);
         }
-        tr:hover {
-            background: rgba(0, 0, 0, 0.02);
-        }
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 100px;
+
+        .table-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 12px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 500;
         }
-        .badge.success {
-            background: rgba(0, 0, 0, 0.1);
-            color: #000;
+
+        .table-badge.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
         }
-        .badge.warning {
-            background: rgba(255, 170, 0, 0.2);
-            color: #ffaa00;
+
+        .table-badge.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
         }
-        .badge.danger {
-            background: rgba(255, 51, 51, 0.2);
-            color: #ff3333;
+
+        .table-badge.danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
         }
-        .user-menu {
+
+        .table-actions-cell {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 8px;
         }
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #000, #333);
+
+        .action-btn {
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #000;
-            font-weight: 600;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
         }
-        .user-info {
-            text-align: right;
+
+        .action-btn:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            border-color: var(--border-subtle);
         }
-        .user-name {
-            color: #000;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .user-role {
-            color: #777;
-            font-size: 12px;
-        }
-        .chart-bars {
+
+        .table-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             justify-content: space-between;
-            height: 200px;
-            gap: 12px;
-            padding: 20px 0;
         }
-        .chart-bar {
-            flex: 1;
-            background: linear-gradient(to top, #000, #333);
-            border-radius: 4px 4px 0 0;
-            position: relative;
-            min-height: 10px;
-            opacity: 0.8;
-            transition: opacity 0.2s;
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .chart-bar:hover {
-            opacity: 1;
+
+        .pagination-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.15s;
         }
-        .chart-bar-label {
-            position: absolute;
-            bottom: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 10px;
-            color: #777;
+
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            border-color: var(--border-subtle);
         }
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
-        .quick-action {
-            background: rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            padding: 16px;
-            text-align: center;
-            color: #000;
-            text-decoration: none;
-            font-size: 14px;
+
+        .pagination-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .table-info {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Charts */
+        .chart-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .chart-title {
+            font-size: 16px;
             font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .chart-legend {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .modal-close:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 24px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: none;
+            outline: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            border-color: var(--border-subtle);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.15s;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent);
+            background: var(--bg-tertiary);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            border-color: var(--accent);
+            background: var(--bg-tertiary);
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            opacity: 0.3;
+        }
+
+        .empty-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .empty-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                height: 100vh;
+                z-index: 999;
+                transition: left 0.3s;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .header-left {
+                flex: 1;
+            }
+
+            .breadcrumb {
+                display: none;
+            }
+        }
+
+        /* Section Styles */
+        .section-header {
+            margin-bottom: 30px;
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 4px;
+            cursor: pointer;
             transition: all 0.2s;
         }
-        .quick-action:hover {
-            background: rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
+
+        .btn-sm:hover {
+            background: var(--hover-bg);
+            border-color: var(--text-secondary);
+        }
+
+        .primary-button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #00FF88, #00CC6A);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .primary-button:hover {
+            transform: scale(1.02);
         }
     </style>
 </head>
-<body style="background: #fff; color: #000;">
-    <div class="dashboard-container">
+<body>
+    <div class="dashboard">
         <!-- Sidebar -->
-        <aside class="dashboard-sidebar">
-            <div class="dashboard-logo">
-                <img src="aegis-icon.svg" alt="Aegis" style="width: 32px; height: 32px;">
-                <span style="color: #000; font-size: 20px; font-weight: 700;">AEGIS</span>
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">🔑</div>
+                    <span>SafeKey Lab</span>
+                </div>
             </div>
 
-            <nav class="dashboard-nav">
-                <a href="#" class="active">
-                    <span>📊</span> Overview
-                </a>
-                <a href="#">
-                    <span>📈</span> Analytics
-                </a>
-                <a href="#">
-                    <span>🔍</span> PII Detection
-                </a>
-                <a href="#">
-                    <span>🔑</span> API Keys
-                </a>
-                <a href="#">
-                    <span>📋</span> Audit Logs
-                </a>
-                <a href="#">
-                    <span>⚡</span> Performance
-                </a>
-                <a href="#">
-                    <span>⚠️</span> Alerts
-                </a>
-                <a href="#">
-                    <span>📄</span> Reports
-                </a>
-                <a href="#">
-                    <span>⚙️</span> Settings
-                </a>
-                <a href="#">
-                    <span>📚</span> Documentation
-                </a>
+            <nav class="nav">
+                <!-- Main -->
+                <div class="nav-section">
+                    <div class="nav-label">Main</div>
+                    <a class="nav-item active" onclick="navigate('dashboard')">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+                    <a class="nav-item" onclick="navigate('detections')">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        <span>Detections</span>
+                        <span class="nav-badge">24</span>
+                    </a>
+                    <a class="nav-item" onclick="navigate('analytics')">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                        <span>Analytics</span>
+                    </a>
+                    <a class="nav-item" onclick="navigate('realtime')">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                        <span>Real-time Monitor</span>
+                    </a>
+                </div>
+
+                <!-- Data Management -->
+                <div class="nav-section">
+                    <div class="nav-label">Data Management</div>
+                    <a class="nav-item" onclick="navigate('api-keys')">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                        </svg>
+                        <span>API Keys</span>
+                    </a>
+                    <a class="nav-item" onclick="navigate('data-catalog')">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
+                        </svg>
+                        <span>Data Catalog</span>
+                    </a>
+                    <a class="nav-item" onclick="navigate('policies')">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span>Policies</span>
+                    </a>
+                    <a class="nav-item" onclick="navigate('models')">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                        </svg>
+                        <span>Models</span>
+                    </a>
+                </div>
+
+                <!-- Compliance -->
+                <div class="nav-section">
+                    <div class="nav-label">Compliance</div>
+                    <a class="nav-item" onclick="navigate('audit-logs')">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span>Audit Logs</span>
+                    </a>
+                    <a class="nav-item" onclick="navigate('compliance')">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                        <span>Compliance</span>
+                    </a>
+                    <a class="nav-item" onclick="navigate('reports')">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span>Reports</span>
+                    </a>
+                </div>
+
+                <!-- Implementation -->
+                <div class="nav-section">
+                    <div class="nav-label">Getting Started</div>
+                    <a class="nav-item" onclick="navigate('implementation')">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        <span>Implementation Guide</span>
+                    </a>
+                    <a class="nav-item" onclick="navigate('deployment')">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <span>Deployment Options</span>
+                    </a>
+                </div>
+
+                <!-- System -->
+                <div class="nav-section">
+                    <div class="nav-label">System</div>
+                    <a class="nav-item" onclick="navigate('team')">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        <span>Team</span>
+                    </a>
+                    <a class="nav-item" onclick="navigate('integrations')">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/>
+                        </svg>
+                        <span>Integrations</span>
+                    </a>
+                    <a href="settings.html" class="nav-item">
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        <span>Settings</span>
+                    </a>
+                </div>
             </nav>
 
-            <div style="margin-top: auto; padding-top: 40px; border-top: 1px solid #222;">
-                <a href="index.html" style="color: #666; text-decoration: none; font-size: 14px;">
-                    ← Back to Website
-                </a>
+            <div class="sidebar-footer">
+                <div class="user-profile" onclick="toggleUserMenu()">
+                    <div class="user-avatar" id="userAvatar">JD</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">John Doe</div>
+                        <div class="user-role" id="userRole">Administrator</div>
+                    </div>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+                <div id="userMenu" style="display: none; position: absolute; bottom: 70px; left: 16px; right: 16px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px;">
+                    <a onclick="logout()" style="display: block; padding: 8px 12px; color: var(--text-secondary); cursor: pointer; border-radius: 4px; transition: background 0.15s;">
+                        <svg style="display: inline-block; width: 16px; height: 16px; margin-right: 8px; vertical-align: middle;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        Sign Out
+                    </a>
+                </div>
             </div>
         </aside>
 
         <!-- Main Content -->
-        <main class="dashboard-main">
+        <main class="main">
             <!-- Header -->
-            <div class="dashboard-header">
-                <h1 class="dashboard-title">Dashboard Overview</h1>
-                <div style="display: flex; gap: 24px; align-items: center;">
-                    <div class="date-range">
-                        <select class="date-select">
-                            <option>Last 7 days</option>
-                            <option>Last 30 days</option>
-                            <option>Last 90 days</option>
-                            <option>Custom range</option>
-                        </select>
-                    </div>
-                    <div class="user-menu">
-                        <div class="user-info">
-                            <div class="user-name">John Smith</div>
-                            <div class="user-role">Administrator</div>
+            <header class="header">
+                <div class="header-left">
+                    <h1 class="page-title">Dashboard</h1>
+                    <nav class="breadcrumb">
+                        <a href="#" class="breadcrumb-item">Home</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item active">Dashboard</span>
+                    </nav>
+                </div>
+                <div class="header-right">
+                    <button class="header-btn" data-export onclick="dashboard.exportData()">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Export
+                    </button>
+                    <button class="header-btn primary" onclick="showCreateModal()">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        New Detection Rule
+                    </button>
+                    <button class="icon-btn" onclick="toggleSearch()">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </button>
+                    <button class="icon-btn" onclick="toggleNotifications()">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="icon-btn" onclick="toggleTheme()" data-theme-toggle>
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content">
+                <!-- Stats Cards -->
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Total Requests</span>
+                            <div class="stat-icon info">📊</div>
                         </div>
-                        <div class="user-avatar">JS</div>
+                        <div class="stat-value" id="total-requests">Loading...</div>
+                        <div class="stat-change positive">
+                            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 14l5-5 5 5H7z"/>
+                            </svg>
+                            12.5% from last month
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Quick Actions -->
-            <div class="quick-actions">
-                <a href="#" class="quick-action">🚀 Test API</a>
-                <a href="#" class="quick-action">📖 View Docs</a>
-                <a href="#" class="quick-action">🔑 Generate API Key</a>
-                <a href="#" class="quick-action">📊 Export Report</a>
-            </div>
-
-            <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">
-                        <span>🛡️</span> PII Items Protected
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">PII Detected</span>
+                            <div class="stat-icon danger">🔒</div>
+                        </div>
+                        <div class="stat-value" id="pii-detected">Loading...</div>
+                        <div class="stat-change negative">
+                            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 10l5 5 5-5H7z"/>
+                            </svg>
+                            3.2% from last month
+                        </div>
                     </div>
-                    <div class="stat-value">2,847,391</div>
-                    <div class="stat-change">↑ 12.5% from last period</div>
-                </div>
 
-                <div class="stat-card">
-                    <div class="stat-label">
-                        <span>📊</span> API Requests
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Compliance Score</span>
+                            <div class="stat-icon success">✓</div>
+                        </div>
+                        <div class="stat-value" id="compliance-score">Loading...</div>
+                        <div class="stat-change positive">
+                            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 14l5-5 5 5H7z"/>
+                            </svg>
+                            2.1% improvement
+                        </div>
                     </div>
-                    <div class="stat-value">982,451</div>
-                    <div class="stat-change">↑ 23.8% from last period</div>
-                </div>
 
-                <div class="stat-card">
-                    <div class="stat-label">
-                        <span>⚡</span> Avg Response Time
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-label">Avg Response Time</span>
+                            <div class="stat-icon warning">⚡</div>
+                        </div>
+                        <div class="stat-value" id="response-time">Loading...</div>
+                        <div class="stat-change positive">
+                            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 14l5-5 5 5H7z"/>
+                            </svg>
+                            15% faster
+                        </div>
                     </div>
-                    <div class="stat-value">1.8ms</div>
-                    <div class="stat-change">↓ 0.3ms improvement</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-label">
-                        <span>✅</span> Detection Accuracy
-                    </div>
-                    <div class="stat-value">99.97%</div>
-                    <div class="stat-change">Maintained</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-label">
-                        <span>💰</span> Compliance Saved
-                    </div>
-                    <div class="stat-value">$4.2M</div>
-                    <div class="stat-change">Estimated fine prevention</div>
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-label">
-                        <span>🌍</span> Active Regions
+                <!-- Charts Row -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px;">
+                    <!-- Detection Trends Chart -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Detection Trends</h3>
+                            <div class="chart-legend">
+                                <div class="legend-item">
+                                    <div class="legend-dot" style="background: #3B82F6;"></div>
+                                    <span>Total Detections</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-dot" style="background: #EF4444;"></div>
+                                    <span>Critical</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="trendsChart"></canvas>
+                        </div>
                     </div>
-                    <div class="stat-value">12</div>
-                    <div class="stat-change">Global coverage</div>
-                </div>
-            </div>
 
-            <!-- Chart: API Usage -->
-            <div class="chart-container">
-                <div class="chart-header">
-                    <h3 class="chart-title">API Request Volume (Last 7 Days)</h3>
-                    <select class="date-select" style="background: #fff; border: 1px solid #d0d0d0; color: #000; font-size: 12px; padding: 6px 12px;">
-                        <option>Hourly</option>
-                        <option>Daily</option>
-                        <option>Weekly</option>
-                    </select>
-                </div>
-                <div class="chart-bars">
-                    <div class="chart-bar" style="height: 60%">
-                        <span class="chart-bar-label">Mon</span>
-                    </div>
-                    <div class="chart-bar" style="height: 75%">
-                        <span class="chart-bar-label">Tue</span>
-                    </div>
-                    <div class="chart-bar" style="height: 85%">
-                        <span class="chart-bar-label">Wed</span>
-                    </div>
-                    <div class="chart-bar" style="height: 70%">
-                        <span class="chart-bar-label">Thu</span>
-                    </div>
-                    <div class="chart-bar" style="height: 90%">
-                        <span class="chart-bar-label">Fri</span>
-                    </div>
-                    <div class="chart-bar" style="height: 45%">
-                        <span class="chart-bar-label">Sat</span>
-                    </div>
-                    <div class="chart-bar" style="height: 40%">
-                        <span class="chart-bar-label">Sun</span>
+                    <!-- Data Types Chart -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Data Types Detected</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="dataTypesChart"></canvas>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- PII Detection Table -->
-            <div class="data-table">
-                <div class="table-header">
-                    <h3 class="table-title">Recent PII Detections</h3>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Timestamp</th>
-                            <th>Type</th>
-                            <th>Count</th>
-                            <th>Action</th>
-                            <th>API Endpoint</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>2024-10-20 15:42:18</td>
-                            <td>SSN</td>
-                            <td>3</td>
-                            <td>Redacted</td>
-                            <td>/v3/protect</td>
-                            <td><span class="badge success">Protected</span></td>
-                        </tr>
-                        <tr>
-                            <td>2024-10-20 15:41:55</td>
-                            <td>Credit Card</td>
-                            <td>2</td>
-                            <td>Masked</td>
-                            <td>/v3/protect</td>
-                            <td><span class="badge success">Protected</span></td>
-                        </tr>
-                        <tr>
-                            <td>2024-10-20 15:41:12</td>
-                            <td>Email, Phone</td>
-                            <td>5</td>
-                            <td>Tokenized</td>
-                            <td>/v2/process</td>
-                            <td><span class="badge success">Protected</span></td>
-                        </tr>
-                        <tr>
-                            <td>2024-10-20 15:40:33</td>
-                            <td>Medical Record</td>
-                            <td>1</td>
-                            <td>Redacted</td>
-                            <td>/v3/protect</td>
-                            <td><span class="badge warning">HIPAA Alert</span></td>
-                        </tr>
-                        <tr>
-                            <td>2024-10-20 15:39:47</td>
-                            <td>API Key</td>
-                            <td>1</td>
-                            <td>Removed</td>
-                            <td>/v2/detect</td>
-                            <td><span class="badge danger">Critical</span></td>
-                        </tr>
-                        <tr>
-                            <td>2024-10-20 15:38:22</td>
-                            <td>Address</td>
-                            <td>4</td>
-                            <td>Generalized</td>
-                            <td>/v3/protect</td>
-                            <td><span class="badge success">Protected</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                <!-- Recent Detections Table -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">Recent Detections</h3>
+                        <div class="table-actions">
+                            <div class="search-box">
+                                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                                <input type="text" class="search-input" placeholder="Search detections..." oninput="filterTable(this.value)">
+                            </div>
+                            <button class="header-btn" onclick="refreshTable()">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
 
-            <!-- Compliance Summary -->
-            <div class="chart-container" style="margin-top: 32px;">
-                <div class="chart-header">
-                    <h3 class="chart-title">Compliance Status</h3>
-                </div>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; padding: 24px;">
-                    <div style="text-align: center;">
-                        <div style="font-size: 48px; margin-bottom: 8px;">✅</div>
-                        <div style="color: #000; font-weight: 600;">GDPR Compliant</div>
-                        <div style="color: #666; font-size: 12px; margin-top: 4px;">All EU data protected</div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Data Type</th>
+                                    <th>Source</th>
+                                    <th>Risk Level</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detectionsTable">
+                                <!-- Dynamic rows will be inserted here by dashboard-data.js -->
+                                <tr>
+                                    <td>Loading...</td>
+                                    <td colspan="5">Fetching recent detections...</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div style="text-align: center;">
-                        <div style="font-size: 48px; margin-bottom: 8px;">✅</div>
-                        <div style="color: #000; font-weight: 600;">HIPAA Ready</div>
-                        <div style="color: #666; font-size: 12px; margin-top: 4px;">PHI fully secured</div>
-                    </div>
-                    <div style="text-align: center;">
-                        <div style="font-size: 48px; margin-bottom: 8px;">✅</div>
-                        <div style="color: #000; font-weight: 600;">PCI DSS</div>
-                        <div style="color: #666; font-size: 12px; margin-top: 4px;">Card data protected</div>
-                    </div>
-                    <div style="text-align: center;">
-                        <div style="font-size: 48px; margin-bottom: 8px;">✅</div>
-                        <div style="color: #000; font-weight: 600;">CCPA Aligned</div>
-                        <div style="color: #666; font-size: 12px; margin-top: 4px;">California privacy met</div>
+
+                    <div class="table-footer">
+                        <div class="table-info">
+                            Showing 1-10 of 324 detections
+                        </div>
+                        <div class="pagination">
+                            <button class="pagination-btn" disabled>Previous</button>
+                            <button class="pagination-btn active">1</button>
+                            <button class="pagination-btn">2</button>
+                            <button class="pagination-btn">3</button>
+                            <button class="pagination-btn">...</button>
+                            <button class="pagination-btn">33</button>
+                            <button class="pagination-btn">Next</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
+    <!-- Create Detection Rule Modal -->
+    <div class="modal-overlay" id="createModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Create Detection Rule</h3>
+                <button class="modal-close" onclick="closeModal()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Rule Name</label>
+                    <input type="text" class="form-input" placeholder="Enter rule name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Data Type</label>
+                    <select class="form-select">
+                        <option>Credit Card</option>
+                        <option>Social Security Number</option>
+                        <option>Email Address</option>
+                        <option>Phone Number</option>
+                        <option>API Key</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Risk Level</label>
+                    <select class="form-select">
+                        <option>Critical</option>
+                        <option>High</option>
+                        <option>Medium</option>
+                        <option>Low</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Action</label>
+                    <select class="form-select">
+                        <option>Redact</option>
+                        <option>Encrypt</option>
+                        <option>Alert Only</option>
+                        <option>Block</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="createRule()">Create Rule</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Simple interactivity
-        document.querySelectorAll('.dashboard-nav a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelectorAll('.dashboard-nav a').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isDark = !document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateCharts();
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-mode');
+        }
+
+        // Navigation
+        function navigate(section) {
+            console.log('Navigating to:', section);
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
             });
+            event.target.closest('.nav-item').classList.add('active');
+
+            // Load section content (would be implemented with routing)
+            loadSectionContent(section);
+        }
+
+        function loadSectionContent(section) {
+            // Update page title and breadcrumb
+            const titleElement = document.querySelector('.page-title');
+            const breadcrumbActive = document.querySelector('.breadcrumb-item.active');
+
+            const sectionTitles = {
+                'dashboard': 'Dashboard',
+                'detections': 'Detections',
+                'analytics': 'Analytics',
+                'implementation': 'Implementation Guide',
+                'deployment': 'Deployment Options',
+                'realtime': 'Real-time Monitor',
+                'api-keys': 'API Keys',
+                'data-catalog': 'Data Catalog',
+                'policies': 'Policies',
+                'models': 'Models',
+                'audit-logs': 'Audit Logs',
+                'compliance': 'Compliance',
+                'reports': 'Reports',
+                'team': 'Team Management',
+                'integrations': 'Integrations'
+            };
+
+            if (titleElement) titleElement.textContent = sectionTitles[section] || section;
+            if (breadcrumbActive) breadcrumbActive.textContent = sectionTitles[section] || section;
+
+            // Update main content area
+            const contentArea = document.querySelector('.content');
+            if (!contentArea) return;
+
+            // Generate appropriate content for each section
+            let content = '';
+
+            switch(section) {
+                case 'dashboard':
+                    // Reload the page to show dashboard
+                    location.reload();
+                    break;
+
+                case 'implementation':
+                    content = `
+                        <div class="section-header">
+                            <h2>Implementation Guide</h2>
+                            <p>Get started with SafeKey Lab in minutes - integrate PII protection into your application</p>
+                        </div>
+
+                        <!-- Quick Start Steps -->
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 32px; margin-bottom: 32px; color: white;">
+                            <h2 style="margin-bottom: 24px; font-size: 28px;">⚡ Quick Start in 3 Steps</h2>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 48px; margin-bottom: 12px;">1️⃣</div>
+                                    <h3>Get Your API Key</h3>
+                                    <p style="opacity: 0.9;">Sign up and grab your API key from the dashboard</p>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 48px; margin-bottom: 12px;">2️⃣</div>
+                                    <h3>Install SDK</h3>
+                                    <p style="opacity: 0.9;">Install our SDK in your preferred language</p>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 48px; margin-bottom: 12px;">3️⃣</div>
+                                    <h3>Start Protecting</h3>
+                                    <p style="opacity: 0.9;">Call our API to detect and remove PII</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Implementation Tabs -->
+                        <div class="implementation-tabs" style="margin-bottom: 32px;">
+                            <div style="display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border);">
+                                <button onclick="showImplementationTab('python')" class="tab-btn active" style="padding: 12px 24px; background: transparent; border: none; color: var(--text-primary); cursor: pointer; border-bottom: 2px solid var(--accent);">Python</button>
+                                <button onclick="showImplementationTab('javascript')" class="tab-btn" style="padding: 12px 24px; background: transparent; border: none; color: var(--text-secondary); cursor: pointer;">JavaScript</button>
+                                <button onclick="showImplementationTab('curl')" class="tab-btn" style="padding: 12px 24px; background: transparent; border: none; color: var(--text-secondary); cursor: pointer;">cURL</button>
+                                <button onclick="showImplementationTab('java')" class="tab-btn" style="padding: 12px 24px; background: transparent; border: none; color: var(--text-secondary); cursor: pointer;">Java</button>
+                                <button onclick="showImplementationTab('go')" class="tab-btn" style="padding: 12px 24px; background: transparent; border: none; color: var(--text-secondary); cursor: pointer;">Go</button>
+                            </div>
+
+                            <!-- Python Tab Content -->
+                            <div id="python-impl" class="impl-content">
+                                <h3>🐍 Python Implementation</h3>
+
+                                <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 20px; margin: 16px 0;">
+                                    <h4>Installation</h4>
+                                    <pre style="background: #1a1a1a; padding: 16px; border-radius: 8px; overflow-x: auto;"><code># Install via pip
+pip install aegis-shield
+
+# Or for enterprise features
+pip install aegis-shield-enterprise</code></pre>
+                                </div>
+
+                                <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 20px; margin: 16px 0;">
+                                    <h4>Basic Usage</h4>
+                                    <pre style="background: #1a1a1a; padding: 16px; border-radius: 8px; overflow-x: auto;"><code>from safekey import SafeKeyClient
+
+# Initialize client
+client = SafeKeyClient(api_key="sk_live_your_api_key_here")
+
+# Detect and remove PII from text
+text = "Contact John Smith at john.smith@email.com or 555-123-4567"
+result = client.process(text)
+
+print(result.processed_text)
+# Output: "Contact [PERSON] at [EMAIL] or [PHONE]"
+
+print(result.detected_entities)
+# Output: [
+#   {"type": "PERSON", "value": "John Smith", "start": 8, "end": 18},
+#   {"type": "EMAIL", "value": "john.smith@email.com", "start": 22, "end": 42},
+#   {"type": "PHONE", "value": "555-123-4567", "start": 46, "end": 58}
+# ]</code></pre>
+                                </div>
+
+                                <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 20px; margin: 16px 0;">
+                                    <h4>Advanced Features</h4>
+                                    <pre style="background: #1a1a1a; padding: 16px; border-radius: 8px; overflow-x: auto;"><code># Process images with face blurring
+with open("photo.jpg", "rb") as f:
+    result = client.process_image(
+        image_data=f.read(),
+        blur_faces=True,
+        detect_text_pii=True
+    )
+    # Returns base64 encoded image with faces blurred
+
+# Process audio files
+result = client.process_audio(
+    audio_file="recording.wav",
+    transcribe=True,
+    anonymize_voices=True
+)
+
+# Batch processing for performance
+texts = [
+    "SSN: 123-45-6789",
+    "Credit card: 4111-1111-1111-1111",
+    "Patient MRN: 12345678"
+]
+results = client.batch_process(texts)
+
+# Custom configuration
+client = SafeKeyClient(
+    api_key="sk_live_xxx",
+    endpoint="https://api.your-deployment.com",  # For on-premise
+    timeout=30,
+    retry_count=3
+)</code></pre>
+                                </div>
+
+                                <div style="background: #e8f5e9; border-left: 4px solid #4caf50; padding: 16px; border-radius: 8px; margin: 16px 0;">
+                                    <strong>💡 Pro Tip:</strong> Use environment variables for API keys:
+                                    <pre style="background: white; padding: 8px; margin-top: 8px; border-radius: 4px;"><code>import os
+client = SafeKeyClient(api_key=os.environ.get("SAFEKEY_API_KEY"))</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- JavaScript Tab Content (hidden by default) -->
+                            <div id="javascript-impl" class="impl-content" style="display: none;">
+                                <h3>📜 JavaScript Implementation</h3>
+
+                                <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 20px; margin: 16px 0;">
+                                    <h4>Installation</h4>
+                                    <pre style="background: #1a1a1a; padding: 16px; border-radius: 8px;"><code># Install via npm
+npm install aegis-shield
+
+# Or using yarn
+yarn add aegis-shield</code></pre>
+                                </div>
+
+                                <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 20px; margin: 16px 0;">
+                                    <h4>Basic Usage</h4>
+                                    <pre style="background: #1a1a1a; padding: 16px; border-radius: 8px;"><code>const { SafeKeyClient } = require('safekey-lab');
+// Or for ES6: import { SafeKeyClient } from 'safekey-lab';
+
+// Initialize client
+const client = new SafeKeyClient({
+    apiKey: 'sk_live_your_api_key_here'
+});
+
+// Detect and remove PII
+async function protectData() {
+    const text = "Email me at user@example.com or call 555-0123";
+    const result = await client.process(text);
+
+    console.log(result.processedText);
+    // Output: "Email me at [EMAIL] or call [PHONE]"
+
+    console.log(result.detectedEntities);
+    // Array of detected PII entities
+}
+
+// Process in React component
+function PrivacyForm() {
+    const [input, setInput] = useState('');
+    const [safe, setSafe] = useState('');
+
+    const handleSubmit = async () => {
+        const result = await client.process(input);
+        setSafe(result.processedText);
+    };
+
+    return (
+        <div>
+            <textarea onChange={(e) => setInput(e.target.value)} />
+            <button onClick={handleSubmit}>Remove PII</button>
+            <div>Safe output: {safe}</div>
+        </div>
+    );
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- cURL Tab Content (hidden) -->
+                            <div id="curl-impl" class="impl-content" style="display: none;">
+                                <h3>🔧 cURL / REST API</h3>
+
+                                <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 20px; margin: 16px 0;">
+                                    <h4>Text Processing</h4>
+                                    <pre style="background: #1a1a1a; padding: 16px; border-radius: 8px;"><code>curl -X POST https://api.safekeylab.com/v1/process \\
+  -H "Authorization: Bearer sk_live_your_api_key" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "text": "John Doe SSN is 123-45-6789",
+    "method": "redaction"
+  }'
+
+# Response:
+{
+  "processed_text": "[PERSON] SSN is [SSN]",
+  "detected_entities": [
+    {"type": "PERSON", "value": "John Doe", "start": 0, "end": 8},
+    {"type": "SSN", "value": "123-45-6789", "start": 16, "end": 27}
+  ],
+  "processing_time_ms": 12.5
+}</code></pre>
+                                </div>
+
+                                <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 20px; margin: 16px 0;">
+                                    <h4>Image Processing</h4>
+                                    <pre style="background: #1a1a1a; padding: 16px; border-radius: 8px;"><code>curl -X POST https://api.safekeylab.com/v1/process/image \\
+  -H "Authorization: Bearer sk_live_your_api_key" \\
+  -F "image=@photo.jpg" \\
+  -F "blur_faces=true" \\
+  -F "detect_text=true"</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- Java Tab Content (hidden) -->
+                            <div id="java-impl" class="impl-content" style="display: none;">
+                                <h3>☕ Java Implementation</h3>
+
+                                <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 20px; margin: 16px 0;">
+                                    <h4>Maven Installation</h4>
+                                    <pre style="background: #1a1a1a; padding: 16px; border-radius: 8px;"><code>&lt;dependency&gt;
+    &lt;groupId&gt;ai.aegis&lt;/groupId&gt;
+    &lt;artifactId&gt;aegis-shield&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+                                </div>
+
+                                <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 20px; margin: 16px 0;">
+                                    <h4>Basic Usage</h4>
+                                    <pre style="background: #1a1a1a; padding: 16px; border-radius: 8px;"><code>import com.safekey.SafeKeyClient;
+import ai.aegis.ProcessResult;
+
+public class PrivacyExample {
+    public static void main(String[] args) {
+        // Initialize client
+        SafeKeyClient client = new SafeKeyClient("sk_live_your_api_key");
+
+        // Process text
+        String text = "Contact admin@company.com or 555-1234";
+        ProcessResult result = client.process(text);
+
+        System.out.println(result.getProcessedText());
+        // Output: "Contact [EMAIL] or [PHONE]"
+
+        // Process with options
+        result = client.process(text, new ProcessOptions()
+            .setMethod("tokenization")
+            .setConfidenceThreshold(0.9));
+    }
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- Go Tab Content (hidden) -->
+                            <div id="go-impl" class="impl-content" style="display: none;">
+                                <h3>🐹 Go Implementation</h3>
+
+                                <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 20px; margin: 16px 0;">
+                                    <h4>Installation</h4>
+                                    <pre style="background: #1a1a1a; padding: 16px; border-radius: 8px;"><code>go get github.com/aegis-shield/aegis-go</code></pre>
+                                </div>
+
+                                <div style="background: var(--bg-tertiary); border-radius: 8px; padding: 20px; margin: 16px 0;">
+                                    <h4>Basic Usage</h4>
+                                    <pre style="background: #1a1a1a; padding: 16px; border-radius: 8px;"><code>package main
+
+import (
+    "fmt"
+    "github.com/aegis-shield/aegis-go"
+)
+
+func main() {
+    // Initialize client
+    client := aegis.NewClient("sk_live_your_api_key")
+
+    // Process text
+    text := "Email: user@example.com, Phone: 555-0123"
+    result, err := client.Process(text)
+    if err != nil {
+        panic(err)
+    }
+
+    fmt.Println(result.ProcessedText)
+    // Output: "Email: [EMAIL], Phone: [PHONE]"
+
+    // Process with context
+    ctx := context.Background()
+    result, err = client.ProcessWithContext(ctx, text, &aegis.Options{
+        Method: "redaction",
+        Timeout: 30,
+    })
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Common Use Cases -->
+                        <div style="margin-top: 48px;">
+                            <h2 style="margin-bottom: 24px;">🎯 Common Use Cases</h2>
+
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+                                <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px;">
+                                    <h3 style="color: var(--accent); margin-bottom: 12px;">📝 Form Submission Protection</h3>
+                                    <p style="color: var(--text-secondary); margin-bottom: 16px;">Sanitize user input before storing in database</p>
+                                    <pre style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; font-size: 13px;"><code>// Before saving to DB
+const sanitized = await safekey.process(userInput);
+await db.save(sanitized.processedText);</code></pre>
+                                </div>
+
+                                <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px;">
+                                    <h3 style="color: var(--accent); margin-bottom: 12px;">💬 Chat & Support Systems</h3>
+                                    <p style="color: var(--text-secondary); margin-bottom: 16px;">Remove PII from chat logs and support tickets</p>
+                                    <pre style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; font-size: 13px;"><code>// Clean chat messages
+messages = messages.map(msg =>
+  safekey.process(msg).processedText
+);</code></pre>
+                                </div>
+
+                                <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px;">
+                                    <h3 style="color: var(--accent); margin-bottom: 12px;">📊 Analytics & Logging</h3>
+                                    <p style="color: var(--text-secondary); margin-bottom: 16px;">Sanitize logs before sending to analytics platforms</p>
+                                    <pre style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; font-size: 13px;"><code>// Clean logs for analytics
+const safeLogs = await safekey.batch(logs);
+analytics.track(safeLogs);</code></pre>
+                                </div>
+
+                                <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px;">
+                                    <h3 style="color: var(--accent); margin-bottom: 12px;">🤖 AI/LLM Integration</h3>
+                                    <p style="color: var(--text-secondary); margin-bottom: 16px;">Clean prompts before sending to OpenAI/Claude</p>
+                                    <pre style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; font-size: 13px;"><code>// Protect before AI processing
+const safe = await safekey.process(prompt);
+const response = await openai.complete(safe);</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Best Practices -->
+                        <div style="margin-top: 48px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 32px;">
+                            <h2 style="margin-bottom: 24px;">✅ Best Practices</h2>
+
+                            <div style="display: grid; gap: 20px;">
+                                <div style="display: flex; gap: 16px;">
+                                    <span style="font-size: 24px;">🔐</span>
+                                    <div>
+                                        <h4>Never hardcode API keys</h4>
+                                        <p style="color: var(--text-secondary);">Use environment variables or secret management services</p>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 16px;">
+                                    <span style="font-size: 24px;">⚡</span>
+                                    <div>
+                                        <h4>Use batch processing for multiple items</h4>
+                                        <p style="color: var(--text-secondary);">Process up to 1000 items in a single API call for better performance</p>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 16px;">
+                                    <span style="font-size: 24px;">💾</span>
+                                    <div>
+                                        <h4>Cache results when possible</h4>
+                                        <p style="color: var(--text-secondary);">For static content, cache sanitized results to reduce API calls</p>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 16px;">
+                                    <span style="font-size: 24px;">📊</span>
+                                    <div>
+                                        <h4>Monitor your usage</h4>
+                                        <p style="color: var(--text-secondary);">Track API usage and set up alerts before hitting limits</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Troubleshooting -->
+                        <div style="margin-top: 48px;">
+                            <h2 style="margin-bottom: 24px;">🔧 Troubleshooting</h2>
+
+                            <details style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px;">
+                                <summary style="cursor: pointer; font-weight: 600;">Authentication Error (401)</summary>
+                                <div style="margin-top: 12px; color: var(--text-secondary);">
+                                    <p>Check that your API key is correct and active. Make sure you're using the right environment (test vs production).</p>
+                                    <pre style="background: var(--bg-tertiary); padding: 8px; margin-top: 8px; border-radius: 4px;"><code># Verify your API key
+curl -H "Authorization: Bearer YOUR_KEY" https://api.safekeylab.com/v1/validate</code></pre>
+                                </div>
+                            </details>
+
+                            <details style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px;">
+                                <summary style="cursor: pointer; font-weight: 600;">Rate Limit Exceeded (429)</summary>
+                                <div style="margin-top: 12px; color: var(--text-secondary);">
+                                    <p>You've exceeded your plan's rate limit. Consider upgrading your plan or implementing exponential backoff.</p>
+                                    <pre style="background: var(--bg-tertiary); padding: 8px; margin-top: 8px; border-radius: 4px;"><code># Check your limits
+curl -H "Authorization: Bearer YOUR_KEY" https://api.safekeylab.com/v1/usage</code></pre>
+                                </div>
+                            </details>
+
+                            <details style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px;">
+                                <summary style="cursor: pointer; font-weight: 600;">Timeout Errors</summary>
+                                <div style="margin-top: 12px; color: var(--text-secondary);">
+                                    <p>For large files or batch requests, increase your client timeout setting. Consider breaking large batches into smaller chunks.</p>
+                                </div>
+                            </details>
+
+                            <details style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px;">
+                                <summary style="cursor: pointer; font-weight: 600;">On-Premise Connection Issues</summary>
+                                <div style="margin-top: 12px; color: var(--text-secondary);">
+                                    <p>For on-premise deployments, verify network connectivity and firewall rules. Ensure your license key is valid.</p>
+                                    <pre style="background: var(--bg-tertiary); padding: 8px; margin-top: 8px; border-radius: 4px;"><code># Test connection to your instance
+curl http://your-aegis-instance:8000/health</code></pre>
+                                </div>
+                            </details>
+                        </div>
+
+                        <!-- Support Section -->
+                        <div style="margin-top: 48px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 32px; text-align: center; color: white;">
+                            <h2 style="margin-bottom: 16px;">Need Help?</h2>
+                            <p style="margin-bottom: 24px; opacity: 0.9;">Our team is here to help you succeed</p>
+                            <div style="display: flex; gap: 16px; justify-content: center;">
+                                <button onclick="window.open('https://docs.safekeylab.com', '_blank')" style="background: white; color: #667eea; padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600;">
+                                    📚 Documentation
+                                </button>
+                                <button onclick="window.open('mailto:support@safekeylab.com', '_blank')" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 24px; border-radius: 8px; border: 1px solid white; cursor: pointer; font-weight: 600;">
+                                    ✉️ Email Support
+                                </button>
+                                <button onclick="navigate('api-keys')" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 24px; border-radius: 8px; border: 1px solid white; cursor: pointer; font-weight: 600;">
+                                    🔑 Get API Key
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'deployment':
+                    content = `
+                        <div class="section-header">
+                            <h2>Deployment Options</h2>
+                            <p>Choose where and how Aegis runs - your data, your control</p>
+                        </div>
+
+                        <div class="deployment-options">
+                            <!-- Cloud Deployment -->
+                            <div class="deployment-card" style="border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; background: var(--card-bg);">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                                    <div>
+                                        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">☁️ Cloud (SaaS)</h3>
+                                        <p style="color: var(--text-secondary); margin-bottom: 16px;">Quick start with our managed cloud service</p>
+                                    </div>
+                                    <span style="background: #10B981; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px;">Active</span>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                                    <div>
+                                        <strong>✅ Pros:</strong>
+                                        <ul style="margin-top: 8px; color: var(--text-secondary); font-size: 14px;">
+                                            <li>5-minute setup</li>
+                                            <li>No maintenance required</li>
+                                            <li>Automatic updates</li>
+                                            <li>99.99% uptime SLA</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <strong>⚠️ Considerations:</strong>
+                                        <ul style="margin-top: 8px; color: var(--text-secondary); font-size: 14px;">
+                                            <li>Data leaves your network</li>
+                                            <li>Shared infrastructure</li>
+                                            <li>Internet dependency</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <span style="font-size: 24px; font-weight: 700;">$299</span>
+                                        <span style="color: var(--text-secondary);">/month</span>
+                                    </div>
+                                    <button class="action-btn">Current Plan</button>
+                                </div>
+                            </div>
+
+                            <!-- Private Cloud -->
+                            <div class="deployment-card" style="border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; background: var(--card-bg);">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                                    <div>
+                                        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">🔒 Private Cloud (VPC)</h3>
+                                        <p style="color: var(--text-secondary); margin-bottom: 16px;">Runs in your AWS/Azure/GCP account</p>
+                                    </div>
+                                    <span style="background: #F59E0B; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px;">Popular</span>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                                    <div>
+                                        <strong>✅ Pros:</strong>
+                                        <ul style="margin-top: 8px; color: var(--text-secondary); font-size: 14px;">
+                                            <li>Data stays in your cloud</li>
+                                            <li>Full control & visibility</li>
+                                            <li>Custom configurations</li>
+                                            <li>Compliance friendly</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <strong>📋 Requirements:</strong>
+                                        <ul style="margin-top: 8px; color: var(--text-secondary); font-size: 14px;">
+                                            <li>AWS/Azure/GCP account</li>
+                                            <li>VPC configuration</li>
+                                            <li>1-day setup</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <span style="font-size: 24px; font-weight: 700;">$2,999</span>
+                                        <span style="color: var(--text-secondary);">/month</span>
+                                    </div>
+                                    <button class="action-btn primary" onclick="showDeploymentGuide('private-cloud')">Deploy to Your Cloud</button>
+                                </div>
+                            </div>
+
+                            <!-- On-Premise -->
+                            <div class="deployment-card" style="border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; background: var(--card-bg);">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                                    <div>
+                                        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">🏢 On-Premise</h3>
+                                        <p style="color: var(--text-secondary); margin-bottom: 16px;">Complete control on your infrastructure</p>
+                                    </div>
+                                    <span style="background: #8B5CF6; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px;">Enterprise</span>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                                    <div>
+                                        <strong>✅ Pros:</strong>
+                                        <ul style="margin-top: 8px; color: var(--text-secondary); font-size: 14px;">
+                                            <li>100% data sovereignty</li>
+                                            <li>Air-gap capable</li>
+                                            <li>No external dependencies</li>
+                                            <li>Unlimited processing</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <strong>📋 Requirements:</strong>
+                                        <ul style="margin-top: 8px; color: var(--text-secondary); font-size: 14px;">
+                                            <li>Docker/Kubernetes</li>
+                                            <li>4 vCPUs, 16GB RAM min</li>
+                                            <li>IT team deployment</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <span style="font-size: 24px; font-weight: 700;">$9,999</span>
+                                        <span style="color: var(--text-secondary);">/month</span>
+                                    </div>
+                                    <button class="action-btn primary" onclick="showDeploymentGuide('on-premise')">Get License Key</button>
+                                </div>
+                            </div>
+
+                            <!-- SDK Only -->
+                            <div class="deployment-card" style="border: 1px solid var(--border); border-radius: 12px; padding: 24px; background: var(--card-bg);">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                                    <div>
+                                        <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">📦 SDK Only</h3>
+                                        <p style="color: var(--text-secondary); margin-bottom: 16px;">Lightweight library for developers</p>
+                                    </div>
+                                    <span style="background: #06B6D4; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px;">Developer</span>
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <strong>Installation:</strong>
+                                    <pre style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; margin-top: 8px; font-family: monospace; font-size: 14px;">pip install aegis-shield-enterprise</pre>
+
+                                    <strong style="display: block; margin-top: 16px;">Usage:</strong>
+                                    <pre style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; margin-top: 8px; font-family: monospace; font-size: 14px;">from aegis_sdk import AegisSDK
+sdk = AegisSDK(license_key="your_key")
+result = sdk.detect("SSN: 123-45-6789")
+# Processing happens 100% locally</pre>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <span style="font-size: 24px; font-weight: 700;">$999</span>
+                                        <span style="color: var(--text-secondary);">/month</span>
+                                    </div>
+                                    <button class="action-btn" onclick="window.open('/docs/sdk', '_blank')">View SDK Docs</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Comparison Table -->
+                        <div class="comparison-table" style="margin-top: 32px;">
+                            <h3 style="margin-bottom: 16px;">Feature Comparison</h3>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid var(--border);">
+                                        <th style="padding: 12px; text-align: left;">Feature</th>
+                                        <th style="padding: 12px; text-align: center;">Cloud</th>
+                                        <th style="padding: 12px; text-align: center;">Private Cloud</th>
+                                        <th style="padding: 12px; text-align: center;">On-Premise</th>
+                                        <th style="padding: 12px; text-align: center;">SDK</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid var(--border);">
+                                        <td style="padding: 12px;">Setup Time</td>
+                                        <td style="padding: 12px; text-align: center;">5 min</td>
+                                        <td style="padding: 12px; text-align: center;">1 day</td>
+                                        <td style="padding: 12px; text-align: center;">1 week</td>
+                                        <td style="padding: 12px; text-align: center;">5 min</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--border);">
+                                        <td style="padding: 12px;">Data Location</td>
+                                        <td style="padding: 12px; text-align: center;">Our Cloud</td>
+                                        <td style="padding: 12px; text-align: center;">Your Cloud</td>
+                                        <td style="padding: 12px; text-align: center;">Your Servers</td>
+                                        <td style="padding: 12px; text-align: center;">Your Servers</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--border);">
+                                        <td style="padding: 12px;">Maintenance</td>
+                                        <td style="padding: 12px; text-align: center;">None</td>
+                                        <td style="padding: 12px; text-align: center;">Minimal</td>
+                                        <td style="padding: 12px; text-align: center;">Full</td>
+                                        <td style="padding: 12px; text-align: center;">None</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--border);">
+                                        <td style="padding: 12px;">Air-Gap Support</td>
+                                        <td style="padding: 12px; text-align: center;">❌</td>
+                                        <td style="padding: 12px; text-align: center;">❌</td>
+                                        <td style="padding: 12px; text-align: center;">✅</td>
+                                        <td style="padding: 12px; text-align: center;">✅</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--border);">
+                                        <td style="padding: 12px;">API Access</td>
+                                        <td style="padding: 12px; text-align: center;">✅</td>
+                                        <td style="padding: 12px; text-align: center;">✅</td>
+                                        <td style="padding: 12px; text-align: center;">✅</td>
+                                        <td style="padding: 12px; text-align: center;">Library Only</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid var(--border);">
+                                        <td style="padding: 12px;">Dashboard</td>
+                                        <td style="padding: 12px; text-align: center;">✅</td>
+                                        <td style="padding: 12px; text-align: center;">✅</td>
+                                        <td style="padding: 12px; text-align: center;">✅</td>
+                                        <td style="padding: 12px; text-align: center;">❌</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    break;
+
+                case 'detections':
+                    content = `
+                        <div class="section-header">
+                            <h2>Recent Detections</h2>
+                            <p>Monitor and manage privacy violations detected across your systems</p>
+                        </div>
+                        <div class="stats-row">
+                            <div class="stat-card">
+                                <div class="stat-header">
+                                    <span class="stat-label">Critical Detections</span>
+                                </div>
+                                <div class="stat-value" style="color: #FF4444;">47</div>
+                                <div class="stat-change negative">+12 from yesterday</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-header">
+                                    <span class="stat-label">Total Processed</span>
+                                </div>
+                                <div class="stat-value">1.2M</div>
+                                <div class="stat-change positive">+15% this week</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-header">
+                                    <span class="stat-label">False Positives</span>
+                                </div>
+                                <div class="stat-value">0.3%</div>
+                                <div class="stat-change positive">-0.1% improvement</div>
+                            </div>
+                        </div>
+                        <div class="table-container" style="margin-top: 30px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>Type</th>
+                                        <th>Source</th>
+                                        <th>Severity</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2 min ago</td>
+                                        <td>Credit Card</td>
+                                        <td>API Logs</td>
+                                        <td><span class="badge badge-danger">Critical</span></td>
+                                        <td><button class="btn-sm">Review</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>15 min ago</td>
+                                        <td>Email</td>
+                                        <td>Database</td>
+                                        <td><span class="badge badge-warning">Medium</span></td>
+                                        <td><button class="btn-sm">Review</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>`;
+                    break;
+
+                case 'api-keys':
+                    content = `
+                        <div class="section-header">
+                            <h2>API Keys Management</h2>
+                            <p>Manage your API keys and access tokens</p>
+                            <button class="primary-button" style="margin-top: 20px;">Generate New Key</button>
+                        </div>
+                        <div class="table-container" style="margin-top: 30px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Key</th>
+                                        <th>Created</th>
+                                        <th>Last Used</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Production API</td>
+                                        <td>sk_live_****************************3d4f</td>
+                                        <td>Oct 15, 2024</td>
+                                        <td>2 min ago</td>
+                                        <td><span class="badge badge-success">Active</span></td>
+                                        <td>
+                                            <button class="btn-sm">Rotate</button>
+                                            <button class="btn-sm" style="background: #FF4444;">Revoke</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Development API</td>
+                                        <td>sk_test_****************************7a9b</td>
+                                        <td>Sep 20, 2024</td>
+                                        <td>1 hour ago</td>
+                                        <td><span class="badge badge-success">Active</span></td>
+                                        <td>
+                                            <button class="btn-sm">Rotate</button>
+                                            <button class="btn-sm" style="background: #FF4444;">Revoke</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>`;
+                    break;
+
+                case 'team':
+                    content = `
+                        <div class="section-header">
+                            <h2>Team Management</h2>
+                            <p>Manage team members and permissions</p>
+                            <button class="primary-button" style="margin-top: 20px;">Invite Team Member</button>
+                        </div>
+                        <div class="table-container" style="margin-top: 30px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Last Active</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>You</td>
+                                        <td>${localStorage.getItem('aegis_user_email') || 'admin@company.com'}</td>
+                                        <td>Admin</td>
+                                        <td><span class="badge badge-success">Active</span></td>
+                                        <td>Now</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sarah Johnson</td>
+                                        <td>sarah@company.com</td>
+                                        <td>Developer</td>
+                                        <td><span class="badge badge-success">Active</span></td>
+                                        <td>1 hour ago</td>
+                                        <td><button class="btn-sm">Edit</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>`;
+                    break;
+
+                case 'compliance':
+                    content = `
+                        <div class="section-header">
+                            <h2>Compliance Dashboard</h2>
+                            <p>Track your compliance status across regulations</p>
+                        </div>
+                        <div class="stats-row">
+                            <div class="stat-card">
+                                <div class="stat-header">
+                                    <span class="stat-label">GDPR Compliance</span>
+                                </div>
+                                <div class="stat-value" style="color: #00FF88;">98%</div>
+                                <div class="stat-change positive">Fully Compliant</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-header">
+                                    <span class="stat-label">CCPA Compliance</span>
+                                </div>
+                                <div class="stat-value" style="color: #00FF88;">95%</div>
+                                <div class="stat-change positive">2 items pending</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-header">
+                                    <span class="stat-label">HIPAA Compliance</span>
+                                </div>
+                                <div class="stat-value" style="color: #00FF88;">100%</div>
+                                <div class="stat-change positive">Fully Compliant</div>
+                            </div>
+                        </div>
+                        <div style="background: #1A1A1A; padding: 20px; border-radius: 8px; margin-top: 30px;">
+                            <h3>Recent Compliance Actions</h3>
+                            <ul style="list-style: none; padding: 0; margin-top: 15px;">
+                                <li style="padding: 10px 0; border-bottom: 1px solid #333;">✅ Data retention policy updated</li>
+                                <li style="padding: 10px 0; border-bottom: 1px solid #333;">✅ Privacy policy reviewed</li>
+                                <li style="padding: 10px 0;">⚠️ Cookie consent banner needs update</li>
+                            </ul>
+                        </div>`;
+                    break;
+
+                default:
+                    content = `
+                        <div class="section-header">
+                            <h2>${sectionTitles[section] || section}</h2>
+                            <p>This section is being prepared for your trial</p>
+                        </div>
+                        <div style="text-align: center; padding: 60px; background: #1A1A1A; border-radius: 8px; margin-top: 30px;">
+                            <h3>Coming Soon</h3>
+                            <p style="color: #888; margin-top: 10px;">This feature will be available in your trial shortly</p>
+                            <button class="primary-button" style="margin-top: 20px;" onclick="window.location.href='checkout.html'">Upgrade to Access All Features</button>
+                        </div>`;
+            }
+
+            contentArea.innerHTML = content;
+        }
+
+        // Modal Functions
+        function showCreateModal() {
+            document.getElementById('createModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('createModal').classList.remove('active');
+        }
+
+        function createRule() {
+            console.log('Creating detection rule...');
+            closeModal();
+            showToast('Detection rule created successfully');
+        }
+
+        // Table Functions
+        function filterTable(query) {
+            const rows = document.querySelectorAll('#detectionsTable tr');
+            const lowerQuery = query.toLowerCase();
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(lowerQuery) ? '' : 'none';
+            });
+        }
+
+        function refreshTable() {
+            console.log('Refreshing table...');
+            loadTableData();
+            showToast('Data refreshed');
+        }
+
+        // Generate sample table data
+        function loadTableData() {
+            const tbody = document.getElementById('detectionsTable');
+            const data = [
+                { time: '2 min ago', type: 'Credit Card', source: 'API Gateway', risk: 'Critical', status: 'Blocked' },
+                { time: '5 min ago', type: 'SSN', source: 'Web App', risk: 'High', status: 'Redacted' },
+                { time: '8 min ago', type: 'Email', source: 'Database', risk: 'Medium', status: 'Logged' },
+                { time: '12 min ago', type: 'Phone', source: 'API Gateway', risk: 'Low', status: 'Allowed' },
+                { time: '15 min ago', type: 'API Key', source: 'Logs', risk: 'Critical', status: 'Blocked' },
+                { time: '18 min ago', type: 'Password', source: 'Web App', risk: 'Critical', status: 'Redacted' },
+                { time: '22 min ago', type: 'Address', source: 'Database', risk: 'Medium', status: 'Encrypted' },
+                { time: '25 min ago', type: 'Credit Card', source: 'API Gateway', risk: 'High', status: 'Redacted' },
+                { time: '30 min ago', type: 'SSN', source: 'Logs', risk: 'Critical', status: 'Blocked' },
+                { time: '35 min ago', type: 'Email', source: 'Web App', risk: 'Low', status: 'Logged' }
+            ];
+
+            tbody.innerHTML = data.map(item => `
+                <tr>
+                    <td>${item.time}</td>
+                    <td>${item.type}</td>
+                    <td>${item.source}</td>
+                    <td>
+                        <span class="table-badge ${item.risk.toLowerCase() === 'critical' ? 'danger' : item.risk.toLowerCase() === 'high' ? 'warning' : 'success'}">
+                            ${item.risk}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="table-badge ${item.status === 'Blocked' ? 'danger' : item.status === 'Redacted' ? 'warning' : 'success'}">
+                            ${item.status}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="table-actions-cell">
+                            <button class="action-btn" onclick="viewDetails('${item.type}')">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                            <button class="action-btn" onclick="editItem('${item.type}')">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function viewDetails(type) {
+            console.log('Viewing details for:', type);
+        }
+
+        function editItem(type) {
+            console.log('Editing:', type);
+        }
+
+        function exportData() {
+            console.log('Exporting data...');
+            showToast('Export started');
+        }
+
+        // Toast Notification
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 24px;
+                right: 24px;
+                background: var(--accent);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 14px;
+                z-index: 1001;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Search Functionality
+        let searchModal;
+        const searchData = [
+            // API Endpoints
+            { title: 'POST /api/v1/protect', description: 'Protect sensitive data in text', category: 'API', icon: '🔌', url: '#' },
+            { title: 'POST /api/v1/detect', description: 'Detect PII in documents', category: 'API', icon: '🔌', url: '#' },
+            { title: 'GET /api/v1/compliance/status', description: 'Check compliance status', category: 'API', icon: '🔌', url: '#' },
+            { title: 'POST /api/v1/redact', description: 'Redact sensitive information', category: 'API', icon: '🔌', url: '#' },
+
+            // Documentation
+            { title: 'Getting Started Guide', description: 'Quick start with Aegis Shield', category: 'Docs', icon: '📚', url: '#' },
+            { title: 'API Reference', description: 'Complete API documentation', category: 'Docs', icon: '📚', url: '#' },
+            { title: 'Integration Guide', description: 'Integrate with your stack', category: 'Docs', icon: '📚', url: '#' },
+            { title: 'Best Practices', description: 'Security best practices', category: 'Docs', icon: '📚', url: '#' },
+
+            // Settings
+            { title: 'API Keys', description: 'Manage API keys and tokens', category: 'Settings', icon: '⚙️', url: '#' },
+            { title: 'Team Members', description: 'Manage team access', category: 'Settings', icon: '⚙️', url: '#' },
+            { title: 'Billing', description: 'Billing and subscription', category: 'Settings', icon: '⚙️', url: '#' },
+            { title: 'Security', description: 'Security settings', category: 'Settings', icon: '⚙️', url: '#' },
+
+            // Features
+            { title: 'Real-time Monitoring', description: 'Monitor data in real-time', category: 'Features', icon: '✨', url: '#' },
+            { title: 'Compliance Reports', description: 'Generate compliance reports', category: 'Features', icon: '✨', url: '#' },
+            { title: 'Data Catalog', description: 'Browse data catalog', category: 'Features', icon: '✨', url: '#' },
+            { title: 'Detection Rules', description: 'Configure detection rules', category: 'Features', icon: '✨', url: '#' }
+        ];
+
+        function toggleSearch() {
+            if (!searchModal) {
+                createSearchModal();
+            }
+            searchModal.classList.add('active');
+            searchModal.querySelector('input').focus();
+        }
+
+        function createSearchModal() {
+            searchModal = document.createElement('div');
+            searchModal.className = 'search-modal';
+            searchModal.innerHTML = `
+                <div class="search-backdrop" onclick="closeSearch()"></div>
+                <div class="search-container">
+                    <div class="search-header">
+                        <svg class="search-icon-large" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input type="text" class="search-input-large" placeholder="Search everything..." onkeyup="performSearch(this.value)">
+                        <kbd class="search-shortcut">ESC</kbd>
+                    </div>
+                    <div class="search-results" id="searchResults">
+                        <div class="search-empty">
+                            <p>Start typing to search...</p>
+                            <div class="search-shortcuts">
+                                <div class="shortcut-item">
+                                    <kbd>↵</kbd> to select
+                                </div>
+                                <div class="shortcut-item">
+                                    <kbd>↑↓</kbd> to navigate
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(searchModal);
+
+            // Add search modal styles
+            const searchStyles = document.createElement('style');
+            searchStyles.textContent = `
+                .search-modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 2000;
+                    display: none;
+                }
+
+                .search-modal.active {
+                    display: flex;
+                    align-items: flex-start;
+                    justify-content: center;
+                    padding-top: 10vh;
+                }
+
+                .search-backdrop {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0, 0, 0, 0.6);
+                    backdrop-filter: blur(8px);
+                }
+
+                .search-container {
+                    position: relative;
+                    width: 90%;
+                    max-width: 600px;
+                    background: var(--card-bg);
+                    border: 1px solid var(--border);
+                    border-radius: 12px;
+                    overflow: hidden;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                }
+
+                .search-header {
+                    display: flex;
+                    align-items: center;
+                    padding: 16px 20px;
+                    border-bottom: 1px solid var(--border);
+                    gap: 12px;
+                }
+
+                .search-icon-large {
+                    color: var(--text-muted);
+                    flex-shrink: 0;
+                }
+
+                .search-input-large {
+                    flex: 1;
+                    background: transparent;
+                    border: none;
+                    outline: none;
+                    font-size: 16px;
+                    color: var(--text-primary);
+                }
+
+                .search-shortcut {
+                    padding: 4px 8px;
+                    background: var(--bg-tertiary);
+                    border: 1px solid var(--border);
+                    border-radius: 4px;
+                    font-size: 11px;
+                    color: var(--text-muted);
+                }
+
+                .search-results {
+                    max-height: 400px;
+                    overflow-y: auto;
+                }
+
+                .search-empty {
+                    padding: 40px;
+                    text-align: center;
+                    color: var(--text-muted);
+                }
+
+                .search-shortcuts {
+                    display: flex;
+                    gap: 16px;
+                    justify-content: center;
+                    margin-top: 20px;
+                }
+
+                .shortcut-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    font-size: 13px;
+                }
+
+                .search-category {
+                    padding: 8px 20px;
+                    font-size: 11px;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    color: var(--text-muted);
+                    background: var(--bg-tertiary);
+                }
+
+                .search-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 12px 20px;
+                    cursor: pointer;
+                    transition: background 0.15s;
+                    border-bottom: 1px solid var(--border);
+                }
+
+                .search-item:hover {
+                    background: var(--hover-bg);
+                }
+
+                .search-item-icon {
+                    width: 32px;
+                    height: 32px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: var(--bg-tertiary);
+                    border-radius: 8px;
+                    font-size: 16px;
+                }
+
+                .search-item-content {
+                    flex: 1;
+                }
+
+                .search-item-title {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: var(--text-primary);
+                    margin-bottom: 2px;
+                }
+
+                .search-item-description {
+                    font-size: 12px;
+                    color: var(--text-secondary);
+                }
+            `;
+            document.head.appendChild(searchStyles);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                    e.preventDefault();
+                    toggleSearch();
+                } else if (e.key === 'Escape' && searchModal?.classList.contains('active')) {
+                    closeSearch();
+                }
+            });
+        }
+
+        function closeSearch() {
+            if (searchModal) {
+                searchModal.classList.remove('active');
+            }
+        }
+
+        function performSearch(query) {
+            const resultsContainer = document.getElementById('searchResults');
+
+            if (!query) {
+                resultsContainer.innerHTML = `
+                    <div class="search-empty">
+                        <p>Start typing to search...</p>
+                        <div class="search-shortcuts">
+                            <div class="shortcut-item">
+                                <kbd>↵</kbd> to select
+                            </div>
+                            <div class="shortcut-item">
+                                <kbd>↑↓</kbd> to navigate
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const lowerQuery = query.toLowerCase();
+            const results = searchData.filter(item =>
+                item.title.toLowerCase().includes(lowerQuery) ||
+                item.description.toLowerCase().includes(lowerQuery)
+            );
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="search-empty">
+                        <p>No results found for "${query}"</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Group results by category
+            const grouped = results.reduce((acc, item) => {
+                if (!acc[item.category]) acc[item.category] = [];
+                acc[item.category].push(item);
+                return acc;
+            }, {});
+
+            let html = '';
+            for (const [category, items] of Object.entries(grouped)) {
+                html += `<div class="search-category">${category}</div>`;
+                items.forEach(item => {
+                    html += `
+                        <div class="search-item" onclick="navigateToResult('${item.url}')">
+                            <div class="search-item-icon">${item.icon}</div>
+                            <div class="search-item-content">
+                                <div class="search-item-title">${item.title}</div>
+                                <div class="search-item-description">${item.description}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            resultsContainer.innerHTML = html;
+        }
+
+        function navigateToResult(url) {
+            closeSearch();
+            console.log('Navigating to:', url);
+            // In a real app, this would navigate to the URL
+        }
+
+        // Notifications Functionality
+        let notificationDropdown;
+        const notifications = [
+            { id: 1, title: 'Critical PII Detection', message: '15 credit card numbers detected in logs', time: '2 min ago', read: false, type: 'danger' },
+            { id: 2, title: 'Compliance Report Ready', message: 'Monthly GDPR compliance report is available', time: '1 hour ago', read: false, type: 'success' },
+            { id: 3, title: 'API Rate Limit Warning', message: 'API usage at 80% of monthly limit', time: '3 hours ago', read: false, type: 'warning' },
+            { id: 4, title: 'New Team Member', message: 'Sarah Johnson joined the team', time: '1 day ago', read: true, type: 'info' },
+            { id: 5, title: 'System Update', message: 'Aegis Shield v2.5.0 is now available', time: '2 days ago', read: true, type: 'info' }
+        ];
+
+        // Deployment Guide Function
+        function showDeploymentGuide(type) {
+            let guideContent = '';
+
+            if (type === 'private-cloud') {
+                guideContent = `
+                    <h2>Deploy to Your Private Cloud</h2>
+                    <h3>AWS Deployment</h3>
+                    <pre style="background: #1a1a1a; padding: 16px; border-radius: 8px;">
+# 1. Create VPC and configure security groups
+aws ec2 create-vpc --cidr-block 10.0.0.0/16
+
+# 2. Deploy using CloudFormation
+aws cloudformation deploy \\
+  --template-file aegis-vpc.yaml \\
+  --stack-name aegis-private \\
+  --parameter-overrides \\
+    VpcId=vpc-xxx \\
+    LicenseKey=lic_xxx
+
+# 3. Access your private instance
+https://aegis.your-vpc.amazonaws.com</pre>
+
+                    <h3>Azure Deployment</h3>
+                    <pre style="background: #1a1a1a; padding: 16px; border-radius: 8px;">
+# Deploy to Azure Container Instances
+az container create \\
+  --resource-group aegis-rg \\
+  --name aegis-private \\
+  --image aegis/enterprise:latest \\
+  --vnet your-vnet \\
+  --subnet your-subnet</pre>
+
+                    <button onclick="generateLicenseKey('private-cloud')" class="action-btn primary">Generate License Key</button>
+                `;
+            } else if (type === 'on-premise') {
+                guideContent = `
+                    <h2>On-Premise Installation</h2>
+                    <h3>Docker Installation</h3>
+                    <pre style="background: #1a1a1a; padding: 16px; border-radius: 8px;">
+# 1. Pull the enterprise image
+docker pull aegis/enterprise:latest
+
+# 2. Create local configuration
+cat > aegis-config.yml << EOF
+deployment:
+  type: on-premise
+  license_key: \${LICENSE_KEY}
+  data_dir: /var/aegis/data
+  air_gap: true
+EOF
+
+# 3. Run Aegis locally
+docker run -d \\
+  --name aegis-local \\
+  -v ./aegis-config.yml:/config.yml \\
+  -v ./data:/var/aegis/data \\
+  -p 8000:8000 \\
+  aegis/enterprise:latest
+
+# 4. Verify installation
+curl http://localhost:8000/health</pre>
+
+                    <h3>Kubernetes Installation</h3>
+                    <pre style="background: #1a1a1a; padding: 16px; border-radius: 8px;">
+# Install via Helm
+helm repo add aegis https://charts.safekeylab.com
+helm install aegis aegis/enterprise \\
+  --set license.key=\${LICENSE_KEY} \\
+  --set deployment.type=onpremise</pre>
+
+                    <button onclick="generateLicenseKey('on-premise')" class="action-btn primary">Generate License Key</button>
+                `;
+            }
+
+            // Show modal with guide
+            const modal = document.createElement('div');
+            modal.style = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+            `;
+            modal.innerHTML = `
+                <div style="background: var(--card-bg); padding: 32px; border-radius: 16px; max-width: 800px; max-height: 80vh; overflow-y: auto;">
+                    ${guideContent}
+                    <button onclick="this.closest('div').parentElement.remove()" style="margin-top: 20px; padding: 8px 16px;">Close</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function generateLicenseKey(type) {
+            // Generate a license key
+            const prefix = type === 'on-premise' ? 'lic_op_' : 'lic_pc_';
+            const key = prefix + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+            // Show the generated key
+            alert(`Your license key has been generated:\n\n${key}\n\nThis key is valid for 30 days. Save it securely!`);
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(key);
+        }
+
+        // Implementation Tab Switching
+        function showImplementationTab(language) {
+            // Hide all content
+            document.querySelectorAll('.impl-content').forEach(content => {
+                content.style.display = 'none';
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.style.color = 'var(--text-secondary)';
+                btn.style.borderBottom = 'none';
+            });
+
+            // Show selected content
+            const selectedContent = document.getElementById(language + '-impl');
+            if (selectedContent) {
+                selectedContent.style.display = 'block';
+            }
+
+            // Add active class to selected tab
+            event.target.style.color = 'var(--text-primary)';
+            event.target.style.borderBottom = '2px solid var(--accent)';
+        }
+
+        function toggleNotifications() {
+            if (!notificationDropdown) {
+                createNotificationDropdown();
+            }
+            notificationDropdown.classList.toggle('active');
+        }
+
+        function createNotificationDropdown() {
+            notificationDropdown = document.createElement('div');
+            notificationDropdown.className = 'notification-dropdown';
+            notificationDropdown.innerHTML = `
+                <div class="notification-header">
+                    <h3>Notifications</h3>
+                    <button class="mark-all-btn" onclick="markAllAsRead()">Mark all as read</button>
+                </div>
+                <div class="notification-list">
+                    ${notifications.map(notif => `
+                        <div class="notification-item ${notif.read ? 'read' : ''}" onclick="markAsRead(${notif.id})">
+                            <div class="notification-icon ${notif.type}">
+                                ${notif.type === 'danger' ? '🚨' : notif.type === 'warning' ? '⚠️' : notif.type === 'success' ? '✅' : 'ℹ️'}
+                            </div>
+                            <div class="notification-content">
+                                <div class="notification-title">${notif.title}</div>
+                                <div class="notification-message">${notif.message}</div>
+                                <div class="notification-time">${notif.time}</div>
+                            </div>
+                            ${!notif.read ? '<div class="notification-unread"></div>' : ''}
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="notification-footer">
+                    <a href="#" onclick="viewAllNotifications()">View all notifications</a>
+                </div>
+            `;
+
+            // Position it relative to the notification button
+            const notifBtn = document.querySelector('.icon-btn[onclick="toggleNotifications()"]');
+            const rect = notifBtn.getBoundingClientRect();
+            notificationDropdown.style.position = 'fixed';
+            notificationDropdown.style.top = rect.bottom + 8 + 'px';
+            notificationDropdown.style.right = document.body.clientWidth - rect.right + 'px';
+
+            document.body.appendChild(notificationDropdown);
+
+            // Add notification dropdown styles
+            const notifStyles = document.createElement('style');
+            notifStyles.textContent = `
+                .notification-dropdown {
+                    position: fixed;
+                    width: 380px;
+                    background: var(--card-bg);
+                    border: 1px solid var(--border);
+                    border-radius: 12px;
+                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+                    z-index: 1500;
+                    display: none;
+                }
+
+                .notification-dropdown.active {
+                    display: block;
+                }
+
+                .notification-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 16px 20px;
+                    border-bottom: 1px solid var(--border);
+                }
+
+                .notification-header h3 {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                }
+
+                .mark-all-btn {
+                    background: transparent;
+                    border: none;
+                    color: var(--accent);
+                    font-size: 13px;
+                    cursor: pointer;
+                    transition: opacity 0.15s;
+                }
+
+                .mark-all-btn:hover {
+                    opacity: 0.8;
+                }
+
+                .notification-list {
+                    max-height: 400px;
+                    overflow-y: auto;
+                }
+
+                .notification-item {
+                    display: flex;
+                    gap: 12px;
+                    padding: 12px 20px;
+                    cursor: pointer;
+                    transition: background 0.15s;
+                    position: relative;
+                    border-bottom: 1px solid var(--border);
+                }
+
+                .notification-item:hover {
+                    background: var(--hover-bg);
+                }
+
+                .notification-item.read {
+                    opacity: 0.7;
+                }
+
+                .notification-icon {
+                    width: 32px;
+                    height: 32px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 8px;
+                    font-size: 16px;
+                    flex-shrink: 0;
+                }
+
+                .notification-icon.danger {
+                    background: rgba(239, 68, 68, 0.1);
+                }
+
+                .notification-icon.warning {
+                    background: rgba(245, 158, 11, 0.1);
+                }
+
+                .notification-icon.success {
+                    background: rgba(16, 185, 129, 0.1);
+                }
+
+                .notification-icon.info {
+                    background: rgba(59, 130, 246, 0.1);
+                }
+
+                .notification-content {
+                    flex: 1;
+                }
+
+                .notification-title {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: var(--text-primary);
+                    margin-bottom: 2px;
+                }
+
+                .notification-message {
+                    font-size: 13px;
+                    color: var(--text-secondary);
+                    margin-bottom: 4px;
+                }
+
+                .notification-time {
+                    font-size: 11px;
+                    color: var(--text-muted);
+                }
+
+                .notification-unread {
+                    position: absolute;
+                    right: 20px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 8px;
+                    height: 8px;
+                    background: var(--accent);
+                    border-radius: 50%;
+                }
+
+                .notification-footer {
+                    padding: 12px 20px;
+                    text-align: center;
+                    border-top: 1px solid var(--border);
+                }
+
+                .notification-footer a {
+                    color: var(--accent);
+                    text-decoration: none;
+                    font-size: 13px;
+                    font-weight: 500;
+                }
+
+                .notification-footer a:hover {
+                    text-decoration: underline;
+                }
+            `;
+            document.head.appendChild(notifStyles);
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (notificationDropdown?.classList.contains('active') &&
+                    !notificationDropdown.contains(e.target) &&
+                    !e.target.closest('.icon-btn[onclick="toggleNotifications()"]')) {
+                    notificationDropdown.classList.remove('active');
+                }
+            });
+        }
+
+        function markAsRead(id) {
+            const notif = notifications.find(n => n.id === id);
+            if (notif) {
+                notif.read = true;
+                updateNotificationBadge();
+                if (notificationDropdown) {
+                    // Refresh the dropdown
+                    notificationDropdown.remove();
+                    notificationDropdown = null;
+                    createNotificationDropdown();
+                    notificationDropdown.classList.add('active');
+                }
+            }
+        }
+
+        function markAllAsRead() {
+            notifications.forEach(n => n.read = true);
+            updateNotificationBadge();
+            if (notificationDropdown) {
+                notificationDropdown.remove();
+                notificationDropdown = null;
+                createNotificationDropdown();
+                notificationDropdown.classList.add('active');
+            }
+            showToast('All notifications marked as read');
+        }
+
+        function updateNotificationBadge() {
+            const unreadCount = notifications.filter(n => !n.read).length;
+            const badge = document.querySelector('.notification-badge');
+            if (badge) {
+                badge.textContent = unreadCount;
+                badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+            }
+        }
+
+        function viewAllNotifications() {
+            console.log('Viewing all notifications');
+            notificationDropdown.classList.remove('active');
+        }
+
+        // Initialize Charts
+        let trendsChart, dataTypesChart;
+
+        function initCharts() {
+            const isDark = !document.body.classList.contains('light-mode');
+            const textColor = isDark ? '#A3A3A3' : '#6B7280';
+            const gridColor = isDark ? '#262626' : '#E5E7EB';
+
+            // Trends Chart
+            const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+            trendsChart = new Chart(trendsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Total Detections',
+                        data: [65, 78, 90, 81, 86, 95, 114, 120, 118, 125, 142, 156],
+                        borderColor: '#3B82F6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Critical',
+                        data: [12, 19, 15, 25, 22, 30, 28, 35, 33, 38, 42, 45],
+                        borderColor: '#EF4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: gridColor,
+                                borderColor: gridColor
+                            },
+                            ticks: {
+                                color: textColor
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: gridColor,
+                                borderColor: gridColor
+                            },
+                            ticks: {
+                                color: textColor
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Data Types Chart
+            const dataTypesCtx = document.getElementById('dataTypesChart').getContext('2d');
+            dataTypesChart = new Chart(dataTypesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Credit Cards', 'SSN', 'Email', 'API Keys', 'Other'],
+                    datasets: [{
+                        data: [30, 25, 20, 15, 10],
+                        backgroundColor: [
+                            '#3B82F6',
+                            '#10B981',
+                            '#F59E0B',
+                            '#EF4444',
+                            '#8B5CF6'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: textColor,
+                                padding: 10,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateCharts() {
+            if (trendsChart && dataTypesChart) {
+                trendsChart.destroy();
+                dataTypesChart.destroy();
+                initCharts();
+            }
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Check authentication
+        function checkAuth() {
+            // Check if user is logged in (using localStorage for demo)
+            const isLoggedIn = localStorage.getItem('aegis_authenticated');
+            if (!isLoggedIn) {
+                // Redirect to login if not authenticated
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('aegis_authenticated');
+            window.location.href = 'login.html';
+        }
+
+        // Toggle user menu
+        function toggleUserMenu() {
+            const menu = document.getElementById('userMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Close user menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const userMenu = document.getElementById('userMenu');
+            const userProfile = document.querySelector('.user-profile');
+            if (userMenu && !userProfile.contains(e.target) && !userMenu.contains(e.target)) {
+                userMenu.style.display = 'none';
+            }
         });
 
-        // Simulate real-time updates
-        setInterval(() => {
-            const apiRequests = document.querySelector('.stat-value');
-            if (apiRequests && apiRequests.textContent.includes(',')) {
-                const current = parseInt(apiRequests.textContent.replace(/,/g, ''));
-                const increment = Math.floor(Math.random() * 10) + 1;
-                apiRequests.textContent = (current + increment).toLocaleString();
+        // Load user info from localStorage
+        function loadUserInfo() {
+            const userName = localStorage.getItem('aegis_user_name') || 'User';
+            const userEmail = localStorage.getItem('aegis_user_email') || 'user@example.com';
+            const userRole = localStorage.getItem('aegis_user_role') || 'user';
+            // Check if user is on trial
+            const trialStart = localStorage.getItem('aegis_trial_start');
+            const trialEnd = localStorage.getItem('aegis_trial_end');
+            const isOnTrial = trialEnd && new Date(trialEnd) > new Date();
+
+            // Update user profile
+            const nameElement = document.getElementById('userName');
+            const roleElement = document.getElementById('userRole');
+            const avatarElement = document.getElementById('userAvatar');
+
+            if (nameElement) nameElement.textContent = userName;
+            if (roleElement) {
+                const roleDisplay = {
+                    'admin': 'Administrator',
+                    'developer': 'Developer',
+                    'analyst': 'Analyst',
+                    'user': 'User'
+                };
+                roleElement.textContent = roleDisplay[userRole] || 'User';
+                // Show trial status instead of demo
+                if (isOnTrial) {
+                    const daysLeft = Math.ceil((new Date(trialEnd) - new Date()) / (1000 * 60 * 60 * 24));
+                    if (daysLeft > 0 && daysLeft <= 14) {
+                        roleElement.textContent += ` (${daysLeft} days left in trial)`;
+                    }
+                }
             }
-        }, 3000);
+            if (avatarElement) {
+                // Create initials from name
+                const initials = userName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                avatarElement.textContent = initials;
+            }
+
+            // Show trial banner if on trial (professional, not "demo")
+            if (isOnTrial && !document.getElementById('trialBanner')) {
+                const daysLeft = Math.ceil((new Date(trialEnd) - new Date()) / (1000 * 60 * 60 * 24));
+                if (daysLeft > 0 && daysLeft <= 14) {
+                    const banner = document.createElement('div');
+                    banner.id = 'trialBanner';
+                    banner.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; background: linear-gradient(90deg, #059669, #10B981); color: white; text-align: center; padding: 8px; font-size: 14px; z-index: 10000;';
+                    banner.innerHTML = `✨ Free Trial: ${daysLeft} days remaining • <a href="checkout.html" style="color: white; text-decoration: underline; font-weight: bold;">Upgrade Now</a> to continue using Aegis`;
+                    document.body.prepend(banner);
+                    // Adjust main content for banner
+                    document.querySelector('.main').style.paddingTop = '40px';
+                }
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (checkAuth()) {
+                loadUserInfo();
+                loadTableData();
+                initCharts();
+            }
+        });
     </script>
 </body>
 </html>

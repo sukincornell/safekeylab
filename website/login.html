@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in to Aegis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0A0A0A;
+            color: #FFFFFF;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+            background: #161616;
+            border: 1px solid #262626;
+            border-radius: 16px;
+            padding: 48px 40px;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: #262626;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon svg {
+            width: 36px;
+            height: 36px;
+            fill: #FFFFFF;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #FFFFFF;
+            letter-spacing: -0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #E5E5E5;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            background: #0A0A0A;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            color: #666666;
+        }
+
+        .input-field:focus {
+            border-color: #4A4A4A;
+            background: #0D0D0D;
+        }
+
+        .continue-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: #FFFFFF;
+            color: #000000;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 24px;
+        }
+
+        .continue-btn:hover {
+            background: #E5E5E5;
+        }
+
+        .continue-btn:active {
+            background: #D4D4D4;
+            transform: scale(0.99);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: #666666;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #333333;
+        }
+
+        .divider span {
+            padding: 0 16px;
+        }
+
+        .oauth-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: transparent;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            color: #E5E5E5;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .oauth-btn:hover {
+            background: #1A1A1A;
+            border-color: #4A4A4A;
+        }
+
+        .oauth-btn:active {
+            background: #0D0D0D;
+            transform: scale(0.99);
+        }
+
+        .oauth-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .footer-text {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 13px;
+            color: #888888;
+            line-height: 1.6;
+        }
+
+        .footer-text a {
+            color: #CCCCCC;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-text a:hover {
+            color: #FFFFFF;
+            text-decoration: underline;
+        }
+
+        .help-text {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 13px;
+            color: #888888;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Logo -->
+        <div class="logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 4h6l2 4h8v10H4z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Title -->
+        <h1>Sign in to Aegis</h1>
+
+        <!-- Email Form -->
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input
+                type="email"
+                id="email"
+                class="input-field"
+                placeholder="Your email address"
+                autocomplete="email"
+                autofocus
+            >
+        </div>
+
+        <!-- Continue Button -->
+        <button class="continue-btn" onclick="handleEmailContinue()">
+            Continue
+        </button>
+
+        <!-- Divider -->
+        <div class="divider">
+            <span>OR</span>
+        </div>
+
+        <!-- OAuth Buttons -->
+        <button class="oauth-btn" onclick="handleOAuth('github')">
+            <svg class="oauth-icon" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+            Continue with GitHub
+        </button>
+
+        <button class="oauth-btn" onclick="handleOAuth('google')">
+            <svg class="oauth-icon" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Continue with Google
+        </button>
+
+        <button class="oauth-btn" onclick="handleOAuth('sso')">
+            Continue with SSO
+        </button>
+
+        <!-- Footer -->
+        <div class="footer-text">
+            Don't have an account? <a href="register.html">Create one</a><br>
+            By continuing, you agree to Aegis's <a href="#">Terms of Service</a>
+        </div>
+
+        <div class="help-text">
+            <strong>Demo Accounts Available:</strong> <a href="register.html">Try demo access</a><br>
+            Having trouble? <a href="#">Visit our docs</a> • <a href="#">Report an issue</a>
+        </div>
+    </div>
+
+    <!-- Load Configuration -->
+    <script src="js/config.js"></script>
+
+    <script>
+        // Handle email continue
+        function handleEmailContinue() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                document.getElementById('email').focus();
+                return;
+            }
+
+            // Demo mode - accept any email
+            // Pre-configured demo accounts
+            const demoEmails = {
+                'admin@demo.com': { name: 'Admin User', role: 'admin' },
+                'dev@demo.com': { name: 'Developer User', role: 'developer' },
+                'user@demo.com': { name: 'Standard User', role: 'user' }
+            };
+
+            const userData = demoEmails[email] || { name: email.split('@')[0], role: 'user' };
+
+            // Set auth and redirect
+            localStorage.setItem('aegis_authenticated', 'true');
+            localStorage.setItem('aegis_user_email', email);
+            localStorage.setItem('aegis_user_name', userData.name);
+            localStorage.setItem('aegis_user_role', userData.role);
+            localStorage.setItem('aegis_demo_mode', 'true');
+
+            window.location.href = 'dashboard.html';
+        }
+
+        // Handle OAuth
+        function handleOAuth(provider) {
+            console.log(`Signing in with ${provider}...`);
+
+            // Check if we're in demo mode or production
+            const isDemoMode = window.location.hostname === 'localhost' ||
+                              window.location.hostname.includes('vercel.app') ||
+                              !AegisConfig?.auth?.oauth?.[provider]?.clientId ||
+                              AegisConfig?.auth?.oauth?.[provider]?.clientId?.includes('client-id');
+
+            if (isDemoMode) {
+                // Professional OAuth simulation for trial
+                const providerNames = {
+                    github: 'GitHub',
+                    google: 'Google',
+                    sso: 'Enterprise SSO'
+                };
+
+                // No alerts - just seamless login
+                // Create unique user for each login
+                const timestamp = Date.now();
+                const userAccounts = {
+                    github: {
+                        email: `user${timestamp}@github.com`,
+                        name: 'GitHub User',
+                        company: 'Tech Company'
+                    },
+                    google: {
+                        email: `user${timestamp}@gmail.com`,
+                        name: 'Google User',
+                        company: 'Business Inc'
+                    },
+                    sso: {
+                        email: `user${timestamp}@enterprise.com`,
+                        name: 'Enterprise User',
+                        company: 'Enterprise Corp'
+                    }
+                };
+
+                const account = userAccounts[provider];
+
+                // Set authentication
+                localStorage.setItem('aegis_authenticated', 'true');
+                localStorage.setItem('aegis_auth_provider', provider);
+                localStorage.setItem('aegis_user_email', account.email);
+                localStorage.setItem('aegis_user_name', account.name);
+                localStorage.setItem('aegis_user_company', account.company);
+                localStorage.setItem('aegis_trial_start', new Date().toISOString());
+                localStorage.setItem('aegis_trial_end', new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString());
+
+                // Redirect smoothly to dashboard
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 500);
+            } else {
+                // Production mode - redirect to real OAuth
+                const oauthUrls = {
+                    github: `https://github.com/login/oauth/authorize?client_id=${AegisConfig.auth.oauth.github.clientId}&redirect_uri=${encodeURIComponent(window.location.origin + '/dashboard.html')}`,
+                    google: `https://accounts.google.com/o/oauth2/v2/auth?client_id=${AegisConfig.auth.oauth.google.clientId}&redirect_uri=${encodeURIComponent(window.location.origin + '/dashboard.html')}&response_type=code&scope=email%20profile`,
+                    sso: `${AegisConfig.auth.oauth.sso.endpoint}?client_id=${AegisConfig.auth.oauth.sso.clientId}&redirect_uri=${encodeURIComponent(window.location.origin + '/dashboard.html')}`
+                };
+
+                // Redirect to OAuth provider
+                window.location.href = oauthUrls[provider];
+            }
+        }
+
+        // Handle Enter key
+        document.getElementById('email').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleEmailContinue();
+            }
+        });
+    </script>
+</body>
+</html>

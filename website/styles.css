@@ -100,7 +100,7 @@ body {
 }
 
 .cta-button {
-    background: #ffffff;
+    background: #000000;
     color: #ffffff;
     border: 1px solid #000000;
     padding: 12px 24px;
@@ -191,7 +191,7 @@ body {
 }
 
 .primary-button {
-    background: #ffffff;
+    background: #000000;
     color: #ffffff;
     border: 1px solid #000000;
     padding: 16px 32px;
@@ -331,7 +331,7 @@ body {
     font-weight: 700;
     text-align: center;
     margin-bottom: 20px;
-    color: #ffffff;
+    color: #000000;
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.02em;
 }
@@ -359,7 +359,7 @@ body {
 
 .demo-input h3, .demo-output h3 {
     margin-bottom: 24px;
-    color: #ffffff;
+    color: #000000;
     font-family: 'Inter', sans-serif;
     font-weight: 400;
         letter-spacing: 2px;
@@ -371,7 +371,7 @@ body {
     min-height: 150px;
     background: #ffffff;
     border: 1px solid #e0e0e0;
-    color: #ffffff;
+    color: #000000;
     padding: 16px;
     font-family: 'Courier New', monospace;
     font-size: 14px;
@@ -382,14 +382,14 @@ body {
 
 #demo-input:focus {
     outline: none;
-    border-color: #ffffff;
+    border-color: #000000;
 }
 
 .protect-button {
     width: 100%;
-    background: #ffffff;
-    color: #000000;
-    border: 1px solid #ffffff;
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
     padding: 16px;
     font-size: 14px;
     font-family: 'Inter', sans-serif;
@@ -403,8 +403,9 @@ body {
 }
 
 .protect-button:hover {
-    background: #ffffff;
-    color: #ffffff;
+    background: transparent;
+    color: #000000;
+    border: 1px solid #000000;
 }
 
 .shield-icon-small {
@@ -432,7 +433,7 @@ body {
 }
 
 .output-box .protected {
-    color: #ffffff;
+    color: #000000;
     background: #f0f0f0;
     padding: 2px 8px;
 }
@@ -451,7 +452,7 @@ body {
     display: block;
     font-size: 28px;
     font-weight: 400;
-    color: #ffffff;
+    color: #000000;
     margin-bottom: 8px;
     font-family: 'Inter', sans-serif;
 }
@@ -486,7 +487,7 @@ body {
 
 .metric-card:hover {
     background: #ffffff;
-    border-color: #ffffff;
+    border-color: #000000;
 }
 
 .metric-icon {
@@ -498,7 +499,7 @@ body {
 .metric-value {
     font-size: 48px;
     font-weight: 700;
-    color: #ffffff;
+    color: #000000;
     margin-bottom: 8px;
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.02em;
@@ -535,7 +536,7 @@ body {
 .input-group label {
     display: block;
     margin-bottom: 12px;
-    color: #ffffff;
+    color: #000000;
     font-size: 12px;
         letter-spacing: 2px;
     font-family: 'Inter', sans-serif;
@@ -547,7 +548,7 @@ body {
     background: #ffffff;
     border: 1px solid #e0e0e0;
     padding: 14px;
-    color: #ffffff;
+    color: #000000;
     font-size: 16px;
     font-family: 'Inter', sans-serif;
 }
@@ -555,7 +556,7 @@ body {
 .input-group input:focus,
 .input-group select:focus {
     outline: none;
-    border-color: #ffffff;
+    border-color: #000000;
 }
 
 .risk-display {
@@ -565,7 +566,7 @@ body {
 }
 
 .risk-display h3 {
-    color: #ffffff;
+    color: #000000;
     margin-bottom: 24px;
     font-family: 'Inter', sans-serif;
     font-weight: 400;
@@ -576,7 +577,7 @@ body {
 .risk-amount {
     font-size: 48px;
     font-weight: 400;
-    color: #ffffff;
+    color: #000000;
     margin-bottom: 36px;
     font-family: 'Inter', sans-serif;
 }
@@ -588,15 +589,15 @@ body {
 }
 
 .risk-details strong {
-    color: #ffffff;
+    color: #000000;
     font-weight: 400;
 }
 
 .cta-button-large {
     display: inline-block;
-    background: #ffffff;
-    color: #000000;
-    border: 2px solid #ffffff;
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #000000;
     padding: 18px 48px;
     font-size: 16px;
     font-family: 'Inter', sans-serif;
@@ -612,9 +613,10 @@ body {
 
 .cta-button-large:hover {
     background: transparent;
-    color: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Features Section */
@@ -639,7 +641,7 @@ body {
 
 .feature-card:hover {
     background: #ffffff;
-    border-color: #ffffff;
+    border-color: #000000;
 }
 
 .feature-icon {
@@ -650,7 +652,7 @@ body {
 
 .feature-card h3 {
     margin-bottom: 20px;
-    color: #ffffff;
+    color: #000000;
     font-family: 'Inter', sans-serif;
     font-weight: 400;
         letter-spacing: 2px;
@@ -696,12 +698,12 @@ body {
 }
 
 .tab.active {
-    color: #ffffff;
+    color: #000000;
     background: #ffffff;
 }
 
 .tab:hover {
-    color: #ffffff;
+    color: #000000;
 }
 
 .code-block {
@@ -717,7 +719,7 @@ body {
 }
 
 .code-block .keyword {
-    color: #ffffff;
+    color: #000000;
 }
 
 .code-block .string {
@@ -752,7 +754,7 @@ body {
 }
 
 .pricing-card.featured {
-    border-color: #ffffff;
+    border-color: #000000;
     transform: scale(1.05);
 }
 
@@ -779,7 +781,7 @@ body {
 .pricing-card h3 {
     margin-bottom: 24px;
     font-size: 24px;
-    color: #ffffff;
+    color: #000000;
     font-family: 'Inter', sans-serif;
     font-weight: 600;
     letter-spacing: -0.01em;
@@ -820,7 +822,7 @@ body {
     padding: 16px;
     background: transparent;
     border: 1px solid #e0e0e0;
-    color: #ffffff;
+    color: #000000;
     font-size: 14px;
     font-family: 'Inter', sans-serif;
     cursor: pointer;
@@ -837,14 +839,15 @@ body {
 }
 
 .pricing-button.primary {
-    background: #ffffff;
-    color: #000000;
-    border: 1px solid #ffffff;
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
 }
 
 .pricing-button.primary:hover {
-    background: #ffffff;
-    color: #ffffff;
+    background: transparent;
+    color: #000000;
+    border: 1px solid #000000;
 }
 
 /* CTA Section */
@@ -859,7 +862,7 @@ body {
     font-size: 48px;
     font-weight: 400;
     margin-bottom: 24px;
-    color: #ffffff;
+    color: #000000;
     font-family: 'Inter', sans-serif;
 }
 
@@ -881,8 +884,8 @@ body {
     align-items: center;
     gap: 12px;
     padding: 20px 40px;
-    background: #ffffff;
-    border: 1px solid #ffffff;
+    background: #000000;
+    border: 1px solid #000000;
     color: #ffffff;
     text-decoration: none;
     font-size: 14px;
@@ -892,8 +895,9 @@ body {
 }
 
 .github-link:hover {
-    background: #ffffff;
+    background: transparent;
     color: #000000;
+    border: 1px solid #000000;
 }
 
 .github-link svg {
@@ -934,7 +938,7 @@ body {
 .contact-info h3 {
     font-size: 32px;
     margin-bottom: 24px;
-    color: #fff;
+    color: #000;
     font-weight: 600;
     letter-spacing: -0.02em;
 }
@@ -1006,7 +1010,7 @@ body {
 
 .contact-method a,
 .contact-method span {
-    color: #fff;
+    color: #000;
     text-decoration: none;
     font-size: 16px;
     display: block;
@@ -1032,9 +1036,9 @@ body {
 .contact-form input,
 .contact-form select,
 .contact-form textarea {
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    color: #000000;
     padding: 16px 20px;
     font-size: 15px;
     font-family: 'Inter', sans-serif;
@@ -1044,7 +1048,250 @@ body {
 
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
-    color: #666;
+    color: #999999;
+}
+
+/* SDK Section Styles */
+.sdk-section {
+    padding: 80px 0;
+    background: #f8f8f8;
+}
+
+.deployment-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin: 48px 0;
+}
+
+.deployment-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.sdk-card {
+    border: 2px solid #000000;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, #ffffff 100%);
+}
+
+.card-badge {
+    position: absolute;
+    top: -12px;
+    right: 24px;
+    background: #000000;
+    color: #ffffff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.deployment-card h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #000000;
+}
+
+.performance-metric {
+    display: flex;
+    flex-direction: column;
+    margin: 24px 0;
+}
+
+.metric-large {
+    font-size: 36px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.metric-label {
+    color: #888;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0;
+}
+
+.feature-list li {
+    padding: 8px 0;
+    color: #666666;
+    font-size: 14px;
+}
+
+.code-sample {
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    color: #333333;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    overflow-x: auto;
+}
+
+.competitor-comparison {
+    margin-top: 64px;
+}
+
+.competitor-comparison h3 {
+    font-size: 20px;
+    margin-bottom: 24px;
+    color: #000000;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.comparison-table th {
+    background: #f8f8f8;
+    padding: 16px;
+    text-align: left;
+    color: #000000;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.comparison-table td {
+    padding: 16px;
+    border-top: 1px solid #e0e0e0;
+    color: #666666;
+    font-size: 14px;
+}
+
+.comparison-table .highlight {
+    color: #000000;
+    font-weight: 700;
+}
+
+.comparison-table .check {
+    color: #4CAF50;
+}
+
+.comparison-table .cross {
+    color: #ff4444;
+}
+
+/* Benchmark Section Styles */
+.benchmark-section {
+    padding: 80px 0;
+    background: #ffffff;
+}
+
+.benchmark-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin: 48px 0;
+}
+
+.benchmark-card {
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 32px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.benchmark-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.benchmark-card h3 {
+    font-size: 20px;
+    margin-bottom: 24px;
+    color: #000000;
+}
+
+.benchmark-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.stat-row:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    color: #666666;
+    font-size: 14px;
+}
+
+.stat-value {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.stat-value.highlight {
+    color: #000000;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.stat-value.success {
+    color: #4CAF50;
+}
+
+.benchmark-verify {
+    margin-top: 48px;
+    padding: 32px;
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+}
+
+.benchmark-verify h3 {
+    color: #000000;
+    margin-bottom: 16px;
+}
+
+.verify-code {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 24px;
+    color: #333333;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    overflow-x: auto;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .benchmark-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .deployment-comparison {
+        grid-template-columns: 1fr;
+    }
 }
 
 .contact-form input:focus,
@@ -1072,7 +1319,7 @@ body {
 
 .contact-submit-btn {
     background: linear-gradient(135deg, #000000, #333333);
-    color: #000;
+    color: #ffffff;
     border: none;
     padding: 18px 36px;
     font-size: 16px;
@@ -1230,7 +1477,7 @@ body {
 
 .comparison-table .highlight {
     background: var(--accent-black);
-    color: white;
+    color: #000000;
     padding: 6px 12px;
     border-radius: 6px;
     font-weight: 600;
@@ -1269,7 +1516,7 @@ body {
 
 .footer-column h4 {
     margin-bottom: 24px;
-    color: #ffffff;
+    color: #000000;
     font-size: 12px;
         letter-spacing: 2px;
     font-family: 'Inter', sans-serif;
@@ -1285,7 +1532,7 @@ body {
 }
 
 .footer-column a:hover {
-    color: #ffffff;
+    color: #000000;
 }
 
 .footer-bottom {
@@ -1403,17 +1650,17 @@ html {
     margin-bottom: 10px;
 }
 
-.industry-badge.healthcare { background: #1e3a8a; color: white; }
-.industry-badge.finance { background: #166534; color: white; }
-.industry-badge.enterprise { background: #7c2d12; color: white; }
-.industry-badge.hr { background: #6b21a8; color: white; }
-.industry-badge.legal { background: #991b1b; color: white; }
-.industry-badge.education { background: #0891b2; color: white; }
+.industry-badge.healthcare { background: #1e3a8a; color: #000000; }
+.industry-badge.finance { background: #166534; color: #000000; }
+.industry-badge.enterprise { background: #7c2d12; color: #000000; }
+.industry-badge.hr { background: #6b21a8; color: #000000; }
+.industry-badge.legal { background: #991b1b; color: #000000; }
+.industry-badge.education { background: #0891b2; color: #000000; }
 
 .use-case-card h3 {
     font-size: 20px;
     margin-bottom: 15px;
-    color: white;
+    color: #000000;
 }
 
 .use-case-card .problem {
@@ -1553,7 +1800,7 @@ html {
 .docs-hero h1 {
     font-size: 48px;
     margin-bottom: 20px;
-    color: white;
+    color: #000000;
 }
 
 .docs-hero p {
@@ -1620,7 +1867,7 @@ html {
 
 .sidebar-section a:hover,
 .sidebar-section a.active {
-    color: white;
+    color: #000000;
 }
 
 .docs-main {
@@ -1634,13 +1881,13 @@ html {
 .doc-section h2 {
     font-size: 32px;
     margin-bottom: 20px;
-    color: white;
+    color: #000000;
 }
 
 .doc-section h3 {
     font-size: 20px;
     margin: 30px 0 15px;
-    color: white;
+    color: #000000;
 }
 
 .alert {
@@ -1679,7 +1926,7 @@ html {
 .pii-category h3 {
     font-size: 18px;
     margin-bottom: 10px;
-    color: white;
+    color: #000000;
 }
 
 .endpoint-section {
@@ -1703,15 +1950,15 @@ html {
     text-transform: uppercase;
 }
 
-.method.get { background: #10b981; color: white; }
-.method.post { background: #3b82f6; color: white; }
-.method.put { background: #f59e0b; color: white; }
-.method.delete { background: #ef4444; color: white; }
+.method.get { background: #10b981; color: #000000; }
+.method.post { background: #3b82f6; color: #000000; }
+.method.put { background: #f59e0b; color: #000000; }
+.method.delete { background: #ef4444; color: #000000; }
 
 .endpoint-path {
     font-family: monospace;
     font-size: 20px;
-    color: white;
+    color: #000000;
 }
 
 .endpoint-description {
@@ -1730,7 +1977,7 @@ html {
     padding: 12px;
     text-align: left;
     border: 1px solid #333;
-    color: white;
+    color: #000000;
 }
 
 .api-table td {
@@ -1747,6 +1994,6 @@ html {
 }
 
 .nav-links a.active {
-    color: white;
+    color: #000000;
 }
 

@@ -1,0 +1,59 @@
+{
+  "name": "aegis-shield-enterprise",
+  "version": "2.0.0",
+  "description": "Enterprise Privacy Shield Platform - Production-Ready Dashboard",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 8080",
+    "build": "npm run build:prod",
+    "build:dev": "echo 'Building for development...' && npm run copy-env:dev",
+    "build:staging": "echo 'Building for staging...' && npm run copy-env:staging",
+    "build:prod": "echo 'Building for production...' && npm run copy-env:prod && npm run minify",
+    "copy-env:dev": "cp .env.development .env 2>/dev/null || true",
+    "copy-env:staging": "cp .env.staging .env 2>/dev/null || true",
+    "copy-env:prod": "cp .env.production .env 2>/dev/null || true",
+    "minify": "echo 'Minifying assets...'",
+    "test": "echo 'Running tests...'",
+    "lint": "eslint js/*.js",
+    "format": "prettier --write '**/*.{js,html,css,json}'",
+    "deploy:vercel": "vercel --prod",
+    "deploy:netlify": "netlify deploy --prod",
+    "deploy:aws": "aws s3 sync . s3://$AWS_BUCKET_NAME --exclude '.git/*' --exclude 'node_modules/*' --exclude '.env*'",
+    "clean": "rm -rf node_modules dist .cache",
+    "preflight": "npm run lint && npm run test && npm run build:prod"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aegis-shield/enterprise-dashboard.git"
+  },
+  "keywords": [
+    "privacy",
+    "PII",
+    "GDPR",
+    "compliance",
+    "dashboard",
+    "enterprise",
+    "security"
+  ],
+  "author": "Aegis Shield",
+  "license": "PROPRIETARY",
+  "dependencies": {
+    "chart.js": "^4.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.3",
+    "vercel": "^32.0.0",
+    "netlify-cli": "^16.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "> 1%",
+    "not dead"
+  ],
+  "private": true
+}
